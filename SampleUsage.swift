@@ -1,6 +1,82 @@
+import SwiftUI
 import UIKit
 
-// MARK: - Sample Usage of ExpenseDetailViewController
+// MARK: - Sample Usage of SwiftUI ContentView (Expense Home Page)
+
+// MARK: - SwiftUI Integration Example
+struct SampleExpenseApp: App {
+    let persistenceController = PersistenceController.shared
+    
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+        }
+    }
+}
+
+// MARK: - UIKit Integration Example
+class SampleExpenseHostingController: UIViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Create SwiftUI ContentView
+        let contentView = ContentView()
+            .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
+        
+        // Wrap in UIHostingController for UIKit integration
+        let hostingController = UIHostingController(rootView: contentView)
+        
+        // Add as child view controller
+        addChild(hostingController)
+        view.addSubview(hostingController.view)
+        hostingController.didMove(toParent: self)
+        
+        // Setup constraints
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            hostingController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+}
+
+// MARK: - Custom Expense Data Example
+struct CustomExpenseExample {
+    static func createSampleExpenses() -> [ExpenseItem] {
+        return [
+            ExpenseItem(
+                name: "Business Lunch",
+                price: 45.99,
+                description: "Team lunch at downtown restaurant",
+                date: Date(),
+                time: Date(),
+                currency: "USD"
+            ),
+            ExpenseItem(
+                name: "Office Supplies",
+                price: 23.50,
+                description: "Notebooks, pens, and sticky notes",
+                date: Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date(),
+                time: Date(),
+                currency: "USD"
+            ),
+            ExpenseItem(
+                name: "Transportation",
+                price: 12.75,
+                description: "Uber ride to client meeting",
+                date: Calendar.current.date(byAdding: .day, value: -2, to: Date()) ?? Date(),
+                time: Date(),
+                currency: "USD"
+            )
+        ]
+    }
+}
+
+// MARK: - Legacy UIKit Implementation (for reference)
 class SampleExpenseListViewController: UIViewController {
     
     // MARK: - Properties

@@ -1,17 +1,42 @@
-# iOS Expense Detail Screen Implementation
+# iOS Expense App Implementation
 
-This implementation provides a complete iOS expense detail screen based on the design document specifications. The code follows iOS design principles, accessibility guidelines, and best practices.
+This implementation provides a complete iOS expense tracking app with both SwiftUI and UIKit implementations. The code follows iOS design principles, accessibility guidelines, and best practices outlined in the iOS Design Document.
 
 ## Files Overview
 
 ### Core Implementation Files
 
-1. **`ExpenseDetailViewController.swift`** - Main view controller implementing the expense detail screen
-2. **`ExpenseDesignSystem.swift`** - Design system with colors, fonts, spacing, and layout constants
-3. **`Localizable.strings`** - Localization strings for internationalization support
-4. **`SampleUsage.swift`** - Example implementation showing how to integrate the expense detail screen
+1. **`ContentView.swift`** - Main SwiftUI home page with expense list and detail views
+2. **`ExpenseDetailViewController.swift`** - UIKit view controller implementing the expense detail screen
+3. **`ExpenseDesignSystem.swift`** - Design system with colors, fonts, spacing, and layout constants
+4. **`Localizable.strings`** - Localization strings for internationalization support
+5. **`SampleUsage.swift`** - Example implementations showing both SwiftUI and UIKit integration
+6. **`iOS_Design_Document.md`** - Comprehensive design specifications and guidelines
 
-## Features Implemented
+## SwiftUI Implementation (ContentView.swift)
+
+### ✅ Home Page Features
+- **Summary Card**: Total expenses, average, today's count, and highest expense
+- **Expense List**: Scrollable list of expenses with category icons
+- **Add/Edit Functionality**: Modal presentation for adding and editing expenses
+- **Empty State**: Beautiful empty state with call-to-action
+- **Search & Filter**: Built-in list management
+- **Dark Mode Support**: Full light/dark mode compatibility
+
+### ✅ Expense Detail View (SwiftUI)
+- **Form Fields**: Name, price, description, date, and time inputs
+- **Date/Time Pickers**: Native iOS picker wheels in modal sheets
+- **Validation**: Real-time input validation and error handling
+- **Save/Update**: Proper data flow with completion handlers
+- **Responsive Design**: Adaptive layout for different screen sizes
+
+### ✅ UI Components
+- **StatItemView**: Reusable statistics display component
+- **ExpenseRowView**: Custom expense list item with category icons
+- **EmptyStateView**: Engaging empty state with illustration
+- **DatePickerView/TimePickerView**: Modal picker components
+
+## UIKit Implementation (Legacy Support)
 
 ### ✅ UI Components
 - **Header Section**: Custom navigation with back button and title
@@ -51,6 +76,81 @@ This implementation provides a complete iOS expense detail screen based on the d
 
 ```swift
 // Create and present expense detail screen
+let expenseDetailVC = ExpenseDetailViewController(expense: existingExpense) // or nil for new
+expenseDetailVC.delegate = self
+navigationController?.pushViewController(expenseDetailVC, animated: true)
+
+// Implement delegate methods
+extension YourViewController: ExpenseDetailDelegate {
+    func expenseDetailDidSave(_ expense: Expense) {
+        // Handle saved expense
+    }
+    
+    func expenseDetailDidDelete(_ expenseId: UUID) {
+        // Handle deleted expense
+    }
+}
+```
+
+## Usage Examples
+
+### SwiftUI Implementation
+
+```swift
+import SwiftUI
+
+struct MyExpenseApp: App {
+    let persistenceController = PersistenceController.shared
+    
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+        }
+    }
+}
+
+// Using ContentView in existing SwiftUI app
+struct ParentView: View {
+    var body: some View {
+        NavigationView {
+            ContentView()
+        }
+    }
+}
+
+// Custom expense creation
+let newExpense = ExpenseItem(
+    name: "Business Lunch",
+    price: 45.99,
+    description: "Team lunch meeting",
+    date: Date(),
+    time: Date(),
+    currency: "USD"
+)
+```
+
+### UIKit Integration (if needed)
+
+```swift
+// Integrate SwiftUI ContentView into UIKit app
+class MainViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let contentView = ContentView()
+            .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
+        
+        let hostingController = UIHostingController(rootView: contentView)
+        addChild(hostingController)
+        view.addSubview(hostingController.view)
+        hostingController.didMove(toParent: self)
+        
+        // Setup constraints...
+    }
+}
+
+// Legacy UIKit ExpenseDetailViewController usage
 let expenseDetailVC = ExpenseDetailViewController(expense: existingExpense) // or nil for new
 expenseDetailVC.delegate = self
 navigationController?.pushViewController(expenseDetailVC, animated: true)
