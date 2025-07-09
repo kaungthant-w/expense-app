@@ -67,53 +67,66 @@ struct ContentView: View {
     @State private var showingAddExpense = false
     @State private var selectedExpense: ExpenseItem?
     @State private var totalExpenses: Decimal = 0
+    @State private var selectedTab = 0
+    @State private var showingNavigationDrawer = false
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Color.expenseBackground
-                    .ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 0) {
-                        // Summary Card
-                        summaryCardView
+        ZStack {
+            // Main Content (equivalent to CoordinatorLayout)
+            NavigationView {
+                VStack(spacing: 0) {
+                    // Main Content with proper layout behavior
+                    VStack(spacing: 10) {
+                        // Today's Summary Card (matching Android CardView)
+                        todaySummaryCardView
                         
-                        // Expense List
-                        expenseListView
+                        // Tab Layout equivalent
+                        tabLayoutView
+                        
+                        // ViewPager equivalent with TabView
+                        viewPagerView
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 10)
+                    .padding(.horizontal, 10)
+                    .background(Color.expenseBackground)
                 }
-            }
-            .navigationTitle("Expenses")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    HStack(spacing: 8) {
-                        Image("ExpenseLogo")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 32, height: 32)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                        
-                        Text("My Expenses")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .foregroundColor(.expensePrimaryText)
+                .navigationTitle("HSU Expense")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: { showingNavigationDrawer = true }) {
+                            Image(systemName: "line.horizontal.3")
+                                .font(.title2)
+                                .foregroundColor(.white)
+                        }
                     }
                 }
+                .toolbarBackground(Color.expenseAccent, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+            
+            // Floating Action Button (equivalent to DraggableFloatingActionButton)
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
                     Button(action: { showingAddExpense = true }) {
-                        Image(systemName: "plus.circle.fill")
+                        Image(systemName: "plus")
                             .font(.title2)
-                            .foregroundColor(.expenseAccent)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.black)
+                            .frame(width: 56, height: 56)
+                            .background(Color(.systemGray5))
+                            .clipShape(Circle())
+                            .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
                     }
-                    .accessibilityLabel("Add new expense")
+                    .accessibilityLabel("Add expense")
+                    .padding(.trailing, 24)
+                    .padding(.bottom, 24)
                 }
             }
+        }
+        .sheet(isPresented: $showingNavigationDrawer) {
+            NavigationDrawerView()
         }
         .sheet(isPresented: $showingAddExpense) {
             ExpenseDetailView(expense: nil) { newExpense in
@@ -131,83 +144,110 @@ struct ContentView: View {
         }
     }
     
-    // MARK: - Summary Card View
-    private var summaryCardView: some View {
-        VStack(spacing: 16) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Total Expenses")
-                        .font(.subheadline)
+    // MARK: - Today's Summary Card View (matching Android CardView)
+    private var todaySummaryCardView: some View {
+        VStack(spacing: 0) {
+            // Card container with elevation and corner radius
+            VStack(alignment: .leading, spacing: 14) {
+                // Title
+                HStack {
+                    Text("📅 Today's Summary")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(.expensePrimaryText)
+                    Spacer()
+                }
+                .padding(.bottom, 2)
+                
+                // Total Number row
+                HStack {
+                    Text("💰Total Number:")
+                        .font(.system(size: 14))
                         .foregroundColor(.expenseSecondaryText)
-                    
-                    Text(formatCurrency(totalExpenses))
-                        .font(.title)
-                        .fontWeight(.bold)
+                    Spacer()
+                    Text("\(todayExpensesCount)")
+                        .font(.system(size: 14, weight: .bold))
                         .foregroundColor(.expensePrimaryText)
                 }
+                .padding(.bottom, 8)
                 
-                Spacer()
-                
-                VStack(alignment: .trailing, spacing: 4) {
-                    Text("This Month")
-                        .font(.caption)
+                // Total Amount row
+                HStack {
+                    Text("💵 Total Amount:")
+                        .font(.system(size: 14))
                         .foregroundColor(.expenseSecondaryText)
-                    
-                    Text("\(expenses.count) items")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .foregroundColor(.expenseAccent)
+                    Spacer()
+                    Text(formatCurrency(todayTotalAmount))
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(.expensePrimaryText)
                 }
             }
-            
-            // Quick Stats
-            HStack(spacing: 20) {
-                StatItemView(
-                    icon: "chart.line.uptrend.xyaxis",
-                    title: "Average",
-                    value: expenses.isEmpty ? "$0" : formatCurrency(totalExpenses / Decimal(expenses.count))
-                )
-                
-                Spacer()
-                
-                StatItemView(
-                    icon: "calendar",
-                    title: "Today",
-                    value: "\(todayExpensesCount)"
-                )
-                
-                Spacer()
-                
-                StatItemView(
-                    icon: "arrow.up.circle",
-                    title: "Highest",
-                    value: expenses.isEmpty ? "$0" : formatCurrency(expenses.map { $0.price }.max() ?? 0)
-                )
+            .padding(14)
+            .background(Color.expenseCardBackground)
+            .cornerRadius(10)
+            .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+        }
+        .padding(.bottom, 20)
+    }
+    
+    // MARK: - Tab Layout View (equivalent to TabLayout)
+    private var tabLayoutView: some View {
+        HStack(spacing: 0) {
+            ForEach(0..<3) { index in
+                Button(action: { selectedTab = index }) {
+                    VStack(spacing: 8) {
+                        Text(tabTitle(for: index))
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(selectedTab == index ? Color.expensePrimaryText : Color.expenseSecondaryText)
+                        
+                        // Tab indicator
+                        Rectangle()
+                            .fill(selectedTab == index ? Color.expensePrimaryText : Color.clear)
+                            .frame(height: 2)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                }
+                .buttonStyle(PlainButtonStyle())
             }
         }
-        .padding(20)
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color.expenseCardBackground)
-                .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
-        )
-        .padding(.bottom, 24)
+        .background(Color.clear)
+    }
+    
+    // MARK: - ViewPager equivalent with TabView
+    private var viewPagerView: some View {
+        TabView(selection: $selectedTab) {
+            // All Expenses Tab
+            expenseListView
+                .tag(0)
+            
+            // Today's Expenses Tab
+            todayExpenseListView
+                .tag(1)
+            
+            // Categories Tab
+            categoriesView
+                .tag(2)
+        }
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
     }
     
     // MARK: - Expense List View
     private var expenseListView: some View {
-        LazyVStack(spacing: 12) {
-            if expenses.isEmpty {
-                EmptyStateView {
-                    showingAddExpense = true
-                }
-            } else {
-                ForEach(expenses) { expense in
-                    ExpenseRowView(expense: expense) {
-                        selectedExpense = expense
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                if expenses.isEmpty {
+                    EmptyStateView {
+                        showingAddExpense = true
+                    }
+                } else {
+                    ForEach(expenses) { expense in
+                        ExpenseRowView(expense: expense) {
+                            selectedExpense = expense
+                        }
                     }
                 }
             }
+            .padding(.horizontal, 10)
         }
     }
     
@@ -218,6 +258,95 @@ struct ContentView: View {
         return expenses.filter { expense in
             expense.date >= today && expense.date < tomorrow
         }.count
+    }
+    
+    private var todayTotalAmount: Decimal {
+        let today = Calendar.current.startOfDay(for: Date())
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+        return expenses.filter { expense in
+            expense.date >= today && expense.date < tomorrow
+        }.reduce(0) { $0 + $1.price }
+    }
+    
+    private var todayExpenses: [ExpenseItem] {
+        let today = Calendar.current.startOfDay(for: Date())
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+        return expenses.filter { expense in
+            expense.date >= today && expense.date < tomorrow
+        }
+    }
+    
+    // MARK: - Tab Views
+    private var todayExpenseListView: some View {
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                if todayExpenses.isEmpty {
+                    EmptyStateView {
+                        showingAddExpense = true
+                    }
+                } else {
+                    ForEach(todayExpenses) { expense in
+                        ExpenseRowView(expense: expense) {
+                            selectedExpense = expense
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, 10)
+        }
+    }
+    
+    private var categoriesView: some View {
+        ScrollView {
+            LazyVStack(spacing: 16) {
+                ForEach(expenseCategories, id: \.category) { categoryData in
+                    CategoryRowView(
+                        category: categoryData.category,
+                        count: categoryData.count,
+                        totalAmount: categoryData.totalAmount,
+                        iconName: categoryData.iconName
+                    )
+                }
+            }
+            .padding(.horizontal, 10)
+        }
+    }
+    
+    private var expenseCategories: [(category: String, count: Int, totalAmount: Decimal, iconName: String)] {
+        let grouped = Dictionary(grouping: expenses) { expense in
+            categoryName(for: expense.name)
+        }
+        
+        return grouped.map { (category, expenses) in
+            let count = expenses.count
+            let totalAmount = expenses.reduce(0) { $0 + $1.price }
+            let iconName = categoryIconName(for: expenses.first?.name ?? "")
+            return (category: category, count: count, totalAmount: totalAmount, iconName: iconName)
+        }.sorted { $0.totalAmount > $1.totalAmount }
+    }
+    
+    private func categoryName(for expenseName: String) -> String {
+        let lowercaseName = expenseName.lowercased()
+        if lowercaseName.contains("food") || lowercaseName.contains("restaurant") || lowercaseName.contains("grocery") || lowercaseName.contains("lunch") || lowercaseName.contains("coffee") {
+            return "Food & Dining"
+        } else if lowercaseName.contains("gas") || lowercaseName.contains("fuel") || lowercaseName.contains("car") || lowercaseName.contains("transport") || lowercaseName.contains("taxi") || lowercaseName.contains("uber") {
+            return "Transportation"
+        } else if lowercaseName.contains("shop") || lowercaseName.contains("store") || lowercaseName.contains("market") || lowercaseName.contains("mall") {
+            return "Shopping"
+        } else if lowercaseName.contains("movie") || lowercaseName.contains("entertainment") {
+            return "Entertainment"
+        } else {
+            return "General"
+        }
+    }
+    
+    private func tabTitle(for index: Int) -> String {
+        switch index {
+        case 0: return "All Expenses"
+        case 1: return "Today"
+        case 2: return "Categories"
+        default: return ""
+        }
     }
     
     // MARK: - Helper Methods
@@ -286,6 +415,38 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
             .preferredColorScheme(.dark)
+    }
+}
+
+struct NavigationDrawerView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationDrawerView()
+            .preferredColorScheme(.light)
+        
+        NavigationDrawerView()
+            .preferredColorScheme(.dark)
+    }
+}
+
+struct CategoryRowView_Previews: PreviewProvider {
+    static var previews: some View {
+        CategoryRowView(
+            category: "Food & Dining",
+            count: 5,
+            totalAmount: 125.50,
+            iconName: "CategoryFood"
+        )
+        .padding()
+        .preferredColorScheme(.light)
+        
+        CategoryRowView(
+            category: "Transportation",
+            count: 3,
+            totalAmount: 85.75,
+            iconName: "CategoryTransport"
+        )
+        .padding()
+        .preferredColorScheme(.dark)
     }
 }
 
@@ -781,5 +942,147 @@ struct TimePickerView: View {
                 }
             }
         }
+    }
+}
+
+// MARK: - Navigation Drawer View (equivalent to NavigationView)
+struct NavigationDrawerView: View {
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        NavigationView {
+            VStack(alignment: .leading, spacing: 0) {
+                // Header
+                VStack(alignment: .leading, spacing: 8) {
+                    Image("ExpenseLogo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 60, height: 60)
+                        .clipShape(Circle())
+                    
+                    Text("HSU Expense")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                    
+                    Text("Expense Tracker")
+                        .font(.subheadline)
+                        .foregroundColor(.white.opacity(0.8))
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(20)
+                .background(Color.expenseAccent)
+                
+                // Menu Items
+                VStack(spacing: 0) {
+                    NavigationMenuItem(icon: "house.fill", title: "Home") {
+                        dismiss()
+                    }
+                    
+                    NavigationMenuItem(icon: "chart.bar.fill", title: "Reports") {
+                        dismiss()
+                    }
+                    
+                    NavigationMenuItem(icon: "gear", title: "Settings") {
+                        dismiss()
+                    }
+                    
+                    NavigationMenuItem(icon: "info.circle", title: "About") {
+                        dismiss()
+                    }
+                }
+                .padding(.top, 20)
+                
+                Spacer()
+            }
+            .background(Color.expenseCardBackground)
+            .navigationBarHidden(true)
+        }
+    }
+}
+
+// MARK: - Navigation Menu Item
+struct NavigationMenuItem: View {
+    let icon: String
+    let title: String
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 16) {
+                Image(systemName: icon)
+                    .font(.title3)
+                    .foregroundColor(.expenseAccent)
+                    .frame(width: 24)
+                
+                Text(title)
+                    .font(.body)
+                    .foregroundColor(.expensePrimaryText)
+                
+                Spacer()
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+// MARK: - Category Row View
+struct CategoryRowView: View {
+    let category: String
+    let count: Int
+    let totalAmount: Decimal
+    let iconName: String
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            // Category Icon
+            ZStack {
+                Circle()
+                    .fill(Color.expenseAccent.opacity(0.1))
+                    .frame(width: 48, height: 48)
+                
+                Image(iconName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(.expenseAccent)
+            }
+            
+            // Category Info
+            VStack(alignment: .leading, spacing: 4) {
+                Text(category)
+                    .font(.body)
+                    .fontWeight(.medium)
+                    .foregroundColor(.expensePrimaryText)
+                
+                Text("\(count) items")
+                    .font(.caption)
+                    .foregroundColor(.expenseSecondaryText)
+            }
+            
+            Spacer()
+            
+            // Total Amount
+            Text(formatCurrency(totalAmount))
+                .font(.body)
+                .fontWeight(.bold)
+                .foregroundColor(.expensePrimaryText)
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.expenseCardBackground)
+                .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
+        )
+    }
+    
+    private func formatCurrency(_ amount: Decimal) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "USD"
+        formatter.maximumFractionDigits = 2
+        return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "$0.00"
     }
 }
