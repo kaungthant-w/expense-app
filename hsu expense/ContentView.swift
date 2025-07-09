@@ -86,8 +86,24 @@ struct ContentView: View {
                     .padding(.top, 10)
                 }
             }
-            .navigationTitle("💰 Expenses")
+            .navigationTitle("Expenses")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    HStack(spacing: 8) {
+                        Image("ExpenseLogo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 32, height: 32)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        
+                        Text("My Expenses")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(.expensePrimaryText)
+                    }
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { showingAddExpense = true }) {
@@ -337,8 +353,11 @@ struct ExpenseRowView: View {
                         .fill(Color.expenseAccent.opacity(0.1))
                         .frame(width: 48, height: 48)
                     
-                    Text(categoryIcon(for: expense.name))
-                        .font(.title2)
+                    Image(categoryIconName(for: expense.name))
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(.expenseAccent)
                 }
                 
                 // Expense Details
@@ -395,20 +414,17 @@ struct ExpenseRowView: View {
         .buttonStyle(PlainButtonStyle())
     }
     
-    private func categoryIcon(for name: String) -> String {
+    private func categoryIconName(for name: String) -> String {
         let lowercaseName = name.lowercased()
-        if lowercaseName.contains("food") || lowercaseName.contains("restaurant") || lowercaseName.contains("grocery") {
-            return "🍽️"
-        } else if lowercaseName.contains("gas") || lowercaseName.contains("fuel") || lowercaseName.contains("car") {
-            return "⛽"
-        } else if lowercaseName.contains("coffee") || lowercaseName.contains("drink") {
-            return "☕"
-        } else if lowercaseName.contains("movie") || lowercaseName.contains("entertainment") {
-            return "🎬"
-        } else if lowercaseName.contains("shop") || lowercaseName.contains("store") {
-            return "🛍️"
+        if lowercaseName.contains("food") || lowercaseName.contains("restaurant") || lowercaseName.contains("grocery") || lowercaseName.contains("lunch") || lowercaseName.contains("coffee") {
+            return "CategoryFood"
+        } else if lowercaseName.contains("gas") || lowercaseName.contains("fuel") || lowercaseName.contains("car") || lowercaseName.contains("transport") || lowercaseName.contains("taxi") || lowercaseName.contains("uber") {
+            return "CategoryTransport"
+        } else if lowercaseName.contains("shop") || lowercaseName.contains("store") || lowercaseName.contains("market") || lowercaseName.contains("mall") {
+            return "CategoryShopping"
         } else {
-            return "💼"
+            // Default to system icon for general expenses
+            return "ExpenseIcon"
         }
     }
 }
@@ -420,9 +436,12 @@ struct EmptyStateView: View {
     var body: some View {
         VStack(spacing: 24) {
             VStack(spacing: 16) {
-                Image(systemName: "receipt")
-                    .font(.system(size: 64))
+                Image("ExpenseIcon")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 80, height: 80)
                     .foregroundColor(.expenseSecondaryText)
+                    .opacity(0.6)
                 
                 VStack(spacing: 8) {
                     Text("No Expenses Yet")
@@ -491,9 +510,14 @@ struct ExpenseDetailView: View {
                     VStack(spacing: 20) {
                         // Name Field
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("💼 Name")
-                                .font(.caption)
-                                .foregroundColor(.expenseSecondaryText)
+                            HStack(spacing: 8) {
+                                Image(systemName: "tag.fill")
+                                    .font(.caption)
+                                    .foregroundColor(.expenseAccent)
+                                Text("Name")
+                                    .font(.caption)
+                                    .foregroundColor(.expenseSecondaryText)
+                            }
                             
                             TextField("Enter expense name", text: $expense.name)
                                 .font(.body)
@@ -505,9 +529,14 @@ struct ExpenseDetailView: View {
                         
                         // Price Field
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("💵 Price")
-                                .font(.caption)
-                                .foregroundColor(.expenseSecondaryText)
+                            HStack(spacing: 8) {
+                                Image(systemName: "dollarsign.circle.fill")
+                                    .font(.caption)
+                                    .foregroundColor(.expenseAccent)
+                                Text("Price")
+                                    .font(.caption)
+                                    .foregroundColor(.expenseSecondaryText)
+                            }
                             
                             HStack {
                                 TextField("0.00", value: Binding(
@@ -530,9 +559,14 @@ struct ExpenseDetailView: View {
                         
                         // Description Field
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("📝 Description")
-                                .font(.caption)
-                                .foregroundColor(.expenseSecondaryText)
+                            HStack(spacing: 8) {
+                                Image(systemName: "note.text")
+                                    .font(.caption)
+                                    .foregroundColor(.expenseAccent)
+                                Text("Description")
+                                    .font(.caption)
+                                    .foregroundColor(.expenseSecondaryText)
+                            }
                             
                             TextField("Enter description (optional)", text: $expense.description, axis: .vertical)
                                 .font(.body)
@@ -546,9 +580,14 @@ struct ExpenseDetailView: View {
                         HStack(spacing: 12) {
                             // Date Field
                             VStack(alignment: .leading, spacing: 8) {
-                                Text("📅 Date")
-                                    .font(.caption)
-                                    .foregroundColor(.expenseSecondaryText)
+                                HStack(spacing: 8) {
+                                    Image(systemName: "calendar")
+                                        .font(.caption)
+                                        .foregroundColor(.expenseAccent)
+                                    Text("Date")
+                                        .font(.caption)
+                                        .foregroundColor(.expenseSecondaryText)
+                                }
                                 
                                 Button(action: { showingDatePicker = true }) {
                                     Text(expense.formattedDate)
@@ -564,9 +603,14 @@ struct ExpenseDetailView: View {
                             
                             // Time Field
                             VStack(alignment: .leading, spacing: 8) {
-                                Text("🕐 Time")
-                                    .font(.caption)
-                                    .foregroundColor(.expenseSecondaryText)
+                                HStack(spacing: 8) {
+                                    Image(systemName: "clock")
+                                        .font(.caption)
+                                        .foregroundColor(.expenseAccent)
+                                    Text("Time")
+                                        .font(.caption)
+                                        .foregroundColor(.expenseSecondaryText)
+                                }
                                 
                                 Button(action: { showingTimePicker = true }) {
                                     Text(expense.formattedTime)
@@ -596,7 +640,7 @@ struct ExpenseDetailView: View {
                                 Image(systemName: "checkmark.circle.fill")
                                     .font(.body)
                                 
-                                Text(isNewExpense ? "💾 Save" : "💾 Update")
+                                Text(isNewExpense ? "Save" : "Update")
                                     .font(.body)
                                     .fontWeight(.bold)
                             }
@@ -620,7 +664,7 @@ struct ExpenseDetailView: View {
                                     Image(systemName: "trash.fill")
                                         .font(.body)
                                     
-                                    Text("🗑️ Delete")
+                                    Text("Delete")
                                         .font(.body)
                                         .fontWeight(.bold)
                                 }
