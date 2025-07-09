@@ -63,6 +63,31 @@ extension Color {
     static let expenseCardBorder = Color(red: 224/255, green: 224/255, blue: 224/255) // #FFE0E0E0
 }
 
+// MARK: - Safe Image View (handles asset loading with fallbacks)
+struct SafeImage: View {
+    let imageName: String
+    let systemFallback: String
+    let width: CGFloat
+    let height: CGFloat
+    
+    var body: some View {
+        ZStack {
+            // Try to load the custom image first
+            if let uiImage = UIImage(named: imageName) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: width, height: height)
+            } else {
+                // Fallback to system image
+                Image(systemName: systemFallback)
+                    .font(.system(size: min(width, height) * 0.6))
+                    .frame(width: width, height: height)
+            }
+        }
+    }
+}
+
 // MARK: - Main Content View
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -144,6 +169,7 @@ struct ContentView: View {
         .onAppear {
             loadSampleData()
             calculateTotal()
+            debugTabData() // Debug information - can be removed later
         }
     }
     
@@ -275,8 +301,16 @@ struct ContentView: View {
     // This week's expenses
     private var thisWeekExpenses: [ExpenseItem] {
         let calendar = Calendar.current
-        let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: Date())?.start ?? Date()
-        let endOfWeek = calendar.dateInterval(of: .weekOfYear, for: Date())?.end ?? Date()
+        let today = Date()
+        
+        // Get the start of this week (Sunday or Monday depending on locale)
+        guard let weekInterval = calendar.dateInterval(of: .weekOfYear, for: today) else {
+            return []
+        }
+        
+        let startOfWeek = weekInterval.start
+        let endOfWeek = weekInterval.end
+        
         return expenses.filter { expense in
             expense.date >= startOfWeek && expense.date < endOfWeek
         }.sorted { $0.date > $1.date }
@@ -285,8 +319,16 @@ struct ContentView: View {
     // This month's expenses
     private var thisMonthExpenses: [ExpenseItem] {
         let calendar = Calendar.current
-        let startOfMonth = calendar.dateInterval(of: .month, for: Date())?.start ?? Date()
-        let endOfMonth = calendar.dateInterval(of: .month, for: Date())?.end ?? Date()
+        let today = Date()
+        
+        // Get the start of this month
+        guard let monthInterval = calendar.dateInterval(of: .month, for: today) else {
+            return []
+        }
+        
+        let startOfMonth = monthInterval.start
+        let endOfMonth = monthInterval.end
+        
         return expenses.filter { expense in
             expense.date >= startOfMonth && expense.date < endOfMonth
         }.sorted { $0.date > $1.date }
@@ -449,26 +491,30 @@ struct ContentView: View {
         
         // Sample data for demonstration with various time periods
         expenses = [
-            // Today's expenses
+            // Today's expenses (2 items)
             ExpenseItem(name: "Grocery Shopping", price: 85.50, description: "Weekly groceries from supermarket", date: now, time: now),
             ExpenseItem(name: "Coffee Shop", price: 5.50, description: "Morning coffee", date: now, time: calendar.date(byAdding: .hour, value: -2, to: now) ?? now),
             
-            // Yesterday's expenses
-            ExpenseItem(name: "Gas Station", price: 45.00, description: "Fuel for car", date: calendar.date(byAdding: .day, value: -1, to: now) ?? now, time: now),
-            ExpenseItem(name: "Restaurant Lunch", price: 28.75, description: "Lunch with colleagues", date: calendar.date(byAdding: .day, value: -1, to: now) ?? now, time: now),
+            // Yesterday's expenses (will be in THIS WEEK but not TODAY)
+            ExpenseItem(name: "Gas Station", price: 45.00, description: "Fuel for car", date: calendar.date(byAdding: .day, value: -1, to: now) ?? now, time: calendar.date(byAdding: .day, value: -1, to: now) ?? now),
+            ExpenseItem(name: "Restaurant Lunch", price: 28.75, description: "Lunch with colleagues", date: calendar.date(byAdding: .day, value: -1, to: now) ?? now, time: calendar.date(byAdding: .day, value: -1, to: now) ?? now),
             
-            // This week's expenses
-            ExpenseItem(name: "Movie Tickets", price: 24.00, description: "Cinema tickets for two", date: calendar.date(byAdding: .day, value: -3, to: now) ?? now, time: now),
-            ExpenseItem(name: "Shopping Mall", price: 120.00, description: "Clothes shopping", date: calendar.date(byAdding: .day, value: -4, to: now) ?? now, time: now),
+            // Earlier this week (will be in THIS WEEK and THIS MONTH but not TODAY)
+            ExpenseItem(name: "Movie Tickets", price: 24.00, description: "Cinema tickets for two", date: calendar.date(byAdding: .day, value: -2, to: now) ?? now, time: calendar.date(byAdding: .day, value: -2, to: now) ?? now),
+            ExpenseItem(name: "Shopping Mall", price: 120.00, description: "Clothes shopping", date: calendar.date(byAdding: .day, value: -3, to: now) ?? now, time: calendar.date(byAdding: .day, value: -3, to: now) ?? now),
             
-            // This month's expenses
-            ExpenseItem(name: "Utility Bills", price: 150.00, description: "Electricity and water", date: calendar.date(byAdding: .day, value: -10, to: now) ?? now, time: now),
-            ExpenseItem(name: "Internet Bill", price: 55.00, description: "Monthly internet", date: calendar.date(byAdding: .day, value: -15, to: now) ?? now, time: now),
+            // Earlier this month (will be in THIS MONTH and ALL but not THIS WEEK or TODAY)
+            ExpenseItem(name: "Utility Bills", price: 150.00, description: "Electricity and water", date: calendar.date(byAdding: .day, value: -10, to: now) ?? now, time: calendar.date(byAdding: .day, value: -10, to: now) ?? now),
+            ExpenseItem(name: "Internet Bill", price: 55.00, description: "Monthly internet", date: calendar.date(byAdding: .day, value: -15, to: now) ?? now, time: calendar.date(byAdding: .day, value: -15, to: now) ?? now),
+            ExpenseItem(name: "Phone Bill", price: 75.00, description: "Monthly phone bill", date: calendar.date(byAdding: .day, value: -20, to: now) ?? now, time: calendar.date(byAdding: .day, value: -20, to: now) ?? now),
             
-            // Older expenses (for 3-year data)
-            ExpenseItem(name: "Car Service", price: 200.00, description: "Annual car maintenance", date: calendar.date(byAdding: .month, value: -6, to: now) ?? now, time: now),
-            ExpenseItem(name: "Insurance Premium", price: 300.00, description: "Health insurance", date: calendar.date(byAdding: .year, value: -1, to: now) ?? now, time: now),
-            ExpenseItem(name: "Home Repair", price: 450.00, description: "Roof maintenance", date: calendar.date(byAdding: .year, value: -2, to: now) ?? now, time: now)
+            // Previous months (will be in ALL only)
+            ExpenseItem(name: "Car Service", price: 200.00, description: "Annual car maintenance", date: calendar.date(byAdding: .month, value: -2, to: now) ?? now, time: calendar.date(byAdding: .month, value: -2, to: now) ?? now),
+            ExpenseItem(name: "Medical Checkup", price: 125.00, description: "Annual health checkup", date: calendar.date(byAdding: .month, value: -4, to: now) ?? now, time: calendar.date(byAdding: .month, value: -4, to: now) ?? now),
+            
+            // Previous years (will be in ALL only if within 3 years)
+            ExpenseItem(name: "Insurance Premium", price: 300.00, description: "Health insurance", date: calendar.date(byAdding: .year, value: -1, to: now) ?? now, time: calendar.date(byAdding: .year, value: -1, to: now) ?? now),
+            ExpenseItem(name: "Home Repair", price: 450.00, description: "Roof maintenance", date: calendar.date(byAdding: .year, value: -2, to: now) ?? now, time: calendar.date(byAdding: .year, value: -2, to: now) ?? now)
         ]
         calculateTotal()
     }
@@ -476,6 +522,36 @@ struct ContentView: View {
     private func categoryIconName(for name: String) -> String {
         // Always return ExpenseIcon for all categories
         return "ExpenseIcon"
+    }
+    
+    // MARK: - Debug Helper (for testing - can be removed later)
+    private func debugTabData() {
+        print("=== TAB DATA DEBUG ===")
+        print("Total expenses: \(expenses.count)")
+        print("Today expenses: \(todayExpenses.count)")
+        print("This week expenses: \(thisWeekExpenses.count)")
+        print("This month expenses: \(thisMonthExpenses.count)")
+        print("All expenses (3 years): \(allExpenses.count)")
+        
+        let calendar = Calendar.current
+        let today = Date()
+        
+        if let weekInterval = calendar.dateInterval(of: .weekOfYear, for: today) {
+            print("Week range: \(weekInterval.start) to \(weekInterval.end)")
+        }
+        
+        if let monthInterval = calendar.dateInterval(of: .month, for: today) {
+            print("Month range: \(monthInterval.start) to \(monthInterval.end)")
+        }
+        
+        print("Today's date: \(today)")
+        
+        // Print each expense with its date for debugging
+        print("\n--- Expense Details ---")
+        for (index, expense) in expenses.enumerated() {
+            print("\(index + 1). \(expense.name) - \(expense.formattedDate)")
+        }
+        print("====================")
     }
 }
 
@@ -515,7 +591,7 @@ struct CategoryRowView_Previews: PreviewProvider {
             category: "Food & Dining",
             count: 5,
             totalAmount: 125.50,
-            iconName: "CategoryFood"
+            iconName: "ExpenseIcon"
         )
         .padding()
         .preferredColorScheme(.light)
@@ -524,7 +600,7 @@ struct CategoryRowView_Previews: PreviewProvider {
             category: "Transportation",
             count: 3,
             totalAmount: 85.75,
-            iconName: "CategoryTransport"
+            iconName: "ExpenseIcon"
         )
         .padding()
         .preferredColorScheme(.dark)
@@ -596,11 +672,13 @@ struct ExpenseRowView: View {
                             .fill(Color.expenseAccent.opacity(0.1))
                             .frame(width: 48, height: 48)
                         
-                        Image(categoryIconName(for: expense.name))
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(.expenseAccent)
+                        SafeImage(
+                            imageName: categoryIconName(for: expense.name),
+                            systemFallback: "dollarsign.circle",
+                            width: 24,
+                            height: 24
+                        )
+                        .foregroundColor(.expenseAccent)
                     }
                     
                     // Expense Details (Name and Description)
@@ -689,10 +767,9 @@ struct EmptyStateView: View {
     var body: some View {
         VStack(spacing: 24) {
             VStack(spacing: 16) {
-                Image("ExpenseIcon")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 80, height: 80)
+                // Use a system image as the primary icon for better reliability
+                Image(systemName: "dollarsign.circle")
+                    .font(.system(size: 80))
                     .foregroundColor(.expenseSecondaryText)
                     .opacity(0.6)
                 
@@ -1046,11 +1123,14 @@ struct NavigationDrawerView: View {
             VStack(alignment: .leading, spacing: 0) {
                 // Header
                 VStack(alignment: .leading, spacing: 8) {
-                    Image("ExpenseLogo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 60, height: 60)
-                        .clipShape(Circle())
+                    SafeImage(
+                        imageName: "ExpenseLogo",
+                        systemFallback: "dollarsign.circle.fill",
+                        width: 60,
+                        height: 60
+                    )
+                    .clipShape(Circle())
+                    .foregroundColor(.white)
                     
                     Text("HSU Expense")
                         .font(.title2)
@@ -1135,11 +1215,13 @@ struct CategoryRowView: View {
                     .fill(Color.expenseAccent.opacity(0.1))
                     .frame(width: 48, height: 48)
                 
-                Image(iconName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(.expenseAccent)
+                SafeImage(
+                    imageName: iconName,
+                    systemFallback: "tag.circle",
+                    width: 24,
+                    height: 24
+                )
+                .foregroundColor(.expenseAccent)
             }
             
             // Category Info
@@ -1178,3 +1260,5 @@ struct CategoryRowView: View {
         return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "$0.00"
     }
 }
+
+
