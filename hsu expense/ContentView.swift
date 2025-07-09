@@ -160,7 +160,7 @@ struct ContentView: View {
                 
                 // Total Number row
                 HStack {
-                    Text("💰Total Number:")
+                    Text("Total Number:")
                         .font(.system(size: 14))
                         .foregroundColor(.expenseSecondaryText)
                     Spacer()
@@ -172,7 +172,7 @@ struct ContentView: View {
                 
                 // Total Amount row
                 HStack {
-                    Text("💵 Total Amount:")
+                    Text("Total Amount:")
                         .font(.system(size: 14))
                         .foregroundColor(.expenseSecondaryText)
                     Spacer()
@@ -342,9 +342,10 @@ struct ContentView: View {
     
     private func tabTitle(for index: Int) -> String {
         switch index {
-        case 0: return "All Expenses"
-        case 1: return "Today"
-        case 2: return "Categories"
+        case 0: return "ALL"
+        case 1: return "TODAY"
+        case 2: return "THIS WEEK"
+        case 3: return "THIS MONTH"
         default: return ""
         }
     }
@@ -395,6 +396,19 @@ struct ContentView: View {
             ExpenseItem(name: "Movie Tickets", price: 24.00, description: "Cinema tickets for two", date: Calendar.current.date(byAdding: .day, value: -3, to: Date()) ?? Date(), time: Date())
         ]
         calculateTotal()
+    }
+    
+    private func categoryIconName(for name: String) -> String {
+        let lowercaseName = name.lowercased()
+        if lowercaseName.contains("food") || lowercaseName.contains("restaurant") || lowercaseName.contains("grocery") || lowercaseName.contains("lunch") || lowercaseName.contains("coffee") {
+            return "CategoryFood"
+        } else if lowercaseName.contains("gas") || lowercaseName.contains("fuel") || lowercaseName.contains("car") || lowercaseName.contains("transport") || lowercaseName.contains("taxi") || lowercaseName.contains("uber") {
+            return "CategoryTransport"
+        } else if lowercaseName.contains("shop") || lowercaseName.contains("store") || lowercaseName.contains("market") || lowercaseName.contains("mall") {
+            return "CategoryShopping"
+        } else {
+            return "ExpenseIcon"
+        }
     }
 }
 
