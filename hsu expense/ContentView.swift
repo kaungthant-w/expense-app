@@ -12,12 +12,8 @@ import CoreData
 struct ExpenseItem: Identifiable {
     let id: UUID
     var name: String
-    var price: D        ]
-        calculateTotal()
-    }
-}
-
-// MARK: - Supporting Viewsr description: String
+    var price: Decimal
+    var description: String
     var date: Date
     var time: Date
     var currency: String
