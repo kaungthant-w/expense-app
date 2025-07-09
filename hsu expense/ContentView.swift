@@ -474,16 +474,8 @@ struct ContentView: View {
     }
     
     private func categoryIconName(for name: String) -> String {
-        let lowercaseName = name.lowercased()
-        if lowercaseName.contains("food") || lowercaseName.contains("restaurant") || lowercaseName.contains("grocery") || lowercaseName.contains("lunch") || lowercaseName.contains("coffee") {
-            return "CategoryFood"
-        } else if lowercaseName.contains("gas") || lowercaseName.contains("fuel") || lowercaseName.contains("car") || lowercaseName.contains("transport") || lowercaseName.contains("taxi") || lowercaseName.contains("uber") {
-            return "CategoryTransport"
-        } else if lowercaseName.contains("shop") || lowercaseName.contains("store") || lowercaseName.contains("market") || lowercaseName.contains("mall") {
-            return "CategoryShopping"
-        } else {
-            return "ExpenseIcon"
-        }
+        // Always return ExpenseIcon for all categories
+        return "ExpenseIcon"
     }
 }
 
@@ -685,17 +677,8 @@ struct ExpenseRowView: View {
     }
     
     private func categoryIconName(for name: String) -> String {
-        let lowercaseName = name.lowercased()
-        if lowercaseName.contains("food") || lowercaseName.contains("restaurant") || lowercaseName.contains("grocery") || lowercaseName.contains("lunch") || lowercaseName.contains("coffee") {
-            return "CategoryFood"
-        } else if lowercaseName.contains("gas") || lowercaseName.contains("fuel") || lowercaseName.contains("car") || lowercaseName.contains("transport") || lowercaseName.contains("taxi") || lowercaseName.contains("uber") {
-            return "CategoryTransport"
-        } else if lowercaseName.contains("shop") || lowercaseName.contains("store") || lowercaseName.contains("market") || lowercaseName.contains("mall") {
-            return "CategoryShopping"
-        } else {
-            // Default to system icon for general expenses
-            return "ExpenseIcon"
-        }
+        // Always return ExpenseIcon for all categories
+        return "ExpenseIcon"
     }
 }
 
