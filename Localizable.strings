@@ -1,0 +1,43 @@
+/* Localizable.strings */
+
+/* Screen Titles */
+"expense_detail_title" = "Expense Details";
+"add_expense_title" = "Add Expense";
+"edit_expense_title" = "Edit Expense";
+
+/* Form Labels */
+"name_label" = "💼 Name";
+"price_label" = "💵 Price";
+"description_label" = "📝 Description";
+"date_label" = "📅 Date";
+"time_label" = "🕐 Time";
+
+/* Buttons */
+"save_button" = "💾 Save";
+"delete_button" = "🗑️ Delete";
+"done_button" = "Done";
+"cancel_button" = "Cancel";
+
+/* Alerts */
+"delete_expense_title" = "Delete Expense";
+"delete_expense_message" = "Are you sure you want to delete this expense?";
+
+/* Validation Messages */
+"validation_name_required" = "Please enter a name for this expense";
+"validation_price_required" = "Please enter a valid price";
+"validation_price_format" = "Please enter a valid price format";
+
+/* Accessibility Labels */
+"accessibility_expense_name" = "Expense name";
+"accessibility_expense_price" = "Expense price";
+"accessibility_expense_description" = "Expense description";
+"accessibility_expense_date" = "Expense date";
+"accessibility_expense_time" = "Expense time";
+"accessibility_save_expense" = "Save expense";
+"accessibility_delete_expense" = "Delete expense";
+"accessibility_back_button" = "Go back";
+
+/* Placeholders */
+"placeholder_name" = "Enter expense name";
+"placeholder_price" = "0.00";
+"placeholder_description" = "Enter description (optional)";
