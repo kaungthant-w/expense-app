@@ -55,9 +55,12 @@ extension Color {
     static let expenseCardBackground = Color(.secondarySystemBackground)
     static let expensePrimaryText = Color(.label)
     static let expenseSecondaryText = Color(.secondaryLabel)
-    static let expenseAccent = Color(.systemBlue)
-    static let expenseError = Color(.systemRed)
+    static let expenseAccent = Color(red: 76/255, green: 175/255, blue: 80/255) // #FF4CAF50
+    static let expenseError = Color(red: 244/255, green: 67/255, blue: 54/255) // #FFF44336
+    static let expenseEdit = Color(red: 33/255, green: 150/255, blue: 243/255) // #FF2196F3
     static let expenseInputBackground = Color(.tertiarySystemBackground)
+    static let expenseSurface = Color(red: 245/255, green: 245/255, blue: 245/255) // #FFF5F5F5
+    static let expenseCardBorder = Color(red: 224/255, green: 224/255, blue: 224/255) // #FFE0E0E0
 }
 
 // MARK: - Main Content View
@@ -113,9 +116,9 @@ struct ContentView: View {
                         Image(systemName: "plus")
                             .font(.title2)
                             .fontWeight(.semibold)
-                            .foregroundColor(.black)
+                            .foregroundColor(.white)
                             .frame(width: 56, height: 56)
-                            .background(Color(.systemGray5))
+                            .background(Color.expenseAccent)
                             .clipShape(Circle())
                             .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
                     }
@@ -192,7 +195,7 @@ struct ContentView: View {
     // MARK: - Tab Layout View (equivalent to TabLayout)
     private var tabLayoutView: some View {
         HStack(spacing: 0) {
-            ForEach(0..<3) { index in
+            ForEach(0..<4) { index in
                 Button(action: { selectedTab = index }) {
                     VStack(spacing: 8) {
                         Text(tabTitle(for: index))
@@ -201,7 +204,7 @@ struct ContentView: View {
                         
                         // Tab indicator
                         Rectangle()
-                            .fill(selectedTab == index ? Color.expensePrimaryText : Color.clear)
+                            .fill(selectedTab == index ? Color.expenseAccent : Color.clear)
                             .frame(height: 2)
                     }
                     .frame(maxWidth: .infinity)
@@ -216,41 +219,26 @@ struct ContentView: View {
     // MARK: - ViewPager equivalent with TabView
     private var viewPagerView: some View {
         TabView(selection: $selectedTab) {
-            // All Expenses Tab
-            expenseListView
+            // All Expenses Tab (3 years of data)
+            allExpenseListView
                 .tag(0)
             
             // Today's Expenses Tab
             todayExpenseListView
                 .tag(1)
             
-            // Categories Tab
-            categoriesView
+            // This Week's Expenses Tab
+            thisWeekExpenseListView
                 .tag(2)
+            
+            // This Month's Expenses Tab
+            thisMonthExpenseListView
+                .tag(3)
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
     }
     
-    // MARK: - Expense List View
-    private var expenseListView: some View {
-        ScrollView {
-            LazyVStack(spacing: 12) {
-                if expenses.isEmpty {
-                    EmptyStateView {
-                        showingAddExpense = true
-                    }
-                } else {
-                    ForEach(expenses) { expense in
-                        ExpenseRowView(expense: expense) {
-                            selectedExpense = expense
-                        }
-                    }
-                }
-            }
-            .padding(.horizontal, 10)
-        }
-    }
-    
+
     // MARK: - Helper Properties
     private var todayExpensesCount: Int {
         let today = Calendar.current.startOfDay(for: Date())
@@ -273,10 +261,57 @@ struct ContentView: View {
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
         return expenses.filter { expense in
             expense.date >= today && expense.date < tomorrow
-        }
+        }.sorted { $0.date > $1.date }
+    }
+    
+    // Three years of data for ALL tab
+    private var allExpenses: [ExpenseItem] {
+        let threeYearsAgo = Calendar.current.date(byAdding: .year, value: -3, to: Date()) ?? Date()
+        return expenses.filter { expense in
+            expense.date >= threeYearsAgo
+        }.sorted { $0.date > $1.date }
+    }
+    
+    // This week's expenses
+    private var thisWeekExpenses: [ExpenseItem] {
+        let calendar = Calendar.current
+        let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: Date())?.start ?? Date()
+        let endOfWeek = calendar.dateInterval(of: .weekOfYear, for: Date())?.end ?? Date()
+        return expenses.filter { expense in
+            expense.date >= startOfWeek && expense.date < endOfWeek
+        }.sorted { $0.date > $1.date }
+    }
+    
+    // This month's expenses
+    private var thisMonthExpenses: [ExpenseItem] {
+        let calendar = Calendar.current
+        let startOfMonth = calendar.dateInterval(of: .month, for: Date())?.start ?? Date()
+        let endOfMonth = calendar.dateInterval(of: .month, for: Date())?.end ?? Date()
+        return expenses.filter { expense in
+            expense.date >= startOfMonth && expense.date < endOfMonth
+        }.sorted { $0.date > $1.date }
     }
     
     // MARK: - Tab Views
+    private var allExpenseListView: some View {
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                if allExpenses.isEmpty {
+                    EmptyStateView {
+                        showingAddExpense = true
+                    }
+                } else {
+                    ForEach(allExpenses) { expense in
+                        ExpenseRowView(expense: expense) {
+                            selectedExpense = expense
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, 10)
+        }
+    }
+    
     private var todayExpenseListView: some View {
         ScrollView {
             LazyVStack(spacing: 12) {
@@ -296,16 +331,38 @@ struct ContentView: View {
         }
     }
     
-    private var categoriesView: some View {
+    private var thisWeekExpenseListView: some View {
         ScrollView {
-            LazyVStack(spacing: 16) {
-                ForEach(expenseCategories, id: \.category) { categoryData in
-                    CategoryRowView(
-                        category: categoryData.category,
-                        count: categoryData.count,
-                        totalAmount: categoryData.totalAmount,
-                        iconName: categoryData.iconName
-                    )
+            LazyVStack(spacing: 12) {
+                if thisWeekExpenses.isEmpty {
+                    EmptyStateView {
+                        showingAddExpense = true
+                    }
+                } else {
+                    ForEach(thisWeekExpenses) { expense in
+                        ExpenseRowView(expense: expense) {
+                            selectedExpense = expense
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, 10)
+        }
+    }
+    
+    private var thisMonthExpenseListView: some View {
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                if thisMonthExpenses.isEmpty {
+                    EmptyStateView {
+                        showingAddExpense = true
+                    }
+                } else {
+                    ForEach(thisMonthExpenses) { expense in
+                        ExpenseRowView(expense: expense) {
+                            selectedExpense = expense
+                        }
+                    }
                 }
             }
             .padding(.horizontal, 10)
@@ -387,13 +444,31 @@ struct ContentView: View {
     }
     
     private func loadSampleData() {
-        // Sample data for demonstration
+        let calendar = Calendar.current
+        let now = Date()
+        
+        // Sample data for demonstration with various time periods
         expenses = [
-            ExpenseItem(name: "Grocery Shopping", price: 85.50, description: "Weekly groceries from supermarket", date: Date(), time: Date()),
-            ExpenseItem(name: "Gas Station", price: 45.00, description: "Fuel for car", date: Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date(), time: Date()),
-            ExpenseItem(name: "Restaurant Lunch", price: 28.75, description: "Lunch with colleagues", date: Calendar.current.date(byAdding: .day, value: -2, to: Date()) ?? Date(), time: Date()),
-            ExpenseItem(name: "Coffee Shop", price: 5.50, description: "Morning coffee", date: Date(), time: Date()),
-            ExpenseItem(name: "Movie Tickets", price: 24.00, description: "Cinema tickets for two", date: Calendar.current.date(byAdding: .day, value: -3, to: Date()) ?? Date(), time: Date())
+            // Today's expenses
+            ExpenseItem(name: "Grocery Shopping", price: 85.50, description: "Weekly groceries from supermarket", date: now, time: now),
+            ExpenseItem(name: "Coffee Shop", price: 5.50, description: "Morning coffee", date: now, time: calendar.date(byAdding: .hour, value: -2, to: now) ?? now),
+            
+            // Yesterday's expenses
+            ExpenseItem(name: "Gas Station", price: 45.00, description: "Fuel for car", date: calendar.date(byAdding: .day, value: -1, to: now) ?? now, time: now),
+            ExpenseItem(name: "Restaurant Lunch", price: 28.75, description: "Lunch with colleagues", date: calendar.date(byAdding: .day, value: -1, to: now) ?? now, time: now),
+            
+            // This week's expenses
+            ExpenseItem(name: "Movie Tickets", price: 24.00, description: "Cinema tickets for two", date: calendar.date(byAdding: .day, value: -3, to: now) ?? now, time: now),
+            ExpenseItem(name: "Shopping Mall", price: 120.00, description: "Clothes shopping", date: calendar.date(byAdding: .day, value: -4, to: now) ?? now, time: now),
+            
+            // This month's expenses
+            ExpenseItem(name: "Utility Bills", price: 150.00, description: "Electricity and water", date: calendar.date(byAdding: .day, value: -10, to: now) ?? now, time: now),
+            ExpenseItem(name: "Internet Bill", price: 55.00, description: "Monthly internet", date: calendar.date(byAdding: .day, value: -15, to: now) ?? now, time: now),
+            
+            // Older expenses (for 3-year data)
+            ExpenseItem(name: "Car Service", price: 200.00, description: "Annual car maintenance", date: calendar.date(byAdding: .month, value: -6, to: now) ?? now, time: now),
+            ExpenseItem(name: "Insurance Premium", price: 300.00, description: "Health insurance", date: calendar.date(byAdding: .year, value: -1, to: now) ?? now, time: now),
+            ExpenseItem(name: "Home Repair", price: 450.00, description: "Roof maintenance", date: calendar.date(byAdding: .year, value: -2, to: now) ?? now, time: now)
         ]
         calculateTotal()
     }
@@ -521,69 +596,89 @@ struct ExpenseRowView: View {
     
     var body: some View {
         Button(action: onTap) {
-            HStack(spacing: 16) {
-                // Category Icon
-                ZStack {
-                    Circle()
-                        .fill(Color.expenseAccent.opacity(0.1))
-                        .frame(width: 48, height: 48)
-                    
-                    Image(categoryIconName(for: expense.name))
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 24, height: 24)
-                        .foregroundColor(.expenseAccent)
-                }
-                
-                // Expense Details
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(expense.name)
-                        .font(.body)
-                        .fontWeight(.medium)
-                        .foregroundColor(.expensePrimaryText)
-                        .lineLimit(1)
-                    
-                    if !expense.description.isEmpty {
-                        Text(expense.description)
-                            .font(.caption)
-                            .foregroundColor(.expenseSecondaryText)
-                            .lineLimit(2)
+            VStack(spacing: 0) {
+                HStack(spacing: 16) {
+                    // Category Icon
+                    ZStack {
+                        Circle()
+                            .fill(Color.expenseAccent.opacity(0.1))
+                            .frame(width: 48, height: 48)
+                        
+                        Image(categoryIconName(for: expense.name))
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(.expenseAccent)
                     }
                     
-                    HStack(spacing: 8) {
-                        Text(expense.formattedDate)
-                            .font(.caption2)
+                    // Expense Details (Name and Description)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(expense.name)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(.expensePrimaryText)
+                            .lineLimit(1)
+                        
+                        if !expense.description.isEmpty {
+                            Text(expense.description)
+                                .font(.system(size: 14))
+                                .foregroundColor(.expenseSecondaryText)
+                                .lineLimit(1)
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    // Price
+                    Text(expense.formattedPrice)
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.expenseAccent)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                
+                // Date and Time Row (similar to Android TabLayout item layout)
+                HStack(spacing: 8) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "calendar")
+                            .font(.system(size: 12))
                             .foregroundColor(.expenseSecondaryText)
                         
-                        Text("•")
-                            .font(.caption2)
+                        Text(expense.formattedDate)
+                            .font(.system(size: 12))
+                            .foregroundColor(.expenseSecondaryText)
+                    }
+                    
+                    Text("•")
+                        .font(.system(size: 12))
+                        .foregroundColor(.expenseSecondaryText)
+                    
+                    HStack(spacing: 4) {
+                        Image(systemName: "clock")
+                            .font(.system(size: 12))
                             .foregroundColor(.expenseSecondaryText)
                         
                         Text(expense.formattedTime)
-                            .font(.caption2)
+                            .font(.system(size: 12))
                             .foregroundColor(.expenseSecondaryText)
                     }
-                }
-                
-                Spacer()
-                
-                // Price
-                VStack(alignment: .trailing, spacing: 4) {
-                    Text(expense.formattedPrice)
-                        .font(.body)
-                        .fontWeight(.bold)
-                        .foregroundColor(.expensePrimaryText)
+                    
+                    Spacer()
                     
                     Text(expense.currency)
-                        .font(.caption2)
+                        .font(.system(size: 12))
                         .foregroundColor(.expenseSecondaryText)
                 }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 12)
             }
-            .padding(16)
             .background(
-                RoundedRectangle(cornerRadius: 16)
+                RoundedRectangle(cornerRadius: 12)
                     .fill(Color.expenseCardBackground)
-                    .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 1)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.expenseCardBorder, lineWidth: 0.5)
+                    )
+                    .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
             )
         }
         .buttonStyle(PlainButtonStyle())
