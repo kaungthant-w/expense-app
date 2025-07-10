@@ -1,3 +1,40 @@
+// MARK: - UserDefaults Keys
+private enum ExpenseUserDefaultsKeys {
+    static let expenses = "hsu_expense_items"
+}
+
+// MARK: - ExpenseItem UserDefaults Conversion
+extension ExpenseItem {
+    // Convert ExpenseItem to dictionary for UserDefaults
+    var asDictionary: [String: Any] {
+        return [
+            "id": id.uuidString,
+            "name": name,
+            "price": NSDecimalNumber(decimal: price).doubleValue,
+            "description": description,
+            "date": date,
+            "time": time,
+            "currency": currency
+        ]
+    }
+
+    // Create ExpenseItem from dictionary
+    static func fromDictionary(_ dict: [String: Any]) -> ExpenseItem? {
+        guard
+            let idString = dict["id"] as? String,
+            let id = UUID(uuidString: idString),
+            let name = dict["name"] as? String,
+            let price = dict["price"] as? Double,
+            let description = dict["description"] as? String,
+            let date = dict["date"] as? Date,
+            let time = dict["time"] as? Date,
+            let currency = dict["currency"] as? String
+        else {
+            return nil
+        }
+        return ExpenseItem(id: id, name: name, price: Decimal(price), description: description, date: date, time: time, currency: currency)
+    }
+}
 //
 //  ContentView.swift
 //  hsu expense
@@ -167,9 +204,9 @@ struct ContentView: View {
             }
         }
         .onAppear {
-            loadSampleData()
+            loadExpensesFromUserDefaults()
             calculateTotal()
-            debugTabData() // Debug information - can be removed later
+            // debugTabData() // Debug information - can be removed later
         }
     }
     
@@ -205,7 +242,7 @@ struct ContentView: View {
                         .font(.system(size: 14))
                         .foregroundColor(.expenseSecondaryText)
                     Spacer()
-                    Text(formatCurrency(todayTotalAmount))
+                    Text("$" + String(format: "%.2f", NSDecimalNumber(decimal: todayTotalAmount).doubleValue))
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(.expensePrimaryText)
                 }
@@ -461,61 +498,61 @@ struct ContentView: View {
     private func calculateTotal() {
         totalExpenses = expenses.reduce(0) { $0 + $1.price }
     }
-    
+
+    // MARK: - UserDefaults CRUD
+    private func saveExpensesToUserDefaults() {
+        let dictArray = expenses.map { $0.asDictionary }
+        UserDefaults.standard.set(dictArray, forKey: ExpenseUserDefaultsKeys.expenses)
+    }
+
+    private func loadExpensesFromUserDefaults() {
+        guard let dictArray = UserDefaults.standard.array(forKey: ExpenseUserDefaultsKeys.expenses) as? [[String: Any]] else {
+            expenses = []
+            return
+        }
+        expenses = dictArray.compactMap { ExpenseItem.fromDictionary($0) }
+    }
+
     private func addExpense(_ expense: ExpenseItem) {
         withAnimation(.easeInOut(duration: 0.3)) {
             expenses.append(expense)
+            saveExpensesToUserDefaults()
             calculateTotal()
         }
     }
-    
+
     private func updateExpense(_ updatedExpense: ExpenseItem) {
+        // If the update is a delete signal, remove the expense
+        if updatedExpense.name == "__DELETE__" {
+            deleteExpense(updatedExpense)
+            return
+        }
         withAnimation(.easeInOut(duration: 0.3)) {
             if let index = expenses.firstIndex(where: { $0.id == updatedExpense.id }) {
                 expenses[index] = updatedExpense
+                saveExpensesToUserDefaults()
                 calculateTotal()
             }
         }
     }
-    
+
     private func deleteExpense(_ expense: ExpenseItem) {
         withAnimation(.easeInOut(duration: 0.3)) {
+            let oldCount = expenses.count
             expenses.removeAll { $0.id == expense.id }
+            saveExpensesToUserDefaults()
             calculateTotal()
+            // Double check: If deletion failed, reload from UserDefaults
+            if expenses.count == oldCount {
+                loadExpensesFromUserDefaults()
+            }
         }
     }
-    
-    private func loadSampleData() {
-        let calendar = Calendar.current
-        let now = Date()
-        
-        // Sample data for demonstration with various time periods
-        expenses = [
-            // Today's expenses (2 items)
-            ExpenseItem(name: "Grocery Shopping", price: 85.50, description: "Weekly groceries from supermarket", date: now, time: now),
-            ExpenseItem(name: "Coffee Shop", price: 5.50, description: "Morning coffee", date: now, time: calendar.date(byAdding: .hour, value: -2, to: now) ?? now),
-            
-            // Yesterday's expenses (will be in THIS WEEK but not TODAY)
-            ExpenseItem(name: "Gas Station", price: 45.00, description: "Fuel for car", date: calendar.date(byAdding: .day, value: -1, to: now) ?? now, time: calendar.date(byAdding: .day, value: -1, to: now) ?? now),
-            ExpenseItem(name: "Restaurant Lunch", price: 28.75, description: "Lunch with colleagues", date: calendar.date(byAdding: .day, value: -1, to: now) ?? now, time: calendar.date(byAdding: .day, value: -1, to: now) ?? now),
-            
-            // Earlier this week (will be in THIS WEEK and THIS MONTH but not TODAY)
-            ExpenseItem(name: "Movie Tickets", price: 24.00, description: "Cinema tickets for two", date: calendar.date(byAdding: .day, value: -2, to: now) ?? now, time: calendar.date(byAdding: .day, value: -2, to: now) ?? now),
-            ExpenseItem(name: "Shopping Mall", price: 120.00, description: "Clothes shopping", date: calendar.date(byAdding: .day, value: -3, to: now) ?? now, time: calendar.date(byAdding: .day, value: -3, to: now) ?? now),
-            
-            // Earlier this month (will be in THIS MONTH and ALL but not THIS WEEK or TODAY)
-            ExpenseItem(name: "Utility Bills", price: 150.00, description: "Electricity and water", date: calendar.date(byAdding: .day, value: -10, to: now) ?? now, time: calendar.date(byAdding: .day, value: -10, to: now) ?? now),
-            ExpenseItem(name: "Internet Bill", price: 55.00, description: "Monthly internet", date: calendar.date(byAdding: .day, value: -15, to: now) ?? now, time: calendar.date(byAdding: .day, value: -15, to: now) ?? now),
-            ExpenseItem(name: "Phone Bill", price: 75.00, description: "Monthly phone bill", date: calendar.date(byAdding: .day, value: -20, to: now) ?? now, time: calendar.date(byAdding: .day, value: -20, to: now) ?? now),
-            
-            // Previous months (will be in ALL only)
-            ExpenseItem(name: "Car Service", price: 200.00, description: "Annual car maintenance", date: calendar.date(byAdding: .month, value: -2, to: now) ?? now, time: calendar.date(byAdding: .month, value: -2, to: now) ?? now),
-            ExpenseItem(name: "Medical Checkup", price: 125.00, description: "Annual health checkup", date: calendar.date(byAdding: .month, value: -4, to: now) ?? now, time: calendar.date(byAdding: .month, value: -4, to: now) ?? now),
-            
-            // Previous years (will be in ALL only if within 3 years)
-            ExpenseItem(name: "Insurance Premium", price: 300.00, description: "Health insurance", date: calendar.date(byAdding: .year, value: -1, to: now) ?? now, time: calendar.date(byAdding: .year, value: -1, to: now) ?? now),
-            ExpenseItem(name: "Home Repair", price: 450.00, description: "Roof maintenance", date: calendar.date(byAdding: .year, value: -2, to: now) ?? now, time: calendar.date(byAdding: .year, value: -2, to: now) ?? now)
-        ]
+
+    // For development: Remove all data from UserDefaults
+    private func clearAllExpensesFromUserDefaults() {
+        UserDefaults.standard.removeObject(forKey: ExpenseUserDefaultsKeys.expenses)
+        expenses = []
         calculateTotal()
     }
     
@@ -672,8 +709,8 @@ struct ExpenseRowView: View {
                         .foregroundColor(.expensePrimaryText)
                         .lineLimit(1)
                     Spacer()
-                    // Price
-                    Text(expense.formattedPrice)
+                    // Price (show as $2.00 style)
+                    Text("$" + String(format: "%.2f", NSDecimalNumber(decimal: expense.price).doubleValue))
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(.expenseAccent)
                 }
@@ -953,6 +990,8 @@ struct ExpenseDetailView: View {
                         // Delete Button (only for existing expenses)
                         if !isNewExpense {
                             Button(action: {
+                                // Signal delete by special name, will be handled in updateExpense
+                                onSave(ExpenseItem(id: expense.id, name: "__DELETE__", price: 0, description: "", date: expense.date, time: expense.time, currency: expense.currency))
                                 dismiss()
                             }) {
                                 HStack(spacing: 8) {
@@ -1203,8 +1242,8 @@ struct CategoryRowView: View {
             
             Spacer()
             
-            // Total Amount
-            Text(formatCurrency(totalAmount))
+            // Total Amount (show as $2.00 style)
+            Text("$" + String(format: "%.2f", NSDecimalNumber(decimal: totalAmount).doubleValue))
                 .font(.body)
                 .fontWeight(.bold)
                 .foregroundColor(.expensePrimaryText)

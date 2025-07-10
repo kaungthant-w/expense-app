@@ -1,127 +1,127 @@
-2025-07-10 15:16:38 +0000 [MT] Initial pipeline context: <IDEDistributionProcessingPipelineContext: 0x7fb2299d3f60; archive(resolved)="<IDEArchive: 0x7fb229b326f0>", distributionTask(resolved)="2", distributionDestination(resolved)="1", distributionMethod(resolved)="<IDEDistributionMethodDevelopmentSigned: 0x7fb2299aa840>", team(resolved)="<IDEProvisioningBasicTeam: 0x7fb229a575f0; teamID='WY3GFL6Y63', teamName='(null)'>">
+2025-07-10 16:03:21 +0000 [MT] Initial pipeline context: <IDEDistributionProcessingPipelineContext: 0x7fdb60ca34e0; archive(resolved)="<IDEArchive: 0x7fdb5d6058f0>", distributionTask(resolved)="2", distributionDestination(resolved)="1", distributionMethod(resolved)="<IDEDistributionMethodDevelopmentSigned: 0x7fdb5fa0d430>", team(resolved)="<IDEProvisioningBasicTeam: 0x7fdb60c367b0; teamID='WY3GFL6Y63', teamName='(null)'>">
 	Chain (13, self inclusive):
-	<IDEDistributionProcessingPipelineContext: 0x7fb2299d3f60; archive = "<IDEArchive: 0x7fb229b326f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fb2299aa840>", team="<IDEProvisioningBasicTeam: 0x7fb229a575f0; teamID='WY3GFL6Y63', teamName='(null)'>">
-	<IDEDistributionProcessingPipelineContext: 0x7fb2299d1840; archive = "<IDEArchive: 0x7fb229b326f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fb2299aa840>", team="<IDEProvisioningBasicTeam: 0x7fb229a575f0; teamID='WY3GFL6Y63', teamName='(null)'>">
-	<IDEDistributionContext: 0x7fb229b6e160; archive = "<IDEArchive: 0x7fb229b326f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fb2299aa840>", team="<IDEProvisioningBasicTeam: 0x7fb229a575f0; teamID='WY3GFL6Y63', teamName='(null)'>">
-	<IDEDistributionContext: 0x7fb229cc6d30; archive = "<IDEArchive: 0x7fb229b326f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fb2299aa840>", team="<IDEProvisioningBasicTeam: 0x7fb229a575f0; teamID='WY3GFL6Y63', teamName='(null)'>">
-	<IDEDistributionContext: 0x7fb229cc5430; archive = "<IDEArchive: 0x7fb229b326f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fb2299aa840>", team="<IDEProvisioningBasicTeam: 0x7fb229a575f0; teamID='WY3GFL6Y63', teamName='(null)'>">
-	<IDEDistributionContext: 0x7fb229cc3c60; archive = "<IDEArchive: 0x7fb229b326f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fb2299aa840>", team="<IDEProvisioningBasicTeam: 0x7fb229a575f0; teamID='WY3GFL6Y63', teamName='(null)'>">
-	<IDEDistributionContext: 0x7fb229cbfb10; archive = "<IDEArchive: 0x7fb229b326f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fb2299aa840>", team="<IDEProvisioningBasicTeam: 0x7fb229a575f0; teamID='WY3GFL6Y63', teamName='(null)'>">
-	<IDEDistributionContext: 0x7fb225108670; archive = "<IDEArchive: 0x7fb229b326f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fb2299aa840>", team="<IDEProvisioningBasicTeam: 0x7fb229a575f0; teamID='WY3GFL6Y63', teamName='(null)'>">
-	<IDEDistributionContext: 0x7fb229c84500; archive = "<IDEArchive: 0x7fb229b326f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fb2299aa840>", team="<IDEProvisioningBasicTeam: 0x7fb229a575f0; teamID='WY3GFL6Y63', teamName='(null)'>">
-	<IDEDistributionContext: 0x7fb229c8a0c0; archive = "<IDEArchive: 0x7fb229b326f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fb2299aa840>", team="(null)">
-	<IDEDistributionContext: 0x7fb229b63dc0; archive = "<IDEArchive: 0x7fb229b326f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fb2299aa840>", team="(null)">
-	<IDEDistributionContext: 0x7fb229b41f70; archive = "<IDEArchive: 0x7fb229b326f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fb2299aa840>", team="(null)">
-	<IDEDistributionContext: 0x7fb229a534b0; archive = "<IDEArchive: 0x7fb229b326f0>", distributionMethod="(null)", team="(null)">
-</IDEDistributionProcessingPipelineContext: 0x7fb2299d3f60>
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionCreateDestRootStep
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionCopyItemStep
-2025-07-10 15:16:38 +0000 [MT] Running /usr/bin/ditto '-V' '/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app' '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~fM4QUJ/Root/Payload/hsu expense.app'
-2025-07-10 15:16:38 +0000  >>> Copying /Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app 
-2025-07-10 15:16:38 +0000  copying file ./_CodeSignature/CodeResources ... 
-2025-07-10 15:16:38 +0000  3071 bytes for ./_CodeSignature/CodeResources
-2025-07-10 15:16:38 +0000  copying file ./hsu expense ... 
-2025-07-10 15:16:38 +0000  317552 bytes for ./hsu expense
-2025-07-10 15:16:38 +0000  copying file ./hsu_expense.momd/hsu_expense.omo ... 
-2025-07-10 15:16:38 +0000  1944 bytes for ./hsu_expense.momd/hsu_expense.omo
-2025-07-10 15:16:38 +0000  copying file ./hsu_expense.momd/VersionInfo.plist ... 
-2025-07-10 15:16:38 +0000  203 bytes for ./hsu_expense.momd/VersionInfo.plist
-2025-07-10 15:16:38 +0000  copying file ./hsu_expense.momd/hsu_expense.mom ... 
-2025-07-10 15:16:38 +0000  1312 bytes for ./hsu_expense.momd/hsu_expense.mom
-2025-07-10 15:16:38 +0000  copying file ./Assets.car ... 
-2025-07-10 15:16:38 +0000  22223 bytes for ./Assets.car
-2025-07-10 15:16:38 +0000  copying file ./embedded.mobileprovision ... 
-2025-07-10 15:16:38 +0000  12278 bytes for ./embedded.mobileprovision
-2025-07-10 15:16:38 +0000  copying file ./Info.plist ... 
-2025-07-10 15:16:38 +0000  1251 bytes for ./Info.plist
-2025-07-10 15:16:38 +0000  copying file ./PkgInfo ... 
-2025-07-10 15:16:38 +0000  8 bytes for ./PkgInfo
-2025-07-10 15:16:38 +0000 [MT] /usr/bin/ditto exited with 0
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionEmbedProfileStep
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionInfoPlistStep
-2025-07-10 15:16:38 +0000 [MT] Skipping step: IDEDistributionInfoPlistStep because it said so
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionAppThinningPlistStep
-2025-07-10 15:16:38 +0000 [MT] Skipping step: IDEDistributionAppThinningPlistStep because it said so
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionCompileBitcodeStep
-2025-07-10 15:16:38 +0000 [MT] Skipping step: IDEDistributionCompileBitcodeStep because it said so
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionCodeSlimmingStep
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionCopyBCSymbolMapsStep
-2025-07-10 15:16:38 +0000 [MT] Skipping step: IDEDistributionCopyBCSymbolMapsStep because it said so
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionSymbolsStep
-2025-07-10 15:16:38 +0000 [MT] Skipping step: IDEDistributionSymbolsStep because it said so
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionAppThinningStep
-2025-07-10 15:16:38 +0000 [MT] Skipping step: IDEDistributionAppThinningStep because it said so
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionArchThinningStep
-2025-07-10 15:16:38 +0000 [MT] Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~fM4QUJ/Root/Payload/hsu expense.app/hsu expense' '-verify_arch' 'arm64e'
-2025-07-10 15:16:38 +0000 [MT] /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 1
-2025-07-10 15:16:38 +0000 [MT] Skipping architecture thinning for item "hsu expense" because arch "arm64e" wasn't found
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionODRStep
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionStripXattrsStep
-2025-07-10 15:16:38 +0000 [MT] Running /usr/bin/xattr '-crs' '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~fM4QUJ/Root/Payload/hsu expense.app'
-2025-07-10 15:16:38 +0000 [MT] /usr/bin/xattr exited with 0
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionCodesignStep
-2025-07-10 15:16:38 +0000 [MT] Entitlements for <IDEDistributionItem: 0x7fb229a541d0; bundleID='expense.hsu-expense', path='<DVTFilePath:0x7fb229b32320:'/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fb229cac4f0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fb229b7d1a0; name='Apple Development: kyawmyothant1995@icloud.com (SKQN96DNBR)', hash='1549F5B13D2BFA3587503AED94D0BAA58594E6C2', serialNumber='73B902F70225236DB2BFC9D0E997DE50', certificateKinds='(
+	<IDEDistributionProcessingPipelineContext: 0x7fdb60ca34e0; archive = "<IDEArchive: 0x7fdb5d6058f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fdb5fa0d430>", team="<IDEProvisioningBasicTeam: 0x7fdb60c367b0; teamID='WY3GFL6Y63', teamName='(null)'>">
+	<IDEDistributionProcessingPipelineContext: 0x7fdb6290a150; archive = "<IDEArchive: 0x7fdb5d6058f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fdb5fa0d430>", team="<IDEProvisioningBasicTeam: 0x7fdb60c367b0; teamID='WY3GFL6Y63', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fdb60c5a360; archive = "<IDEArchive: 0x7fdb5d6058f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fdb5fa0d430>", team="<IDEProvisioningBasicTeam: 0x7fdb60c367b0; teamID='WY3GFL6Y63', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fdb60b50270; archive = "<IDEArchive: 0x7fdb5d6058f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fdb5fa0d430>", team="<IDEProvisioningBasicTeam: 0x7fdb60c367b0; teamID='WY3GFL6Y63', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fdb60c4da60; archive = "<IDEArchive: 0x7fdb5d6058f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fdb5fa0d430>", team="<IDEProvisioningBasicTeam: 0x7fdb60c367b0; teamID='WY3GFL6Y63', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fdb60b4ead0; archive = "<IDEArchive: 0x7fdb5d6058f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fdb5fa0d430>", team="<IDEProvisioningBasicTeam: 0x7fdb60c367b0; teamID='WY3GFL6Y63', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fdb5fb76760; archive = "<IDEArchive: 0x7fdb5d6058f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fdb5fa0d430>", team="<IDEProvisioningBasicTeam: 0x7fdb60c367b0; teamID='WY3GFL6Y63', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fdb60c4c890; archive = "<IDEArchive: 0x7fdb5d6058f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fdb5fa0d430>", team="<IDEProvisioningBasicTeam: 0x7fdb60c367b0; teamID='WY3GFL6Y63', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fdb60d19880; archive = "<IDEArchive: 0x7fdb5d6058f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fdb5fa0d430>", team="<IDEProvisioningBasicTeam: 0x7fdb60c367b0; teamID='WY3GFL6Y63', teamName='(null)'>">
+	<IDEDistributionContext: 0x7fdb5fb75c10; archive = "<IDEArchive: 0x7fdb5d6058f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fdb5fa0d430>", team="(null)">
+	<IDEDistributionContext: 0x7fdb60d19610; archive = "<IDEArchive: 0x7fdb5d6058f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fdb5fa0d430>", team="(null)">
+	<IDEDistributionContext: 0x7fdb608fccf0; archive = "<IDEArchive: 0x7fdb5d6058f0>", distributionMethod="<IDEDistributionMethodDevelopmentSigned: 0x7fdb5fa0d430>", team="(null)">
+	<IDEDistributionContext: 0x7fdb60d0a6d0; archive = "<IDEArchive: 0x7fdb5d6058f0>", distributionMethod="(null)", team="(null)">
+</IDEDistributionProcessingPipelineContext: 0x7fdb60ca34e0>
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionCreateDestRootStep
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionCopyItemStep
+2025-07-10 16:03:21 +0000 [MT] Running /usr/bin/ditto '-V' '/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app' '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~D9baOl/Root/Payload/hsu expense.app'
+2025-07-10 16:03:21 +0000  >>> Copying /Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app 
+2025-07-10 16:03:21 +0000  copying file ./_CodeSignature/CodeResources ... 
+2025-07-10 16:03:21 +0000  3071 bytes for ./_CodeSignature/CodeResources
+2025-07-10 16:03:21 +0000  copying file ./hsu expense ... 
+2025-07-10 16:03:21 +0000  318784 bytes for ./hsu expense
+2025-07-10 16:03:21 +0000  copying file ./hsu_expense.momd/hsu_expense.omo ... 
+2025-07-10 16:03:21 +0000  1944 bytes for ./hsu_expense.momd/hsu_expense.omo
+copying file ./hsu_expense.momd/VersionInfo.plist ... 
+2025-07-10 16:03:21 +0000  203 bytes for ./hsu_expense.momd/VersionInfo.plist
+2025-07-10 16:03:21 +0000  copying file ./hsu_expense.momd/hsu_expense.mom ... 
+2025-07-10 16:03:21 +0000  1312 bytes for ./hsu_expense.momd/hsu_expense.mom
+2025-07-10 16:03:21 +0000  copying file ./Assets.car ... 
+2025-07-10 16:03:21 +0000  22223 bytes for ./Assets.car
+2025-07-10 16:03:21 +0000  copying file ./embedded.mobileprovision ... 
+2025-07-10 16:03:21 +0000  12278 bytes for ./embedded.mobileprovision
+2025-07-10 16:03:21 +0000  copying file ./Info.plist ... 
+2025-07-10 16:03:21 +0000  1251 bytes for ./Info.plist
+2025-07-10 16:03:21 +0000  copying file ./PkgInfo ... 
+2025-07-10 16:03:21 +0000  8 bytes for ./PkgInfo
+2025-07-10 16:03:21 +0000 [MT] /usr/bin/ditto exited with 0
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionEmbedProfileStep
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionInfoPlistStep
+2025-07-10 16:03:21 +0000 [MT] Skipping step: IDEDistributionInfoPlistStep because it said so
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionAppThinningPlistStep
+2025-07-10 16:03:21 +0000 [MT] Skipping step: IDEDistributionAppThinningPlistStep because it said so
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionCompileBitcodeStep
+2025-07-10 16:03:21 +0000 [MT] Skipping step: IDEDistributionCompileBitcodeStep because it said so
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionCodeSlimmingStep
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionCopyBCSymbolMapsStep
+2025-07-10 16:03:21 +0000 [MT] Skipping step: IDEDistributionCopyBCSymbolMapsStep because it said so
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionSymbolsStep
+2025-07-10 16:03:21 +0000 [MT] Skipping step: IDEDistributionSymbolsStep because it said so
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionAppThinningStep
+2025-07-10 16:03:21 +0000 [MT] Skipping step: IDEDistributionAppThinningStep because it said so
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionArchThinningStep
+2025-07-10 16:03:21 +0000 [MT] Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~D9baOl/Root/Payload/hsu expense.app/hsu expense' '-verify_arch' 'arm64e'
+2025-07-10 16:03:21 +0000 [MT] /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 1
+2025-07-10 16:03:21 +0000 [MT] Skipping architecture thinning for item "hsu expense" because arch "arm64e" wasn't found
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionODRStep
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionStripXattrsStep
+2025-07-10 16:03:21 +0000 [MT] Running /usr/bin/xattr '-crs' '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~D9baOl/Root/Payload/hsu expense.app'
+2025-07-10 16:03:21 +0000 [MT] /usr/bin/xattr exited with 0
+2025-07-10 16:03:21 +0000 [MT] Processing step: IDEDistributionCodesignStep
+2025-07-10 16:03:21 +0000 [MT] Entitlements for <IDEDistributionItem: 0x7fdb5fe1c0a0; bundleID='expense.hsu-expense', path='<DVTFilePath:0x7fdb608ef090:'/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fdb5fe28930; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fdb60cda0d0; name='Apple Development: kyawmyothant1995@icloud.com (SKQN96DNBR)', hash='1549F5B13D2BFA3587503AED94D0BAA58594E6C2', serialNumber='73B902F70225236DB2BFC9D0E997DE50', certificateKinds='(
     "1.2.840.113635.100.6.1.12",
     "1.2.840.113635.100.6.1.2"
 ), issueDate='2025-07-08 23:36:01 +0000''>', entitlements='{
     "application-identifier" = "WY3GFL6Y63.expense.hsu-expense";
     "com.apple.developer.team-identifier" = WY3GFL6Y63;
     "get-task-allow" = 1;
-}', teamID='WY3GFL6Y63', identifier='expense.hsu-expense', executablePath='<DVTFilePath:0x7fb229a51f30:'/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app/hsu expense'>', hardenedRuntime='0'>'>: {
+}', teamID='WY3GFL6Y63', identifier='expense.hsu-expense', executablePath='<DVTFilePath:0x7fdb5fe1c680:'/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app/hsu expense'>', hardenedRuntime='0'>'>: {
     "application-identifier" = "WY3GFL6Y63.expense.hsu-expense";
     "com.apple.developer.team-identifier" = WY3GFL6Y63;
     "get-task-allow" = 1;
 }
-2025-07-10 15:16:38 +0000 [MT] Entitlements for <IDEDistributionItem: 0x7fb229a541d0; bundleID='expense.hsu-expense', path='<DVTFilePath:0x7fb229b32320:'/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fb229cac4f0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fb2299bcf80; name='Apple Development: kyawmyothant1995@icloud.com (SKQN96DNBR)', hash='1549F5B13D2BFA3587503AED94D0BAA58594E6C2', serialNumber='73B902F70225236DB2BFC9D0E997DE50', certificateKinds='(
+2025-07-10 16:03:22 +0000 [MT] Entitlements for <IDEDistributionItem: 0x7fdb5fe1c0a0; bundleID='expense.hsu-expense', path='<DVTFilePath:0x7fdb608ef090:'/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fdb5fe28930; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fdb5fa1b500; name='Apple Development: kyawmyothant1995@icloud.com (SKQN96DNBR)', hash='1549F5B13D2BFA3587503AED94D0BAA58594E6C2', serialNumber='73B902F70225236DB2BFC9D0E997DE50', certificateKinds='(
     "1.2.840.113635.100.6.1.12",
     "1.2.840.113635.100.6.1.2"
 ), issueDate='2025-07-08 23:36:01 +0000''>', entitlements='{
     "application-identifier" = "WY3GFL6Y63.expense.hsu-expense";
     "com.apple.developer.team-identifier" = WY3GFL6Y63;
     "get-task-allow" = 1;
-}', teamID='WY3GFL6Y63', identifier='expense.hsu-expense', executablePath='<DVTFilePath:0x7fb229a51f30:'/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app/hsu expense'>', hardenedRuntime='0'>'> are: {
+}', teamID='WY3GFL6Y63', identifier='expense.hsu-expense', executablePath='<DVTFilePath:0x7fdb5fe1c680:'/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app/hsu expense'>', hardenedRuntime='0'>'> are: {
     "application-identifier" = "WY3GFL6Y63.expense.hsu-expense";
     "com.apple.developer.team-identifier" = WY3GFL6Y63;
     "get-task-allow" = 1;
 }
-2025-07-10 15:16:38 +0000 [MT] Writing entitlements for <IDEDistributionItem: 0x7fb229a541d0; bundleID='expense.hsu-expense', path='<DVTFilePath:0x7fb229b32320:'/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fb229cac4f0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fb229c71330; name='Apple Development: kyawmyothant1995@icloud.com (SKQN96DNBR)', hash='1549F5B13D2BFA3587503AED94D0BAA58594E6C2', serialNumber='73B902F70225236DB2BFC9D0E997DE50', certificateKinds='(
+2025-07-10 16:03:22 +0000 [MT] Writing entitlements for <IDEDistributionItem: 0x7fdb5fe1c0a0; bundleID='expense.hsu-expense', path='<DVTFilePath:0x7fdb608ef090:'/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fdb5fe28930; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fdb60cf93f0; name='Apple Development: kyawmyothant1995@icloud.com (SKQN96DNBR)', hash='1549F5B13D2BFA3587503AED94D0BAA58594E6C2', serialNumber='73B902F70225236DB2BFC9D0E997DE50', certificateKinds='(
     "1.2.840.113635.100.6.1.12",
     "1.2.840.113635.100.6.1.2"
 ), issueDate='2025-07-08 23:36:01 +0000''>', entitlements='{
     "application-identifier" = "WY3GFL6Y63.expense.hsu-expense";
     "com.apple.developer.team-identifier" = WY3GFL6Y63;
     "get-task-allow" = 1;
-}', teamID='WY3GFL6Y63', identifier='expense.hsu-expense', executablePath='<DVTFilePath:0x7fb229a51f30:'/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app/hsu expense'>', hardenedRuntime='0'>'> to: /var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~fM4QUJ/entitlements~~~dDklgC
-2025-07-10 15:16:38 +0000 [MT] Running /usr/bin/codesign '-vvv' '--force' '--sign' '1549F5B13D2BFA3587503AED94D0BAA58594E6C2' '--entitlements' '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~fM4QUJ/entitlements~~~dDklgC' '--generate-entitlement-der' '--preserve-metadata=identifier,flags,runtime' '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~fM4QUJ/Root/Payload/hsu expense.app'
-2025-07-10 15:16:38 +0000  /var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~fM4QUJ/Root/Payload/hsu expense.app: replacing existing signature
-2025-07-10 15:16:38 +0000  /var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~fM4QUJ/Root/Payload/hsu expense.app: signed app bundle with Mach-O thin (arm64) [expense.hsu-expense]
-2025-07-10 15:16:38 +0000 [MT] /usr/bin/codesign exited with 0
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionZipODRItemStep
-2025-07-10 15:16:38 +0000 [MT] Skipping step: IDEDistributionZipODRItemStep because it said so
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionCreateIPAStep
-2025-07-10 15:16:38 +0000 [MT] Running /usr/bin/ditto '-V' '-c' '-k' '--norsrc' '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~fM4QUJ/Root' '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~fM4QUJ/Packages/hsu expense.ipa'
-2025-07-10 15:16:38 +0000  >>> Copying /var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~fM4QUJ/Root 
-2025-07-10 15:16:38 +0000  copying file ./Payload/hsu expense.app/_CodeSignature/CodeResources ... 
-2025-07-10 15:16:38 +0000  3071 bytes for ./Payload/hsu expense.app/_CodeSignature/CodeResources
-2025-07-10 15:16:38 +0000  copying file ./Payload/hsu expense.app/hsu expense ... 
-2025-07-10 15:16:38 +0000  317552 bytes for ./Payload/hsu expense.app/hsu expense
-2025-07-10 15:16:38 +0000  copying file ./Payload/hsu expense.app/hsu_expense.momd/hsu_expense.omo ... 
-2025-07-10 15:16:38 +0000  1944 bytes for ./Payload/hsu expense.app/hsu_expense.momd/hsu_expense.omo
+}', teamID='WY3GFL6Y63', identifier='expense.hsu-expense', executablePath='<DVTFilePath:0x7fdb5fe1c680:'/Users/ipromise/Desktop/Desktop/expense-app/expense-app/build/hsu_expense.xcarchive/Products/Applications/hsu expense.app/hsu expense'>', hardenedRuntime='0'>'> to: /var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~D9baOl/entitlements~~~T2IqCU
+2025-07-10 16:03:22 +0000 [MT] Running /usr/bin/codesign '-vvv' '--force' '--sign' '1549F5B13D2BFA3587503AED94D0BAA58594E6C2' '--entitlements' '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~D9baOl/entitlements~~~T2IqCU' '--generate-entitlement-der' '--preserve-metadata=identifier,flags,runtime' '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~D9baOl/Root/Payload/hsu expense.app'
+2025-07-10 16:03:22 +0000  /var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~D9baOl/Root/Payload/hsu expense.app: replacing existing signature
+2025-07-10 16:03:22 +0000  /var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~D9baOl/Root/Payload/hsu expense.app: signed app bundle with Mach-O thin (arm64) [expense.hsu-expense]
+2025-07-10 16:03:22 +0000 [MT] /usr/bin/codesign exited with 0
+2025-07-10 16:03:22 +0000 [MT] Processing step: IDEDistributionZipODRItemStep
+2025-07-10 16:03:22 +0000 [MT] Skipping step: IDEDistributionZipODRItemStep because it said so
+2025-07-10 16:03:22 +0000 [MT] Processing step: IDEDistributionCreateIPAStep
+2025-07-10 16:03:22 +0000 [MT] Running /usr/bin/ditto '-V' '-c' '-k' '--norsrc' '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~D9baOl/Root' '/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~D9baOl/Packages/hsu expense.ipa'
+2025-07-10 16:03:22 +0000  >>> Copying /var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~D9baOl/Root 
+2025-07-10 16:03:22 +0000  copying file ./Payload/hsu expense.app/_CodeSignature/CodeResources ... 
+2025-07-10 16:03:22 +0000  3071 bytes for ./Payload/hsu expense.app/_CodeSignature/CodeResources
+2025-07-10 16:03:22 +0000  copying file ./Payload/hsu expense.app/hsu expense ... 
+2025-07-10 16:03:22 +0000  318784 bytes for ./Payload/hsu expense.app/hsu expense
+2025-07-10 16:03:22 +0000  copying file ./Payload/hsu expense.app/hsu_expense.momd/hsu_expense.omo ... 
+2025-07-10 16:03:22 +0000  1944 bytes for ./Payload/hsu expense.app/hsu_expense.momd/hsu_expense.omo
 copying file ./Payload/hsu expense.app/hsu_expense.momd/VersionInfo.plist ... 
-2025-07-10 15:16:38 +0000  203 bytes for ./Payload/hsu expense.app/hsu_expense.momd/VersionInfo.plist
+2025-07-10 16:03:22 +0000  203 bytes for ./Payload/hsu expense.app/hsu_expense.momd/VersionInfo.plist
 copying file ./Payload/hsu expense.app/hsu_expense.momd/hsu_expense.mom ... 
-2025-07-10 15:16:38 +0000  1312 bytes for ./Payload/hsu expense.app/hsu_expense.momd/hsu_expense.mom
-2025-07-10 15:16:38 +0000  copying file ./Payload/hsu expense.app/Assets.car ... 
-2025-07-10 15:16:38 +0000  22223 bytes for ./Payload/hsu expense.app/Assets.car
+2025-07-10 16:03:22 +0000  1312 bytes for ./Payload/hsu expense.app/hsu_expense.momd/hsu_expense.mom
+copying file ./Payload/hsu expense.app/Assets.car ... 
+2025-07-10 16:03:22 +0000  22223 bytes for ./Payload/hsu expense.app/Assets.car
 copying file ./Payload/hsu expense.app/embedded.mobileprovision ... 
-2025-07-10 15:16:38 +0000  12278 bytes for ./Payload/hsu expense.app/embedded.mobileprovision
+2025-07-10 16:03:22 +0000  12278 bytes for ./Payload/hsu expense.app/embedded.mobileprovision
 copying file ./Payload/hsu expense.app/Info.plist ... 
-2025-07-10 15:16:38 +0000  1251 bytes for ./Payload/hsu expense.app/Info.plist
-2025-07-10 15:16:38 +0000  copying file ./Payload/hsu expense.app/PkgInfo ... 
-8 bytes for ./Payload/hsu expense.app/PkgInfo
-2025-07-10 15:16:38 +0000 [MT] /usr/bin/ditto exited with 0
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionAppStoreInformationStep
-2025-07-10 15:16:38 +0000 [MT] Skipping step: IDEDistributionAppStoreInformationStep because it said so
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionGenerateProcessedDistributionItems
-2025-07-10 15:16:38 +0000 [MT] IDEDistributionItem init <DVTFilePath:0x7fb229995ea0:'/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~fM4QUJ/Root/Payload/hsu expense.app'>
-2025-07-10 15:16:38 +0000 [MT] Processing step: IDEDistributionCreateManifestStep
+2025-07-10 16:03:22 +0000  1251 bytes for ./Payload/hsu expense.app/Info.plist
+copying file ./Payload/hsu expense.app/PkgInfo ... 
+2025-07-10 16:03:22 +0000  8 bytes for ./Payload/hsu expense.app/PkgInfo
+2025-07-10 16:03:22 +0000 [MT] /usr/bin/ditto exited with 0
+2025-07-10 16:03:22 +0000 [MT] Processing step: IDEDistributionAppStoreInformationStep
+2025-07-10 16:03:22 +0000 [MT] Skipping step: IDEDistributionAppStoreInformationStep because it said so
+2025-07-10 16:03:22 +0000 [MT] Processing step: IDEDistributionGenerateProcessedDistributionItems
+2025-07-10 16:03:22 +0000 [MT] IDEDistributionItem init <DVTFilePath:0x7fdb60caf610:'/var/folders/1g/y9ph3zg91c58y99727djvbq80000gn/T/XcodeDistPipeline.~~~D9baOl/Root/Payload/hsu expense.app'>
+2025-07-10 16:03:22 +0000 [MT] Processing step: IDEDistributionCreateManifestStep
