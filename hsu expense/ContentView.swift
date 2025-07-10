@@ -20,19 +20,66 @@ extension ExpenseItem {
 
     // Create ExpenseItem from dictionary
     static func fromDictionary(_ dict: [String: Any]) -> ExpenseItem? {
-        guard
-            let idString = dict["id"] as? String,
-            let id = UUID(uuidString: idString),
-            let name = dict["name"] as? String,
-            let price = dict["price"] as? Double,
-            let description = dict["description"] as? String,
-            let date = dict["date"] as? Date,
-            let time = dict["time"] as? Date,
-            let currency = dict["currency"] as? String
-        else {
+        // Accept id as String (UUID) or Int (legacy export)
+        var id: UUID? = nil
+        if let idString = dict["id"] as? String {
+            id = UUID(uuidString: idString)
+        } else if dict["id"] is Int {
+            id = nil
+        }
+        guard let uuid = id,
+              let name = dict["name"] as? String,
+              let price = dict["price"] as? Double,
+              let description = dict["description"] as? String,
+              let currency = dict["currency"] as? String else {
             return nil
         }
-        return ExpenseItem(id: id, name: name, price: Decimal(price), description: description, date: date, time: time, currency: currency)
+        // Parse date (support multiple formats)
+        var date: Date? = nil
+        if let dateObj = dict["date"] as? Date {
+            date = dateObj
+        } else if let dateStr = dict["date"] as? String {
+            let dateFormats = [
+                "dd/MM/yyyy",
+                "yyyy-MM-dd",
+                "yyyy/MM/dd",
+                "MM/dd/yyyy"
+            ]
+            for format in dateFormats {
+                let formatter = DateFormatter()
+                formatter.dateFormat = format
+                formatter.locale = Locale(identifier: "en_US_POSIX")
+                if let d = formatter.date(from: dateStr) {
+                    date = d
+                    break
+                }
+            }
+        }
+        // Parse time (support multiple formats)
+        var time: Date? = nil
+        if let timeObj = dict["time"] as? Date {
+            time = timeObj
+        } else if let timeStr = dict["time"] as? String {
+            let timeFormats = [
+                "HH:mm",
+                "HH:mm:ss",
+                "h:mm a",
+                "hh:mm a"
+            ]
+            for format in timeFormats {
+                let formatter = DateFormatter()
+                formatter.dateFormat = format
+                formatter.locale = Locale(identifier: "en_US_POSIX")
+                if let t = formatter.date(from: timeStr) {
+                    time = t
+                    break
+                }
+            }
+        }
+        guard let dateVal = date, let timeVal = time else {
+            return nil
+        }
+        return ExpenseItem(id: uuid, name: name, price: Decimal(price), description: description, date: dateVal, time: timeVal, currency: currency)
     }
 }
 //
@@ -132,8 +179,16 @@ struct ContentView: View {
     @State private var showingAddExpense = false
     @State private var selectedExpense: ExpenseItem?
     @State private var totalExpenses: Decimal = 0
-    @State private var selectedTab = 0
+    @State private var selectedTab = 0 {
+        didSet {
+            // Ensure selectedTab is always in valid range
+            if selectedTab < 0 || selectedTab > 3 {
+                selectedTab = 0
+            }
+        }
+    }
     @State private var showingNavigationDrawer = false
+    @State private var showSettingsPage = false
     
     var body: some View {
         ZStack {
@@ -193,6 +248,9 @@ struct ContentView: View {
         .sheet(isPresented: $showingNavigationDrawer) {
             NavigationDrawerView()
         }
+        .sheet(isPresented: $showSettingsPage) {
+            SettingsPage()
+        }
         .sheet(isPresented: $showingAddExpense) {
             ExpenseDetailView(expense: nil) { newExpense in
                 addExpense(newExpense)
@@ -207,6 +265,13 @@ struct ContentView: View {
             loadExpensesFromUserDefaults()
             calculateTotal()
             // debugTabData() // Debug information - can be removed later
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("ShowSettingsPage"), object: nil, queue: .main) { _ in
+                showSettingsPage = true
+            }
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("ReloadExpensesFromUserDefaults"), object: nil, queue: .main) { _ in
+                loadExpensesFromUserDefaults()
+                calculateTotal()
+            }
         }
     }
     
@@ -482,7 +547,9 @@ struct ContentView: View {
         case 1: return "TODAY"
         case 2: return "THIS WEEK"
         case 3: return "THIS MONTH"
-        default: return ""
+        default:
+            assertionFailure("Invalid tab index: \(index)")
+            return ""
         }
     }
     
@@ -1121,7 +1188,6 @@ struct TimePickerView: View {
 // MARK: - Navigation Drawer View (equivalent to NavigationView)
 struct NavigationDrawerView: View {
     @Environment(\.dismiss) private var dismiss
-    
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 0) {
@@ -1154,15 +1220,15 @@ struct NavigationDrawerView: View {
                     NavigationMenuItem(icon: "house.fill", title: "Home") {
                         dismiss()
                     }
-                    
                     NavigationMenuItem(icon: "chart.bar.fill", title: "Reports") {
                         dismiss()
                     }
-                    
                     NavigationMenuItem(icon: "gear", title: "Settings") {
                         dismiss()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            NotificationCenter.default.post(name: NSNotification.Name("ShowSettingsPage"), object: nil)
+                        }
                     }
-                    
                     NavigationMenuItem(icon: "info.circle", title: "About") {
                         dismiss()
                     }
@@ -1262,6 +1328,215 @@ struct CategoryRowView: View {
         formatter.currencyCode = "USD"
         formatter.maximumFractionDigits = 2
         return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "$0.00"
+    }
+}
+
+// MARK: - Settings Page
+import UniformTypeIdentifiers
+import Foundation
+
+struct SettingsPage: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var showExporter = false
+    @State private var showImporter = false
+    @State private var importError: String? = nil
+    @State private var importSuccess: Bool = false
+    @State private var importFileURL: URL? = nil
+    @State private var expenses: [ExpenseItem] = []
+    @State private var totalExpenses: Int = 0
+    @State private var isImporting = false
+    @State private var isExporting = false
+
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 24) {
+                Spacer()
+                Button(action: { showExporter = true }) {
+                    HStack {
+                        Image(systemName: "square.and.arrow.up")
+                        Text("Export Expenses")
+                    }
+                    .font(.title3)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 32)
+                    .padding(.vertical, 16)
+                    .background(Color.expenseAccent)
+                    .cornerRadius(12)
+                }
+                Button(action: { showImporter = true }) {
+                    HStack {
+                        Image(systemName: "square.and.arrow.down")
+                        Text("Import Expenses")
+                    }
+                    .font(.title3)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 32)
+                    .padding(.vertical, 16)
+                    .background(Color.expenseEdit)
+                    .cornerRadius(12)
+                }
+                if let error = importError {
+                    Text(error)
+                        .foregroundColor(.expenseError)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                }
+                if importSuccess {
+                    Text("Import successful!")
+                        .foregroundColor(.green)
+                        .padding()
+                }
+                Spacer()
+            }
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Close") { dismiss() }
+                }
+            }
+            .fileExporter(isPresented: $showExporter, document: ExportDocument(expenses: loadExpensesForExport()), contentType: .json, defaultFilename: exportFileName()) { result in
+                if case .failure(let error) = result {
+                    importError = "Export failed: \(error.localizedDescription)"
+                }
+            }
+            .fileImporter(isPresented: $showImporter, allowedContentTypes: [.json], allowsMultipleSelection: false) { result in
+                switch result {
+                case .success(let urls):
+                    if let url = urls.first {
+                        importFileURL = url
+                        importExpenses(from: url)
+                    }
+                case .failure(let error):
+                    importError = "Import failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    private func loadExpensesForExport() -> [ExpenseItem] {
+        let dictArray = UserDefaults.standard.array(forKey: ExpenseUserDefaultsKeys.expenses) as? [[String: Any]] ?? []
+        return dictArray.compactMap { ExpenseItem.fromDictionary($0) }
+    }
+
+    private func exportFileName() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+        return "hsu_expense_export_\(formatter.string(from: Date())).json"
+    }
+
+    private func importExpenses(from url: URL) {
+        let didStartAccessing = url.startAccessingSecurityScopedResource()
+        defer {
+            if didStartAccessing {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+        do {
+            let data = try Data(contentsOf: url)
+            guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                importError = "Invalid file format."
+                return
+            }
+            // Support both stringified and array for "expenses" field
+            var importedExpensesArray: [[String: Any]] = []
+            if let expensesString = json["expenses"] as? String {
+                if let expensesData = expensesString.data(using: .utf8),
+                   let arr = try? JSONSerialization.jsonObject(with: expensesData) as? [[String: Any]] {
+                    importedExpensesArray = arr
+                }
+            } else if let arr = json["expenses"] as? [[String: Any]] {
+                importedExpensesArray = arr
+            }
+            if importedExpensesArray.isEmpty {
+                importError = "No expenses found in import file."
+                return
+            }
+            // Overwrite: Only use imported expenses
+            let importedExpenses = importedExpensesArray.compactMap { ExpenseItem.fromDictionary($0) }
+            if importedExpenses.isEmpty {
+                importError = "No valid expenses to import."
+                importSuccess = false
+                return
+            }
+            let importedArray = importedExpenses.map { $0.asDictionary }
+            UserDefaults.standard.set(importedArray, forKey: ExpenseUserDefaultsKeys.expenses)
+            // Notify ContentView to reload data
+            NotificationCenter.default.post(name: NSNotification.Name("ReloadExpensesFromUserDefaults"), object: nil)
+            importSuccess = true
+            importError = nil
+        } catch {
+            importError = "Import failed: \(error.localizedDescription)"
+        }
+    }
+}
+
+struct ExportDocument: FileDocument {
+    static var readableContentTypes: [UTType] { [.json] }
+    var expenses: [ExpenseItem]
+
+    init(expenses: [ExpenseItem]) {
+        self.expenses = expenses
+    }
+
+    init(configuration: ReadConfiguration) throws {
+        guard let fileURL = configuration.file.regularFileContents else {
+            self.expenses = []
+            return
+        }
+        let data = fileURL
+        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+        let expensesString = (json?["expenses"] as? String) ?? "[]"
+        let expensesData = expensesString.data(using: String.Encoding.utf8) ?? Data()
+        let expensesArray = try JSONSerialization.jsonObject(with: expensesData) as? [[String: Any]] ?? []
+        self.expenses = expensesArray.compactMap { ExpenseItem.fromDictionary($0) }
+    }
+
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        let exportDict: [String: Any] = [
+            "app_name": "HSU Expense",
+            "export_version": "1.0",
+            "export_date": exportDateString(),
+            "expenses": exportExpensesJSONString(),
+            "total_expenses": expenses.count
+        ]
+        let data = try JSONSerialization.data(withJSONObject: exportDict, options: .prettyPrinted)
+        return FileWrapper(regularFileWithContents: data)
+    }
+
+    private func exportDateString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter.string(from: Date())
+    }
+
+    private func exportExpensesJSONString() -> String {
+        let arr = expenses.map { exp -> [String: Any] in
+            var dict = exp.asDictionary
+            dict["isDeleted"] = false
+            dict["deletedAt"] = ""
+            dict["date"] = dateString(exp.date)
+            dict["time"] = timeString(exp.time)
+            dict["id"] = exp.id.uuidString // Always export as UUID string
+            return dict
+        }
+        if let data = try? JSONSerialization.data(withJSONObject: arr, options: []),
+           let str = String(data: data, encoding: .utf8) {
+            return str
+        }
+        return "[]"
+    }
+
+    private func dateString(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        return formatter.string(from: date)
+    }
+
+    private func timeString(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: date)
     }
 }
 

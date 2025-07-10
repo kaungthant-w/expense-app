@@ -1,0 +1,7 @@
+{
+  "app_name" : "HSU Expense",
+  "export_version" : "1.0",
+  "export_date" : "2025-07-10 11:31:58 PM",
+  "expenses" : "[{\"price\":0,\"date\":\"10\\\/07\\\/2025\",\"time\":\"11:18 PM\",\"currency\":\"USD\",\"isDeleted\":false,\"name\":\"Ccvg\",\"deletedAt\":\"\",\"id\":\"FB0114FC-292C-43BC-8912-DA6CA81B395A\",\"description\":\"\"},{\"id\":\"AD1993D4-6B83-4786-8737-83CD2AB9D3B5\",\"description\":\"\",\"name\":\"Cccc\",\"deletedAt\":\"\",\"currency\":\"USD\",\"price\":880,\"date\":\"10\\\/07\\\/2025\",\"time\":\"11:19 PM\",\"isDeleted\":false}]",
+  "total_expenses" : 2
+}
