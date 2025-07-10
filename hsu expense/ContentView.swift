@@ -55,7 +55,7 @@ extension Color {
     static let expenseCardBackground = Color(.secondarySystemBackground)
     static let expensePrimaryText = Color(.label)
     static let expenseSecondaryText = Color(.secondaryLabel)
-    static let expenseAccent = Color(red: 76/255, green: 175/255, blue: 80/255) // #FF4CAF50
+    static let expenseAccent = Color(red: 33/255, green: 64/255, blue: 154/255) // #21409A
     static let expenseError = Color(red: 244/255, green: 67/255, blue: 54/255) // #FFF44336
     static let expenseEdit = Color(red: 33/255, green: 150/255, blue: 243/255) // #FF2196F3
     static let expenseInputBackground = Color(.tertiarySystemBackground)
@@ -666,38 +666,12 @@ struct ExpenseRowView: View {
         Button(action: onTap) {
             VStack(spacing: 0) {
                 HStack(spacing: 16) {
-                    // Category Icon
-                    ZStack {
-                        Circle()
-                            .fill(Color.expenseAccent.opacity(0.1))
-                            .frame(width: 48, height: 48)
-                        
-                        SafeImage(
-                            imageName: categoryIconName(for: expense.name),
-                            systemFallback: "dollarsign.circle",
-                            width: 24,
-                            height: 24
-                        )
-                        .foregroundColor(.expenseAccent)
-                    }
-                    
-                    // Expense Details (Name and Description)
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(expense.name)
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(.expensePrimaryText)
-                            .lineLimit(1)
-                        
-                        if !expense.description.isEmpty {
-                            Text(expense.description)
-                                .font(.system(size: 14))
-                                .foregroundColor(.expenseSecondaryText)
-                                .lineLimit(1)
-                        }
-                    }
-                    
+                    // Expense Name
+                    Text(expense.name)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.expensePrimaryText)
+                        .lineLimit(1)
                     Spacer()
-                    
                     // Price
                     Text(expense.formattedPrice)
                         .font(.system(size: 16, weight: .bold))
@@ -705,38 +679,29 @@ struct ExpenseRowView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
-                
-                // Date and Time Row (similar to Android TabLayout item layout)
+
+                // Date and Time Row
                 HStack(spacing: 8) {
                     HStack(spacing: 4) {
                         Image(systemName: "calendar")
                             .font(.system(size: 12))
                             .foregroundColor(.expenseSecondaryText)
-                        
                         Text(expense.formattedDate)
                             .font(.system(size: 12))
                             .foregroundColor(.expenseSecondaryText)
                     }
-                    
                     Text("•")
                         .font(.system(size: 12))
                         .foregroundColor(.expenseSecondaryText)
-                    
                     HStack(spacing: 4) {
                         Image(systemName: "clock")
                             .font(.system(size: 12))
                             .foregroundColor(.expenseSecondaryText)
-                        
                         Text(expense.formattedTime)
                             .font(.system(size: 12))
                             .foregroundColor(.expenseSecondaryText)
                     }
-                    
                     Spacer()
-                    
-                    Text(expense.currency)
-                        .font(.system(size: 12))
-                        .foregroundColor(.expenseSecondaryText)
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 12)

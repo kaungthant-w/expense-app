@@ -1,0 +1,26 @@
+{
+  "DVTSourceControlWorkspaceBlueprintLocationsKey" : {
+    "27A2474CAF8E14C8D563CC808732CA01177D4803" : {
+      "DVTSourceControlBranchIdentifierKey" : "master",
+      "DVTSourceControlLocationRevisionKey" : "1b8f52dae68afd52054fd588e2c8966df006ed8d",
+      "DVTSourceControlBranchOptionsKey" : 4,
+      "DVTSourceControlBranchRemoteNameKey" : "origin",
+      "DVTSourceControlWorkspaceBlueprintLocationTypeKey" : "DVTSourceControlBranch"
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "27A2474CAF8E14C8D563CC808732CA01177D4803",
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "8471F830-8231-4E99-945F-625DA889DF0F",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "27A2474CAF8E14C8D563CC808732CA01177D4803" : "expense-app\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "hsu expense",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "hsu expense.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/kaungthant-w\/expense-app.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "27A2474CAF8E14C8D563CC808732CA01177D4803"
+    }
+  ]
+}
