@@ -241,6 +241,7 @@ struct ContentView: View {
     @State private var showingNavigationDrawer = false
     @State private var showSettingsPage = false
     @State private var showCurrencySettings = false
+    @State private var showSummaryView = false
     
     var body: some View {
         ZStack {
@@ -307,6 +308,9 @@ struct ContentView: View {
         .sheet(isPresented: $showCurrencySettings) {
             CurrencySettingsView()
         }
+        .sheet(isPresented: $showSummaryView) {
+            SummaryView()
+        }
         .sheet(isPresented: $showingAddExpense) {
             ExpenseDetailView(expense: nil) { newExpense in
                 addExpense(newExpense)
@@ -326,6 +330,9 @@ struct ContentView: View {
             }
             NotificationCenter.default.addObserver(forName: NSNotification.Name("ShowCurrencySettings"), object: nil, queue: .main) { _ in
                 showCurrencySettings = true
+            }
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("ShowSummary"), object: nil, queue: .main) { _ in
+                showSummaryView = true
             }
             NotificationCenter.default.addObserver(forName: NSNotification.Name("ReloadExpensesFromUserDefaults"), object: nil, queue: .main) { _ in
                 loadExpensesFromUserDefaults()
@@ -1427,6 +1434,9 @@ struct NavigationDrawerView: View {
                             }
                             NavigationMenuItem(icon: "", title: "Summary", emoji: "📊") {
                                 dismiss()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    NotificationCenter.default.post(name: NSNotification.Name("ShowSummary"), object: nil)
+                                }
                             }
                             NavigationMenuItem(icon: "", title: "Currency", emoji: "💱") {
                                 dismiss()
