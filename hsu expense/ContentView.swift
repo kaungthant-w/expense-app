@@ -166,8 +166,8 @@ extension Color {
             UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 1.0) // #FFF8F8F8
     })
     
-    // Primary accent color (green from Android)
-    static let expenseAccent = Color(red: 0.298, green: 0.686, blue: 0.314) // #FF4CAF50
+    // Primary accent color (purple from Android App Bar)
+    static let expenseAccent = Color(red: 0.384, green: 0.0, blue: 0.933) // #FF6200EE
     static let expenseError = Color(red: 0.957, green: 0.263, blue: 0.212) // #FFF44336
     static let expenseEdit = Color(red: 0.129, green: 0.588, blue: 0.953) // #FF2196F3
     
@@ -260,6 +260,7 @@ struct ContentView: View {
                 }
                 .toolbarBackground(Color.expenseAccent, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarColorScheme(.dark, for: .navigationBar) // Ensures white title text
             }
             
             // Floating Action Button (equivalent to DraggableFloatingActionButton)
@@ -271,11 +272,11 @@ struct ContentView: View {
                         Image(systemName: "plus")
                             .font(.title2)
                             .fontWeight(.semibold)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color(red: 0.4, green: 0.4, blue: 0.4)) // Dark gray icon
                             .frame(width: 56, height: 56)
-                            .background(Color.expenseAccent)
+                            .background(Color(red: 0.933, green: 0.933, blue: 0.933)) // Light gray background #EEEEEE
                             .clipShape(Circle())
-                            .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
+                            .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
                     }
                     .accessibilityLabel("Add expense")
                     .padding(.trailing, 24)

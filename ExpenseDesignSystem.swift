@@ -20,7 +20,7 @@ extension UIColor {
         light: UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0), // #FF555555
         dark: UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0) // #FFCCCCCC
     )
-    static let expenseAccentColor = UIColor(red: 0.298, green: 0.686, blue: 0.314, alpha: 1.0) // #FF4CAF50
+    static let expenseAccentColor = UIColor(red: 0.384, green: 0.0, blue: 0.933, alpha: 1.0) // #FF6200EE
     static let expenseErrorColor = UIColor(red: 0.957, green: 0.263, blue: 0.212, alpha: 1.0) // #FFF44336
     
     // MARK: - Input Field Colors (matching Android design)
@@ -42,7 +42,7 @@ extension UIColor {
     )
     
     // MARK: - Button Colors (matching Android design)
-    static let expensePrimaryButton = UIColor(red: 0.298, green: 0.686, blue: 0.314, alpha: 1.0) // #FF4CAF50
+    static let expensePrimaryButton = UIColor(red: 0.384, green: 0.0, blue: 0.933, alpha: 1.0) // #FF6200EE
     static let expenseSecondaryButton = expenseCustomColor(
         light: UIColor(red: 0.878, green: 0.878, blue: 0.878, alpha: 1.0), // #FFE0E0E0
         dark: UIColor(red: 0.251, green: 0.251, blue: 0.251, alpha: 1.0) // #FF404040
