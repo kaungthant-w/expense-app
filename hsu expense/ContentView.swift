@@ -336,10 +336,10 @@ struct ContentView: View {
                 loadExpensesFromUserDefaults()
                 calculateTotal()
             }
-            // Listen for currency changes to refresh UI
-            NotificationCenter.default.addObserver(forName: .currencyChanged, object: nil, queue: .main) { _ in
-                calculateTotal()
-            }
+            // Currency change observer temporarily disabled until CurrencyManager is added
+            // NotificationCenter.default.addObserver(forName: .currencyChanged, object: nil, queue: .main) { _ in
+            //     calculateTotal()
+            // }
         }
     }
     

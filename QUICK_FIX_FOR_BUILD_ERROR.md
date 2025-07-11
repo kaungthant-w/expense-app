@@ -1,13 +1,12 @@
-# URGENT: Quick Fix for Build Error
+# URGENT: Quick Fix for Build Errors
 
-## Problem
-Your build is failing at line 312 in ContentView.swift with:
-```
-error: cannot find 'CurrencySettingsView' in scope
-            CurrencySettingsView()
-```
+## Problems
+Your build is failing with these errors:
 
-## Quick Fix (Copy and paste this exact change)
+1. **Line 312**: `error: cannot find 'CurrencySettingsView' in scope`
+2. **Line 340**: `Type 'NSNotification.Name?' has no member 'currencyChanged'`
+
+## Quick Fix for Error 1 (Line 312)
 
 ### Step 1: Open your ContentView.swift file in Xcode
 - Navigate to `/Users/ipromise/Desktop/Desktop/v1/expense-app/hsu expense/ContentView.swift`
@@ -25,6 +24,24 @@ error: cannot find 'CurrencySettingsView' in scope
 // Currency settings temporarily disabled until CurrencySettingsView is added to project
 // .sheet(isPresented: $showCurrencySettings) {
 //     CurrencySettingsView()
+// }
+```
+
+## Quick Fix for Error 2 (Line 340)
+
+### Find this code around line 340:
+```swift
+// Listen for currency changes to refresh UI
+NotificationCenter.default.addObserver(forName: .currencyChanged, object: nil, queue: .main) { _ in
+    calculateTotal()
+}
+```
+
+### Replace it with this:
+```swift
+// Currency change observer temporarily disabled until CurrencyManager is added
+// NotificationCenter.default.addObserver(forName: .currencyChanged, object: nil, queue: .main) { _ in
+//     calculateTotal()
 // }
 ```
 
