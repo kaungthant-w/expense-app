@@ -332,29 +332,13 @@ struct ContentView: View {
         VStack(spacing: 0) {
             // Card container with elevation and corner radius
             VStack(alignment: .leading, spacing: 14) {
-                    // Title with currency indicator
+                    // Title
                     HStack {
                         Text("📅 Today's Summary")
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(.expensePrimaryText)
                         
                         Spacer()
-                        
-                        // Current currency indicator
-                        HStack(spacing: 4) {
-                            Text(currencyManager.currentCurrency.flag)
-                                .font(.caption)
-                            Text(currencyManager.currentCurrency.code)
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .foregroundColor(.expenseAccent)
-                        }
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(Color.expenseAccent.opacity(0.1))
-                        )
                     }
                 .padding(.bottom, 2)
                 
@@ -370,7 +354,7 @@ struct ContentView: View {
                 }
                 .padding(.bottom, 8)
                 
-                // Total Amount row (with currency conversion)
+                // Total Amount row
                 HStack {
                     Text("Total Amount:")
                         .font(.system(size: 14))
@@ -857,23 +841,15 @@ struct ExpenseRowView: View {
                         .lineLimit(1)
                     Spacer()
                     
-                    // Price display with currency conversion
-                    VStack(alignment: .trailing, spacing: 2) {
-                        Text(expense.formattedPriceInCurrentCurrency())
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(.expenseGreen)
-                        
-                        if expense.currency != currencyManager.currentCurrency.code {
-                            Text(expense.formattedPriceInOriginalCurrency())
-                                .font(.caption2)
-                                .foregroundColor(.expenseSecondaryText)
-                        }
-                    }
+                    // Price display
+                    Text(expense.formattedPriceInCurrentCurrency())
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.expenseGreen)
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
 
-                // Date and Time Row with currency flag
+                // Date and Time Row
                 HStack(spacing: 8) {
                     HStack(spacing: 4) {
                         Image(systemName: "calendar")
@@ -896,24 +872,6 @@ struct ExpenseRowView: View {
                     }
                     
                     Spacer()
-                    
-                    // Original currency flag if different from current
-                    if expense.currency != currencyManager.currentCurrency.code,
-                       let originalCurrency = CurrencyManager.Currency.allCurrencies.first(where: { $0.code == expense.currency }) {
-                        HStack(spacing: 2) {
-                            Text(originalCurrency.flag)
-                                .font(.caption2)
-                            Text(originalCurrency.code)
-                                .font(.caption2)
-                                .foregroundColor(.expenseSecondaryText)
-                        }
-                        .padding(.horizontal, 4)
-                        .padding(.vertical, 2)
-                        .background(
-                            RoundedRectangle(cornerRadius: 3)
-                                .fill(Color.expenseSecondaryText.opacity(0.1))
-                        )
-                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 12)
@@ -1005,13 +963,13 @@ struct ExpenseDetailView: View {
         if let expense = expense {
             self._expense = State(initialValue: expense)
             self._isNewExpense = State(initialValue: false)
-            self._selectedCurrency = State(initialValue: CurrencyManager.Currency.allCurrencies.first { $0.code == expense.currency } ?? CurrencyManager.shared.currentCurrency)
         } else {
             let newExpense = ExpenseItem(currency: CurrencyManager.shared.currentCurrency.code)
             self._expense = State(initialValue: newExpense)
             self._isNewExpense = State(initialValue: true)
-            self._selectedCurrency = State(initialValue: CurrencyManager.shared.currentCurrency)
         }
+        // Always use current currency regardless of existing expense currency
+        self._selectedCurrency = State(initialValue: CurrencyManager.shared.currentCurrency)
         self.onSave = onSave
     }
     
@@ -1243,10 +1201,17 @@ struct ExpenseDetailView: View {
             //         showingCurrencyPicker = false
             //     }
             // }
+            .onAppear {
+                // Update selected currency to current currency manager currency
+                selectedCurrency = currencyManager.currentCurrency
+                expense.currency = currencyManager.currentCurrency.code
+            }
         }
     }
     
     private func saveExpense() {
+        // Set the expense currency to the current selected currency
+        expense.currency = selectedCurrency.code
         onSave(expense)
         dismiss()
     }
@@ -1924,8 +1889,40 @@ class CurrencyManager: ObservableObject {
                 
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                       let rates = json["rates"] as? [String: Double] {
-                        self?.exchangeRates = rates
+                       let dataArray = json["data"] as? [[String: Any]] {
+                        
+                        var newRates: [String: Double] = [:]
+                        
+                        // Parse Myanmar API format
+                        for currencyData in dataArray {
+                            if let currency = currencyData["currency"] as? String,
+                               let sellString = currencyData["sell"] as? String,
+                               let sellRate = Double(sellString.replacingOccurrences(of: ".", with: "")) {
+                                // Convert sell rate to proper format
+                                // Myanmar API gives rates in MMK per 1 foreign currency
+                                // We need rates as foreign currency per 1 USD
+                                if currency == "USD" {
+                                    // For USD to MMK rate
+                                    newRates["MMK"] = sellRate
+                                } else if currency == "JPN" {
+                                    // Handle JPN -> JPY mapping
+                                    newRates["JPY"] = 1.0 / (sellRate / 100.0) // Convert to proper JPY rate
+                                } else {
+                                    // For other currencies, convert to USD rate
+                                    if sellRate > 0 {
+                                        newRates[currency] = 1.0 / (sellRate / newRates["MMK", default: 4400.0])
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Add some missing currencies with fallback rates
+                        if newRates["EUR"] == nil { newRates["EUR"] = 0.85 }
+                        if newRates["GBP"] == nil { newRates["GBP"] = 0.72 }
+                        if newRates["KRW"] == nil { newRates["KRW"] = 1180.0 }
+                        if newRates["INR"] == nil { newRates["INR"] = 74.0 }
+                        
+                        self?.exchangeRates = newRates
                         self?.lastUpdateTime = Date()
                         self?.saveRates()
                         self?.apiError = nil
