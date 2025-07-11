@@ -91,6 +91,7 @@ extension ExpenseItem {
 
 import SwiftUI
 import CoreData
+import Combine
 
 // MARK: - Expense Data Model (SwiftUI Compatible)
 struct ExpenseItem: Identifiable {
@@ -1043,11 +1044,21 @@ struct ExpenseDetailView: View {
                                 .buttonStyle(PlainButtonStyle())
                                 */
                                 
-                                // Temporary currency display
-                                Text(selectedCurrency.code)
-                                    .font(.caption)
-                                    .foregroundColor(.expenseSecondaryText)
-                                    .padding(.leading, 8)
+                                // Current currency display
+                                HStack(spacing: 4) {
+                                    Text(selectedCurrency.flag)
+                                        .font(.body)
+                                    Text(selectedCurrency.code)
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.expenseAccent)
+                                }
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 8)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .fill(Color.expenseAccent.opacity(0.1))
+                                )
                             }
                         }
                         
@@ -1203,6 +1214,11 @@ struct ExpenseDetailView: View {
             // }
             .onAppear {
                 // Update selected currency to current currency manager currency
+                selectedCurrency = currencyManager.currentCurrency
+                expense.currency = currencyManager.currentCurrency.code
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .currencyChanged)) { _ in
+                // Update when currency changes
                 selectedCurrency = currencyManager.currentCurrency
                 expense.currency = currencyManager.currentCurrency.code
             }
@@ -1805,7 +1821,7 @@ class CurrencyManager: ObservableObject {
         let flag: String
         
         static let usd = Currency(code: "USD", name: "US Dollar", symbol: "$", flag: "🇺🇸")
-        static let mmk = Currency(code: "MMK", name: "Myanmar Kyat", symbol: "K", flag: "🇲🇲")
+        static let mmk = Currency(code: "MMK", name: "Myanmar Kyat", symbol: "MMK", flag: "🇲🇲")
         static let eur = Currency(code: "EUR", name: "Euro", symbol: "€", flag: "🇪🇺")
         static let jpy = Currency(code: "JPY", name: "Japanese Yen", symbol: "¥", flag: "🇯🇵")
         static let gbp = Currency(code: "GBP", name: "British Pound", symbol: "£", flag: "🇬🇧")
