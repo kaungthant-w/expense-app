@@ -117,7 +117,17 @@ struct ExpenseItem: Identifiable {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencyCode = currency
-        formatter.maximumFractionDigits = 2
+        
+        if currency == "JPY" || currency == "KRW" {
+            // Japanese Yen and Korean Won don't use decimal places
+            formatter.maximumFractionDigits = 0
+            formatter.minimumFractionDigits = 0
+        } else {
+            // All other currencies show 2 decimal places
+            formatter.maximumFractionDigits = 2
+            formatter.minimumFractionDigits = 2
+        }
+        
         return formatter.string(from: NSDecimalNumber(decimal: price)) ?? "$0.00"
     }
     
@@ -623,6 +633,7 @@ struct ContentView: View {
         formatter.numberStyle = .currency
         formatter.currencyCode = "USD"
         formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 2
         return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "$0.00"
     }
     
@@ -1601,6 +1612,7 @@ struct CategoryRowView: View {
         formatter.numberStyle = .currency
         formatter.currencyCode = "USD"
         formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 2
         return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "$0.00"
     }
 }
@@ -1855,8 +1867,18 @@ class CurrencyManager: ObservableObject {
             formatter.numberStyle = .currency
             formatter.currencyCode = self.code
             formatter.currencySymbol = self.symbol
-            formatter.maximumFractionDigits = (self.code == "JPY" || self.code == "KRW") ? 0 : 2
-            return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "\(symbol)0"
+            
+            if self.code == "JPY" || self.code == "KRW" {
+                // Japanese Yen and Korean Won don't use decimal places
+                formatter.maximumFractionDigits = 0
+                formatter.minimumFractionDigits = 0
+            } else {
+                // All other currencies show 2 decimal places
+                formatter.maximumFractionDigits = 2
+                formatter.minimumFractionDigits = 2
+            }
+            
+            return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "\(symbol)0.00"
         }
     }
     
