@@ -1261,22 +1261,22 @@ struct NavigationDrawerView: View {
                     VStack(spacing: 0) {
                         // Main Group
                         NavigationMenuSection(title: "MAIN") {
-                            NavigationMenuItem(icon: "house.fill", title: "Home", emoji: "🏠") {
+                            NavigationMenuItem(icon: "", title: "Home", emoji: "🏠") {
                                 dismiss()
                             }
-                            NavigationMenuItem(icon: "list.clipboard.fill", title: "All Expense", emoji: "📋") {
+                            NavigationMenuItem(icon: "", title: "All Expense", emoji: "📋") {
                                 dismiss()
                             }
-                            NavigationMenuItem(icon: "archivebox.fill", title: "History", emoji: "🗃️") {
+                            NavigationMenuItem(icon: "", title: "History", emoji: "🗃️") {
                                 dismiss()
                             }
-                            NavigationMenuItem(icon: "chart.bar.fill", title: "Summary", emoji: "📊") {
+                            NavigationMenuItem(icon: "", title: "Summary", emoji: "📊") {
                                 dismiss()
                             }
-                            NavigationMenuItem(icon: "dollarsign.circle.fill", title: "Currency", emoji: "💱") {
+                            NavigationMenuItem(icon: "", title: "Currency", emoji: "💱") {
                                 dismiss()
                             }
-                            NavigationMenuItem(icon: "printer.fill", title: "Printer", emoji: "🖨️") {
+                            NavigationMenuItem(icon: "", title: "Printer", emoji: "🖨️") {
                                 dismiss()
                             }
                         }
@@ -1288,17 +1288,17 @@ struct NavigationDrawerView: View {
                         
                         // Settings Group
                         NavigationMenuSection(title: "SETTINGS") {
-                            NavigationMenuItem(icon: "gear", title: "Settings", emoji: "⚙️") {
+                            NavigationMenuItem(icon: "", title: "Settings", emoji: "⚙️") {
                                 dismiss()
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                     NotificationCenter.default.post(name: NSNotification.Name("ShowSettingsPage"), object: nil)
                                 }
                             }
-                            NavigationMenuItem(icon: "message.fill", title: "Feedback", emoji: "💬") {
+                            NavigationMenuItem(icon: "", title: "Feedback", emoji: "💬") {
                                 dismiss()
                                 // Handle feedback action
                             }
-                            NavigationMenuItem(icon: "info.circle.fill", title: "About Us", emoji: "ℹ️") {
+                            NavigationMenuItem(icon: "", title: "About Us", emoji: "ℹ️") {
                                 dismiss()
                                 // Handle about action
                             }
@@ -1354,15 +1354,10 @@ struct NavigationMenuItem: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 16) {
-                // Emoji + System Icon
-                HStack(spacing: 4) {
-                    Text(emoji)
-                        .font(.body)
-                    Image(systemName: icon)
-                        .font(.caption)
-                        .foregroundColor(.expenseAccent)
-                }
-                .frame(width: 32, alignment: .leading)
+                // Only show emoji
+                Text(emoji)
+                    .font(.title3)
+                    .frame(width: 32, alignment: .leading)
                 
                 Text(title)
                     .font(.body)
