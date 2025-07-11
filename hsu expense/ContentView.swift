@@ -2284,7 +2284,7 @@ struct InlineSummaryView: View {
         
         // Calculate overall statistics
         summaryData.totalExpenseCount = expenses.count
-        summaryData.totalAmount = expenses.reduce(0) { $0 + Double($1.price) }
+        summaryData.totalAmount = expenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
         summaryData.averageAmount = expenses.isEmpty ? 0 : summaryData.totalAmount / Double(expenses.count)
         
         // Calculate today's statistics
@@ -2292,32 +2292,32 @@ struct InlineSummaryView: View {
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
         let todayExpenses = expenses.filter { $0.date >= today && $0.date < tomorrow }
         summaryData.todayExpenseCount = todayExpenses.count
-        summaryData.todayTotalAmount = todayExpenses.reduce(0) { $0 + Double($1.price) }
+        summaryData.todayTotalAmount = todayExpenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
         
         // Calculate weekly statistics
         let calendar = Calendar.current
         if let weekInterval = calendar.dateInterval(of: .weekOfYear, for: Date()) {
             let weeklyExpenses = expenses.filter { $0.date >= weekInterval.start && $0.date < weekInterval.end }
             summaryData.weeklyExpenseCount = weeklyExpenses.count
-            summaryData.weeklyTotalAmount = weeklyExpenses.reduce(0) { $0 + Double($1.price) }
+            summaryData.weeklyTotalAmount = weeklyExpenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
         }
         
         // Calculate monthly statistics
         if let monthInterval = calendar.dateInterval(of: .month, for: Date()) {
             let monthlyExpenses = expenses.filter { $0.date >= monthInterval.start && $0.date < monthInterval.end }
             summaryData.monthlyExpenseCount = monthlyExpenses.count
-            summaryData.monthlyTotalAmount = monthlyExpenses.reduce(0) { $0 + Double($1.price) }
+            summaryData.monthlyTotalAmount = monthlyExpenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
         }
         
         // Calculate extremes
         if !expenses.isEmpty {
             let sortedByPrice = expenses.sorted { $0.price > $1.price }
             if let highest = sortedByPrice.first {
-                summaryData.highestExpenseAmount = Double(highest.price)
+                summaryData.highestExpenseAmount = NSDecimalNumber(decimal: highest.price).doubleValue
                 summaryData.highestExpenseName = highest.name
             }
             if let lowest = sortedByPrice.last {
-                summaryData.lowestExpenseAmount = Double(lowest.price)
+                summaryData.lowestExpenseAmount = NSDecimalNumber(decimal: lowest.price).doubleValue
                 summaryData.lowestExpenseName = lowest.name
             }
         }
@@ -2330,7 +2330,18 @@ struct InlineSummaryView: View {
     
     // MARK: - Summary Row Helper
     private func summaryRow(label: String, value: String, valueColor: Color) -> some View {
-        SummaryRowView(label: label, value: value, valueColor: valueColor)
+        HStack {
+            Text(label)
+                .font(.subheadline)
+                .foregroundColor(.expenseSecondaryText)
+            
+            Spacer()
+            
+            Text(value)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundColor(valueColor)
+        }
     }
 }
 
@@ -2415,8 +2426,7 @@ struct CurrencySettingsView: View {
                                     .padding(12)
                                     .background(
                                         RoundedRectangle(cornerRadius: 8)
-                                            .fill(currency.code == currencyManager.currentCurrency.code ? 
-                                                  Color.expenseAccent.opacity(0.1) : Color.expenseInputBackground)
+                                            .fill(getBackgroundColor(for: currency))
                                     )
                                 }
                                 .buttonStyle(PlainButtonStyle())
@@ -2442,6 +2452,11 @@ struct CurrencySettingsView: View {
                 }
             }
         }
+    }
+    
+    private func getBackgroundColor(for currency: CurrencyManager.Currency) -> Color {
+        return currency.code == currencyManager.currentCurrency.code ? 
+            Color.expenseAccent.opacity(0.1) : Color.expenseInputBackground
     }
 }
 
