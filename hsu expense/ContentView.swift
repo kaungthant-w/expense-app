@@ -308,10 +308,9 @@ struct ContentView: View {
         .sheet(isPresented: $showSettingsPage) {
             SettingsPage()
         }
-        // Currency settings temporarily disabled until CurrencySettingsView is added to project
-        // .sheet(isPresented: $showCurrencySettings) {
-        //     CurrencySettingsView()
-        // }
+        .sheet(isPresented: $showCurrencySettings) {
+            TemporaryCurrencyPage()
+        }
         .sheet(isPresented: $showingAddExpense) {
             ExpenseDetailView(expense: nil) { newExpense in
                 addExpense(newExpense)
@@ -1778,6 +1777,189 @@ struct ExportDocument: FileDocument {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         return formatter.string(from: date)
+    }
+}
+
+// MARK: - Temporary Currency Page (until CurrencyManager is added to project)
+struct TemporaryCurrencyPage: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var selectedCurrency = "USD"
+    
+    // Temporary currency list until CurrencyManager is available
+    private let temporaryCurrencies = [
+        ("🇺🇸", "USD", "US Dollar"),
+        ("🇲🇲", "MMK", "Myanmar Kyat"),
+        ("🇪🇺", "EUR", "Euro"),
+        ("🇯🇵", "JPY", "Japanese Yen"),
+        ("🇬🇧", "GBP", "British Pound"),
+        ("🇨🇳", "CNY", "Chinese Yuan"),
+        ("🇰🇷", "KRW", "Korean Won"),
+        ("🇹🇭", "THB", "Thai Baht"),
+        ("🇸🇬", "SGD", "Singapore Dollar"),
+        ("🇮🇳", "INR", "Indian Rupee")
+    ]
+    
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                // Header Card
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(spacing: 12) {
+                        Text("💱")
+                            .font(.title)
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Currency Settings")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.expensePrimaryText)
+                            
+                            Text("Currency conversion coming soon!")
+                                .font(.subheadline)
+                                .foregroundColor(.expenseSecondaryText)
+                        }
+                        
+                        Spacer()
+                    }
+                }
+                .padding(20)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color.expenseCardBackground)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color.expenseAccent.opacity(0.3), lineWidth: 1)
+                        )
+                )
+                
+                // Currency List
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Text("Available Currencies")
+                            .font(.headline)
+                            .foregroundColor(.expensePrimaryText)
+                        
+                        Spacer()
+                        
+                        Text("Currently: USD")
+                            .font(.caption)
+                            .foregroundColor(.expenseSecondaryText)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .fill(Color.expenseAccent.opacity(0.1))
+                            )
+                    }
+                    
+                    ScrollView {
+                        LazyVStack(spacing: 8) {
+                            ForEach(Array(temporaryCurrencies.enumerated()), id: \.offset) { index, currency in
+                                CurrencyRowView(
+                                    flag: currency.0,
+                                    code: currency.1,
+                                    name: currency.2,
+                                    isSelected: currency.1 == selectedCurrency
+                                ) {
+                                    selectedCurrency = currency.1
+                                }
+                            }
+                        }
+                    }
+                }
+                .padding(20)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color.expenseCardBackground)
+                )
+                
+                // Info Card
+                VStack(spacing: 12) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "info.circle.fill")
+                            .foregroundColor(.expenseAccent)
+                        
+                        Text("Coming Soon")
+                            .font(.headline)
+                            .foregroundColor(.expensePrimaryText)
+                        
+                        Spacer()
+                    }
+                    
+                    Text("Currency conversion with Myanmar Currency API integration will be available once the CurrencyManager system is added to the project.")
+                        .font(.subheadline)
+                        .foregroundColor(.expenseSecondaryText)
+                        .multilineTextAlignment(.leading)
+                }
+                .padding(16)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.expenseAccent.opacity(0.1))
+                )
+                
+                Spacer()
+            }
+            .padding(16)
+            .background(Color.expenseBackground)
+            .navigationTitle("Currency")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Back") {
+                        dismiss()
+                    }
+                    .foregroundColor(.expenseAccent)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Temporary Currency Row View
+struct CurrencyRowView: View {
+    let flag: String
+    let code: String
+    let name: String
+    let isSelected: Bool
+    let onTap: () -> Void
+    
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: 12) {
+                Text(flag)
+                    .font(.title2)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(name)
+                        .font(.body)
+                        .fontWeight(.medium)
+                        .foregroundColor(.expensePrimaryText)
+                    
+                    Text(code)
+                        .font(.caption)
+                        .foregroundColor(.expenseSecondaryText)
+                }
+                
+                Spacer()
+                
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.title3)
+                        .foregroundColor(.expenseGreen)
+                } else {
+                    Image(systemName: "circle")
+                        .font(.title3)
+                        .foregroundColor(.expenseSecondaryText.opacity(0.3))
+                }
+            }
+            .padding(.vertical, 8)
+            .padding(.horizontal, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(isSelected ? Color.expenseAccent.opacity(0.1) : Color.clear)
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 }
 
