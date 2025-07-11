@@ -373,7 +373,7 @@ struct ContentView: View {
                     Spacer()
                     Text(currencyManager.currentCurrency.format(todayTotalAmountInCurrentCurrency))
                         .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(.expenseGreen)
+                        .foregroundColor(.expensePrimaryText)
                 }
             }
             .padding(14)
@@ -1060,22 +1060,6 @@ struct ExpenseDetailView: View {
                                 }
                                 .buttonStyle(PlainButtonStyle())
                                 */
-                                
-                                // Current currency display
-                                HStack(spacing: 4) {
-                                    Text(selectedCurrency.flag)
-                                        .font(.body)
-                                    Text(selectedCurrency.code)
-                                        .font(.caption)
-                                        .fontWeight(.medium)
-                                        .foregroundColor(.expenseAccent)
-                                }
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 8)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 6)
-                                        .fill(Color.expenseAccent.opacity(0.1))
-                                )
                             }
                         }
                         
@@ -2200,7 +2184,7 @@ struct CurrencySettingsView: View {
                 .font(.headline)
                 .foregroundColor(.expensePrimaryText)
             
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
                 ForEach(CurrencyManager.Currency.allCurrencies) { currency in
                     CurrencySelectionRow(
                         currency: currency,
