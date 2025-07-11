@@ -308,9 +308,10 @@ struct ContentView: View {
         .sheet(isPresented: $showSettingsPage) {
             SettingsPage()
         }
-        .sheet(isPresented: $showCurrencySettings) {
-            CurrencySettingsView()
-        }
+        // Currency settings temporarily disabled until CurrencySettingsView is added to project
+        // .sheet(isPresented: $showCurrencySettings) {
+        //     CurrencySettingsView()
+        // }
         .sheet(isPresented: $showingAddExpense) {
             ExpenseDetailView(expense: nil) { newExpense in
                 addExpense(newExpense)
