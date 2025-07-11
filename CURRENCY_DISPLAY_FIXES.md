@@ -96,7 +96,6 @@
    - Add expense in USD
    - Change app currency to MMK
    - Edit the USD expense → Should show MMK currency in edit form
-   - Currency display should have flag + "MMK" with accent styling
 
 3. **Real-time Updates**:
    - Open edit expense page

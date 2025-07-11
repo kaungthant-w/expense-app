@@ -954,6 +954,8 @@ struct ExpenseDetailView: View {
     @State private var expense: ExpenseItem
     @State private var isNewExpense: Bool
     @State private var selectedCurrency: CurrencyManager.Currency
+    @State private var originalCurrency: String
+    @State private var originalPrice: Decimal
     let onSave: (ExpenseItem) -> Void
     
     @State private var showingDatePicker = false
@@ -964,10 +966,14 @@ struct ExpenseDetailView: View {
         if let expense = expense {
             self._expense = State(initialValue: expense)
             self._isNewExpense = State(initialValue: false)
+            self._originalCurrency = State(initialValue: expense.currency)
+            self._originalPrice = State(initialValue: expense.price)
         } else {
             let newExpense = ExpenseItem(currency: CurrencyManager.shared.currentCurrency.code)
             self._expense = State(initialValue: newExpense)
             self._isNewExpense = State(initialValue: true)
+            self._originalCurrency = State(initialValue: CurrencyManager.shared.currentCurrency.code)
+            self._originalPrice = State(initialValue: 0)
         }
         // Always use current currency regardless of existing expense currency
         self._selectedCurrency = State(initialValue: CurrencyManager.shared.currentCurrency)
@@ -1216,11 +1222,22 @@ struct ExpenseDetailView: View {
                 // Update selected currency to current currency manager currency
                 selectedCurrency = currencyManager.currentCurrency
                 expense.currency = currencyManager.currentCurrency.code
+                
+                // Convert price if editing existing expense and currency is different
+                if !isNewExpense && originalCurrency != currencyManager.currentCurrency.code {
+                    expense.price = currencyManager.convertAmount(originalPrice, from: originalCurrency, to: currencyManager.currentCurrency.code)
+                }
             }
             .onReceive(NotificationCenter.default.publisher(for: .currencyChanged)) { _ in
                 // Update when currency changes
+                let oldCurrency = selectedCurrency.code
                 selectedCurrency = currencyManager.currentCurrency
                 expense.currency = currencyManager.currentCurrency.code
+                
+                // Convert price when currency changes
+                if oldCurrency != currencyManager.currentCurrency.code {
+                    expense.price = currencyManager.convertAmount(expense.price, from: oldCurrency, to: currencyManager.currentCurrency.code)
+                }
             }
         }
     }
