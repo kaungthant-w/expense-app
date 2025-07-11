@@ -2349,100 +2349,366 @@ struct InlineSummaryView: View {
 struct CurrencySettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var currencyManager = CurrencyManager.shared
+    @State private var showingRateDetails = false
     
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 20) {
-                    // Current Currency Card
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Current Currency")
-                            .font(.headline)
-                            .foregroundColor(.expensePrimaryText)
-                        
-                        HStack(spacing: 12) {
-                            Text(currencyManager.currentCurrency.flag)
-                                .font(.title)
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(currencyManager.currentCurrency.name)
-                                    .font(.body)
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.expensePrimaryText)
-                                
-                                Text(currencyManager.currentCurrency.code)
-                                    .font(.caption)
-                                    .foregroundColor(.expenseSecondaryText)
-                            }
-                            
-                            Spacer()
-                            
-                            Text(currencyManager.currentCurrency.symbol)
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.expenseAccent)
-                        }
-                    }
-                    .padding(16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.expenseCardBackground)
-                    )
+                    // Current Status Card
+                    currentStatusCard
                     
                     // Currency Selection
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Select Currency")
-                            .font(.headline)
-                            .foregroundColor(.expensePrimaryText)
-                        
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 12) {
-                            ForEach(CurrencyManager.Currency.allCurrencies) { currency in
-                                Button(action: {
-                                    currencyManager.setCurrency(currency)
-                                }) {
-                                    HStack(spacing: 12) {
-                                        Text(currency.flag)
-                                            .font(.title2)
-                                        
-                                        VStack(alignment: .leading, spacing: 2) {
-                                            Text(currency.code)
-                                                .font(.caption)
-                                                .fontWeight(.semibold)
-                                                .foregroundColor(.expensePrimaryText)
-                                            
-                                            Text(currency.name)
-                                                .font(.caption2)
-                                                .foregroundColor(.expenseSecondaryText)
-                                                .lineLimit(1)
-                                        }
-                                        
-                                        Spacer()
-                                        
-                                        if currency.code == currencyManager.currentCurrency.code {
-                                            Image(systemName: "checkmark.circle.fill")
-                                                .foregroundColor(.expenseAccent)
-                                        }
-                                    }
-                                    .padding(12)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .fill(getBackgroundColor(for: currency))
-                                    )
-                                }
-                                .buttonStyle(PlainButtonStyle())
-                            }
-                        }
-                    }
-                    .padding(16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.expenseCardBackground)
-                    )
+                    currencySelectionCard
+                    
+                    // Exchange Rates Card
+                    exchangeRatesCard
+                    
+                    // API Status Card
+                    apiStatusCard
+                    
+                    Spacer(minLength: 20)
                 }
                 .padding(16)
             }
             .background(Color.expenseBackground)
             .navigationTitle("Currency Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                    .foregroundColor(.expenseAccent)
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { currencyManager.fetchExchangeRates() }) {
+                        if currencyManager.isLoadingRates {
+                            ProgressView()
+                                .scaleEffect(0.8)
+                        } else {
+                            Image(systemName: "arrow.clockwise")
+                                .foregroundColor(.expenseAccent)
+                        }
+                    }
+                    .disabled(currencyManager.isLoadingRates)
+                }
+            }
+        }
+        .onAppear {
+            if currencyManager.exchangeRates.isEmpty {
+                currencyManager.fetchExchangeRates()
+            }
+        }
+    }
+    
+    // MARK: - Card Views
+    private var currentStatusCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("💱 Current Currency")
+                    .font(.headline)
+                    .foregroundColor(.expensePrimaryText)
+                
+                Spacer()
+                
+                if currencyManager.isLoadingRates {
+                    ProgressView()
+                        .scaleEffect(0.7)
+                }
+            }
+            
+            HStack(spacing: 12) {
+                Text(currencyManager.currentCurrency.flag)
+                    .font(.largeTitle)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(currencyManager.currentCurrency.name)
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.expensePrimaryText)
+                    
+                    Text("\(currencyManager.currentCurrency.symbol) \(currencyManager.currentCurrency.code)")
+                        .font(.subheadline)
+                        .foregroundColor(.expenseSecondaryText)
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text("Active")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.expenseGreen)
+                        )
+                    
+                    if let lastUpdate = currencyManager.lastUpdateTime {
+                        Text("Updated \(timeAgoString(from: lastUpdate))")
+                            .font(.caption2)
+                            .foregroundColor(.expenseSecondaryText)
+                    }
+                }
+            }
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.expenseCardBackground)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.expenseAccent.opacity(0.3), lineWidth: 1)
+                )
+        )
+    }
+    
+    private var currencySelectionCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("🌍 Available Currencies")
+                .font(.headline)
+                .foregroundColor(.expensePrimaryText)
+            
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
+                ForEach(CurrencyManager.Currency.allCurrencies) { currency in
+                    CurrencySelectionRow(
+                        currency: currency,
+                        isSelected: currency.code == currencyManager.currentCurrency.code,
+                        exchangeRate: currencyManager.exchangeRates[currency.code]
+                    ) {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            currencyManager.setCurrency(currency)
+                        }
+                    }
+                }
+            }
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.expenseCardBackground)
+        )
+    }
+    
+    private var exchangeRatesCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("📊 Exchange Rates")
+                    .font(.headline)
+                    .foregroundColor(.expensePrimaryText)
+                
+                Spacer()
+                
+                Button("View All") {
+                    showingRateDetails = true
+                }
+                .font(.caption)
+                .foregroundColor(.expenseAccent)
+            }
+            
+            if currencyManager.exchangeRates.isEmpty {
+                Text("Loading exchange rates...")
+                    .font(.subheadline)
+                    .foregroundColor(.expenseSecondaryText)
+            } else {
+                VStack(spacing: 8) {
+                    ForEach(Array(currencyManager.exchangeRates.prefix(3).sorted(by: { $0.key < $1.key })), id: \.key) { code, rate in
+                        if let currency = CurrencyManager.Currency.allCurrencies.first(where: { $0.code == code }) {
+                            HStack {
+                                Text("\(currency.flag) \(code)")
+                                    .font(.subheadline)
+                                    .foregroundColor(.expensePrimaryText)
+                                
+                                Spacer()
+                                
+                                Text("1 USD = \(currency.symbol)\(String(format: "%.2f", rate))")
+                                    .font(.caption)
+                                    .foregroundColor(.expenseSecondaryText)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.expenseCardBackground)
+        )
+        .sheet(isPresented: $showingRateDetails) {
+            ExchangeRateDetailsView()
+        }
+    }
+    
+    private var apiStatusCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("🔄 API Status")
+                .font(.headline)
+                .foregroundColor(.expensePrimaryText)
+            
+            if let error = currencyManager.apiError {
+                HStack(spacing: 8) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(.expenseError)
+                    
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.expenseError)
+                        .multilineTextAlignment(.leading)
+                }
+            } else {
+                HStack(spacing: 8) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.expenseGreen)
+                    
+                    Text("Myanmar Currency API - Connected")
+                        .font(.caption)
+                        .foregroundColor(.expenseGreen)
+                }
+            }
+            
+            Text("https://myanmar-currency-api.github.io/api/latest.json")
+                .font(.caption2)
+                .foregroundColor(.expenseSecondaryText)
+                .lineLimit(1)
+                .truncationMode(.middle)
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.expenseCardBackground)
+        )
+    }
+    
+    private func timeAgoString(from date: Date) -> String {
+        let interval = Date().timeIntervalSince(date)
+        
+        if interval < 60 {
+            return "just now"
+        } else if interval < 3600 {
+            let minutes = Int(interval / 60)
+            return "\(minutes)m ago"
+        } else if interval < 86400 {
+            let hours = Int(interval / 3600)
+            return "\(hours)h ago"
+        } else {
+            let days = Int(interval / 86400)
+            return "\(days)d ago"
+        }
+    }
+}
+
+// MARK: - Currency Selection Row
+struct CurrencySelectionRow: View {
+    let currency: CurrencyManager.Currency
+    let isSelected: Bool
+    let exchangeRate: Double?
+    let onSelect: () -> Void
+    
+    var body: some View {
+        Button(action: onSelect) {
+            VStack(spacing: 8) {
+                HStack {
+                    Text(currency.flag)
+                        .font(.title2)
+                    
+                    Spacer()
+                    
+                    if isSelected {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.caption)
+                            .foregroundColor(.expenseGreen)
+                    }
+                }
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(currency.code)
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.expensePrimaryText)
+                    
+                    if let rate = exchangeRate {
+                        Text("1 USD = \(currency.symbol)\(String(format: "%.2f", rate))")
+                            .font(.caption2)
+                            .foregroundColor(.expenseSecondaryText)
+                    } else if currency.code == "USD" {
+                        Text("Base currency")
+                            .font(.caption2)
+                            .foregroundColor(.expenseSecondaryText)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(isSelected ? Color.expenseAccent.opacity(0.1) : Color.expenseInputBackground)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(isSelected ? Color.expenseAccent : Color.clear, lineWidth: 1)
+                    )
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+// MARK: - Exchange Rate Details View
+struct ExchangeRateDetailsView: View {
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var currencyManager = CurrencyManager.shared
+    
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(CurrencyManager.Currency.allCurrencies) { currency in
+                    HStack {
+                        Text(currency.flag)
+                            .font(.title2)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(currency.name)
+                                .font(.body)
+                                .fontWeight(.medium)
+                                .foregroundColor(.expensePrimaryText)
+                            
+                            Text(currency.code)
+                                .font(.caption)
+                                .foregroundColor(.expenseSecondaryText)
+                        }
+                        
+                        Spacer()
+                        
+                        VStack(alignment: .trailing, spacing: 2) {
+                            if currency.code == "USD" {
+                                Text("Base Currency")
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.expenseAccent)
+                            } else if let rate = currencyManager.exchangeRates[currency.code] {
+                                Text("\(currency.symbol)\(String(format: "%.2f", rate))")
+                                    .font(.body)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.expensePrimaryText)
+                                
+                                Text("per 1 USD")
+                                    .font(.caption2)
+                                    .foregroundColor(.expenseSecondaryText)
+                            } else {
+                                Text("Loading...")
+                                    .font(.caption)
+                                    .foregroundColor(.expenseSecondaryText)
+                            }
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+            .navigationTitle("Exchange Rates")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -2452,11 +2718,6 @@ struct CurrencySettingsView: View {
                 }
             }
         }
-    }
-    
-    private func getBackgroundColor(for currency: CurrencyManager.Currency) -> Color {
-        return currency.code == currencyManager.currentCurrency.code ? 
-            Color.expenseAccent.opacity(0.1) : Color.expenseInputBackground
     }
 }
 
