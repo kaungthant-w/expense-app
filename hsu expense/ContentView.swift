@@ -131,6 +131,25 @@ struct ExpenseItem: Identifiable {
         formatter.timeStyle = .short
         return formatter.string(from: time)
     }
+    
+    // MARK: - Currency Conversion Methods
+    func convertedPrice(to targetCurrency: String) -> Decimal {
+        guard currency != targetCurrency else { return price }
+        return CurrencyManager.shared.convertDecimalAmount(price, from: currency, to: targetCurrency)
+    }
+    
+    func formattedPriceInCurrentCurrency() -> String {
+        let currentCurrency = CurrencyManager.shared.currentCurrency
+        let convertedPrice = convertedPrice(to: currentCurrency.code)
+        return CurrencyManager.shared.formatDecimalAmount(convertedPrice, currency: currentCurrency)
+    }
+    
+    func formattedPriceInOriginalCurrency() -> String {
+        if let originalCurrency = CurrencyManager.Currency.allCurrencies.first(where: { $0.code == currency }) {
+            return CurrencyManager.shared.formatDecimalAmount(price, currency: originalCurrency)
+        }
+        return formattedPrice
+    }
 }
 
 // MARK: - Design System Colors (matching Android design)
@@ -170,6 +189,7 @@ extension Color {
     static let expenseAccent = Color(red: 0.384, green: 0.0, blue: 0.933) // #FF6200EE
     static let expenseError = Color(red: 0.957, green: 0.263, blue: 0.212) // #FFF44336
     static let expenseEdit = Color(red: 0.129, green: 0.588, blue: 0.953) // #FF2196F3
+    static let expenseGreen = Color(red: 0.298, green: 0.686, blue: 0.314) // #4CAF50
     
     // Surface and border colors
     static let expenseSurface = Color(UIColor { traitCollection in
@@ -213,6 +233,7 @@ struct SafeImage: View {
 // MARK: - Main Content View
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @StateObject private var currencyManager = CurrencyManager.shared
     @State private var expenses: [ExpenseItem] = []
     @State private var showingAddExpense = false
     @State private var selectedExpense: ExpenseItem?
@@ -227,6 +248,7 @@ struct ContentView: View {
     }
     @State private var showingNavigationDrawer = false
     @State private var showSettingsPage = false
+    @State private var showCurrencySettings = false
     
     var body: some View {
         ZStack {
@@ -290,6 +312,9 @@ struct ContentView: View {
         .sheet(isPresented: $showSettingsPage) {
             SettingsPage()
         }
+        .sheet(isPresented: $showCurrencySettings) {
+            CurrencySettingsView()
+        }
         .sheet(isPresented: $showingAddExpense) {
             ExpenseDetailView(expense: nil) { newExpense in
                 addExpense(newExpense)
@@ -307,8 +332,15 @@ struct ContentView: View {
             NotificationCenter.default.addObserver(forName: NSNotification.Name("ShowSettingsPage"), object: nil, queue: .main) { _ in
                 showSettingsPage = true
             }
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("ShowCurrencySettings"), object: nil, queue: .main) { _ in
+                showCurrencySettings = true
+            }
             NotificationCenter.default.addObserver(forName: NSNotification.Name("ReloadExpensesFromUserDefaults"), object: nil, queue: .main) { _ in
                 loadExpensesFromUserDefaults()
+                calculateTotal()
+            }
+            // Listen for currency changes to refresh UI
+            NotificationCenter.default.addObserver(forName: .currencyChanged, object: nil, queue: .main) { _ in
                 calculateTotal()
             }
         }
@@ -319,12 +351,29 @@ struct ContentView: View {
         VStack(spacing: 0) {
             // Card container with elevation and corner radius
             VStack(alignment: .leading, spacing: 14) {
-                // Title
+                // Title with currency indicator
                 HStack {
                     Text("📅 Today's Summary")
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(.expensePrimaryText)
+                    
                     Spacer()
+                    
+                    // Current currency indicator
+                    HStack(spacing: 4) {
+                        Text(currencyManager.currentCurrency.flag)
+                            .font(.caption)
+                        Text(currencyManager.currentCurrency.code)
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.expenseAccent)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        RoundedRectangle(cornerRadius: 4)
+                            .fill(Color.expenseAccent.opacity(0.1))
+                    )
                 }
                 .padding(.bottom, 2)
                 
@@ -340,15 +389,15 @@ struct ContentView: View {
                 }
                 .padding(.bottom, 8)
                 
-                // Total Amount row
+                // Total Amount row (in current currency)
                 HStack {
                     Text("Total Amount:")
                         .font(.system(size: 14))
                         .foregroundColor(.expenseSecondaryText)
                     Spacer()
-                    Text("$" + String(format: "%.2f", NSDecimalNumber(decimal: todayTotalAmount).doubleValue))
+                    Text(currencyManager.formatDecimalAmount(todayTotalAmountInCurrentCurrency))
                         .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(.expensePrimaryText)
+                        .foregroundColor(.expenseGreen)
                 }
             }
             .padding(14)
@@ -421,6 +470,16 @@ struct ContentView: View {
         return expenses.filter { expense in
             expense.date >= today && expense.date < tomorrow
         }.reduce(0) { $0 + $1.price }
+    }
+    
+    private var todayTotalAmountInCurrentCurrency: Decimal {
+        let today = Calendar.current.startOfDay(for: Date())
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+        return expenses.filter { expense in
+            expense.date >= today && expense.date < tomorrow
+        }.reduce(0) { total, expense in
+            total + expense.convertedPrice(to: currencyManager.currentCurrency.code)
+        }
     }
     
     private var todayExpenses: [ExpenseItem] {
@@ -804,6 +863,7 @@ struct StatItemView: View {
 struct ExpenseRowView: View {
     let expense: ExpenseItem
     let onTap: () -> Void
+    @StateObject private var currencyManager = CurrencyManager.shared
     
     var body: some View {
         Button(action: onTap) {
@@ -815,10 +875,21 @@ struct ExpenseRowView: View {
                         .foregroundColor(.expensePrimaryText)
                         .lineLimit(1)
                     Spacer()
-                    // Price (show as $2.00 style)
-                    Text("$" + String(format: "%.2f", NSDecimalNumber(decimal: expense.price).doubleValue))
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(.expenseAccent)
+                    
+                    // Price display
+                    VStack(alignment: .trailing, spacing: 2) {
+                        // Main price in current currency
+                        Text(expense.formattedPriceInCurrentCurrency())
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.expenseGreen)
+                        
+                        // Original currency if different
+                        if expense.currency != currencyManager.currentCurrency.code {
+                            Text("(\(expense.formattedPriceInOriginalCurrency()))")
+                                .font(.system(size: 12))
+                                .foregroundColor(.expenseSecondaryText)
+                        }
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
@@ -844,7 +915,28 @@ struct ExpenseRowView: View {
                             .font(.system(size: 12))
                             .foregroundColor(.expenseSecondaryText)
                     }
-                    Spacer()
+                    
+                    // Currency indicator
+                    if expense.currency != currencyManager.currentCurrency.code {
+                        Spacer()
+                        HStack(spacing: 2) {
+                            if let originalCurrency = CurrencyManager.Currency.allCurrencies.first(where: { $0.code == expense.currency }) {
+                                Text(originalCurrency.flag)
+                                    .font(.system(size: 10))
+                                Text(originalCurrency.code)
+                                    .font(.system(size: 10))
+                                    .foregroundColor(.expenseSecondaryText)
+                            }
+                        }
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(Color.expenseSecondaryText.opacity(0.1))
+                        )
+                    } else {
+                        Spacer()
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 12)
@@ -922,20 +1014,26 @@ struct EmptyStateView: View {
 // MARK: - Expense Detail View (SwiftUI Version)
 struct ExpenseDetailView: View {
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var currencyManager = CurrencyManager.shared
     @State private var expense: ExpenseItem
     @State private var isNewExpense: Bool
+    @State private var selectedCurrency: CurrencyManager.Currency
     let onSave: (ExpenseItem) -> Void
     
     @State private var showingDatePicker = false
     @State private var showingTimePicker = false
+    @State private var showingCurrencyPicker = false
     
     init(expense: ExpenseItem?, onSave: @escaping (ExpenseItem) -> Void) {
         if let expense = expense {
             self._expense = State(initialValue: expense)
             self._isNewExpense = State(initialValue: false)
+            self._selectedCurrency = State(initialValue: CurrencyManager.Currency.allCurrencies.first { $0.code == expense.currency } ?? CurrencyManager.shared.currentCurrency)
         } else {
-            self._expense = State(initialValue: ExpenseItem())
+            let newExpense = ExpenseItem(currency: CurrencyManager.shared.currentCurrency.code)
+            self._expense = State(initialValue: newExpense)
             self._isNewExpense = State(initialValue: true)
+            self._selectedCurrency = State(initialValue: CurrencyManager.shared.currentCurrency)
         }
         self.onSave = onSave
     }
@@ -965,7 +1063,7 @@ struct ExpenseDetailView: View {
                                 .cornerRadius(10)
                         }
                         
-                        // Price Field
+                        // Price Field with Currency Selection
                         VStack(alignment: .leading, spacing: 8) {
                             HStack(spacing: 8) {
                                 Image(systemName: "dollarsign.circle.fill")
@@ -976,7 +1074,8 @@ struct ExpenseDetailView: View {
                                     .foregroundColor(.expenseSecondaryText)
                             }
                             
-                            HStack {
+                            HStack(spacing: 12) {
+                                // Price input
                                 TextField("0.00", value: Binding(
                                     get: { NSDecimalNumber(decimal: expense.price).doubleValue },
                                     set: { expense.price = Decimal($0) }
@@ -988,10 +1087,24 @@ struct ExpenseDetailView: View {
                                 .background(Color.expenseInputBackground)
                                 .cornerRadius(10)
                                 
-                                Text("USD")
-                                    .font(.caption)
-                                    .foregroundColor(.expenseSecondaryText)
-                                    .padding(.leading, 8)
+                                // Currency selector
+                                Button(action: { showingCurrencyPicker = true }) {
+                                    HStack(spacing: 6) {
+                                        Text(selectedCurrency.flag)
+                                            .font(.body)
+                                        Text(selectedCurrency.code)
+                                            .font(.caption)
+                                            .fontWeight(.medium)
+                                        Image(systemName: "chevron.down")
+                                            .font(.caption2)
+                                    }
+                                    .foregroundColor(.expenseAccent)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 12)
+                                    .background(Color.expenseInputBackground)
+                                    .cornerRadius(10)
+                                }
+                                .buttonStyle(PlainButtonStyle())
                             }
                         }
                         
@@ -1137,6 +1250,13 @@ struct ExpenseDetailView: View {
             .sheet(isPresented: $showingTimePicker) {
                 TimePickerView(time: $expense.time, title: "Select Time")
             }
+            .sheet(isPresented: $showingCurrencyPicker) {
+                CurrencyPickerView(selectedCurrency: $selectedCurrency) { currency in
+                    selectedCurrency = currency
+                    expense.currency = currency.code
+                    showingCurrencyPicker = false
+                }
+            }
         }
     }
     
@@ -1224,7 +1344,60 @@ struct TimePickerView: View {
     }
 }
 
-// MARK: - Navigation Drawer View (equivalent to NavigationView)
+// MARK: - Currency Picker View
+struct CurrencyPickerView: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var selectedCurrency: CurrencyManager.Currency
+    let onSelect: (CurrencyManager.Currency) -> Void
+    
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(CurrencyManager.Currency.allCurrencies, id: \.code) { currency in
+                    Button(action: {
+                        onSelect(currency)
+                    }) {
+                        HStack(spacing: 12) {
+                            Text(currency.flag)
+                                .font(.title2)
+                            
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(currency.name)
+                                    .font(.body)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.expensePrimaryText)
+                                
+                                Text("\(currency.symbol) \(currency.code)")
+                                    .font(.caption)
+                                    .foregroundColor(.expenseSecondaryText)
+                            }
+                            
+                            Spacer()
+                            
+                            if currency.code == selectedCurrency.code {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .font(.body)
+                                    .foregroundColor(.expenseGreen)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+            }
+            .navigationTitle("Select Currency")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
 struct NavigationDrawerView: View {
     @Environment(\.dismiss) private var dismiss
     
@@ -1275,6 +1448,9 @@ struct NavigationDrawerView: View {
                             }
                             NavigationMenuItem(icon: "", title: "Currency", emoji: "💱") {
                                 dismiss()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    NotificationCenter.default.post(name: NSNotification.Name("ShowCurrencySettings"), object: nil)
+                                }
                             }
                             NavigationMenuItem(icon: "", title: "Printer", emoji: "🖨️") {
                                 dismiss()
