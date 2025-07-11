@@ -229,7 +229,7 @@ struct SafeImage: View {
 // MARK: - Main Content View
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    // @StateObject private var currencyManager = CurrencyManager.shared  // Commented out until CurrencyManager is added
+    @StateObject private var currencyManager = CurrencyManager.shared
     @State private var expenses: [ExpenseItem] = []
     @State private var showingAddExpense = false
     @State private var selectedExpense: ExpenseItem?
@@ -309,7 +309,7 @@ struct ContentView: View {
             SettingsPage()
         }
         .sheet(isPresented: $showCurrencySettings) {
-            TemporaryCurrencyPage()
+            CurrencySettingsView()
         }
         .sheet(isPresented: $showingAddExpense) {
             ExpenseDetailView(expense: nil) { newExpense in
@@ -335,10 +335,10 @@ struct ContentView: View {
                 loadExpensesFromUserDefaults()
                 calculateTotal()
             }
-            // Currency change observer temporarily disabled until CurrencyManager is added
-            // NotificationCenter.default.addObserver(forName: .currencyChanged, object: nil, queue: .main) { _ in
-            //     calculateTotal()
-            // }
+            // Listen for currency changes to refresh UI
+            NotificationCenter.default.addObserver(forName: .currencyChanged, object: nil, queue: .main) { _ in
+                calculateTotal()
+            }
         }
     }
     
@@ -347,7 +347,7 @@ struct ContentView: View {
         VStack(spacing: 0) {
             // Card container with elevation and corner radius
             VStack(alignment: .leading, spacing: 14) {
-                    // Title with currency indicator (temporarily disabled)
+                    // Title with currency indicator
                     HStack {
                         Text("📅 Today's Summary")
                             .font(.system(size: 18, weight: .bold))
@@ -355,8 +355,7 @@ struct ContentView: View {
                         
                         Spacer()
                         
-                        // Current currency indicator (temporarily commented out)
-                        /*
+                        // Current currency indicator
                         HStack(spacing: 4) {
                             Text(currencyManager.currentCurrency.flag)
                                 .font(.caption)
@@ -371,7 +370,6 @@ struct ContentView: View {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(Color.expenseAccent.opacity(0.1))
                         )
-                        */
                     }
                 .padding(.bottom, 2)
                 
@@ -387,13 +385,13 @@ struct ContentView: View {
                 }
                 .padding(.bottom, 8)
                 
-                // Total Amount row (temporarily using original calculation)
+                // Total Amount row (with currency conversion)
                 HStack {
                     Text("Total Amount:")
                         .font(.system(size: 14))
                         .foregroundColor(.expenseSecondaryText)
                     Spacer()
-                    Text("$" + String(format: "%.2f", NSDecimalNumber(decimal: todayTotalAmount).doubleValue))
+                    Text(currencyManager.currentCurrency.format(todayTotalAmountInCurrentCurrency))
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(.expenseGreen)
                 }
@@ -470,8 +468,6 @@ struct ContentView: View {
         }.reduce(0) { $0 + $1.price }
     }
     
-    // Temporarily commented out until CurrencyManager is added
-    /*
     private var todayTotalAmountInCurrentCurrency: Decimal {
         let today = Calendar.current.startOfDay(for: Date())
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
@@ -481,7 +477,6 @@ struct ContentView: View {
             total + expense.convertedPrice(to: currencyManager.currentCurrency.code)
         }
     }
-    */
     
     private var todayExpenses: [ExpenseItem] {
         let today = Calendar.current.startOfDay(for: Date())
@@ -864,7 +859,7 @@ struct StatItemView: View {
 struct ExpenseRowView: View {
     let expense: ExpenseItem
     let onTap: () -> Void
-    // @StateObject private var currencyManager = CurrencyManager.shared  // Commented out until CurrencyManager is added
+    @StateObject private var currencyManager = CurrencyManager.shared
     
     var body: some View {
         Button(action: onTap) {
@@ -877,15 +872,23 @@ struct ExpenseRowView: View {
                         .lineLimit(1)
                     Spacer()
                     
-                    // Price display (temporarily simplified)
-                    Text("$" + String(format: "%.2f", NSDecimalNumber(decimal: expense.price).doubleValue))
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(.expenseGreen)
+                    // Price display with currency conversion
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text(expense.formattedPriceInCurrentCurrency())
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.expenseGreen)
+                        
+                        if expense.currency != currencyManager.currentCurrency.code {
+                            Text(expense.formattedPriceInOriginalCurrency())
+                                .font(.caption2)
+                                .foregroundColor(.expenseSecondaryText)
+                        }
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
 
-                // Date and Time Row
+                // Date and Time Row with currency flag
                 HStack(spacing: 8) {
                     HStack(spacing: 4) {
                         Image(systemName: "calendar")
@@ -906,7 +909,26 @@ struct ExpenseRowView: View {
                             .font(.system(size: 12))
                             .foregroundColor(.expenseSecondaryText)
                     }
+                    
                     Spacer()
+                    
+                    // Original currency flag if different from current
+                    if expense.currency != currencyManager.currentCurrency.code,
+                       let originalCurrency = CurrencyManager.Currency.allCurrencies.first(where: { $0.code == expense.currency }) {
+                        HStack(spacing: 2) {
+                            Text(originalCurrency.flag)
+                                .font(.caption2)
+                            Text(originalCurrency.code)
+                                .font(.caption2)
+                                .foregroundColor(.expenseSecondaryText)
+                        }
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 2)
+                        .background(
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(Color.expenseSecondaryText.opacity(0.1))
+                        )
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 12)
@@ -984,10 +1006,10 @@ struct EmptyStateView: View {
 // MARK: - Expense Detail View (SwiftUI Version)
 struct ExpenseDetailView: View {
     @Environment(\.dismiss) private var dismiss
-    // @StateObject private var currencyManager = CurrencyManager.shared  // Commented out until CurrencyManager is added
+    @StateObject private var currencyManager = CurrencyManager.shared
     @State private var expense: ExpenseItem
     @State private var isNewExpense: Bool
-    // @State private var selectedCurrency: CurrencyManager.Currency  // Commented out until CurrencyManager is added
+    @State private var selectedCurrency: CurrencyManager.Currency
     let onSave: (ExpenseItem) -> Void
     
     @State private var showingDatePicker = false
@@ -998,13 +1020,12 @@ struct ExpenseDetailView: View {
         if let expense = expense {
             self._expense = State(initialValue: expense)
             self._isNewExpense = State(initialValue: false)
-            // self._selectedCurrency = State(initialValue: CurrencyManager.Currency.allCurrencies.first { $0.code == expense.currency } ?? CurrencyManager.shared.currentCurrency)
+            self._selectedCurrency = State(initialValue: CurrencyManager.Currency.allCurrencies.first { $0.code == expense.currency } ?? CurrencyManager.shared.currentCurrency)
         } else {
-            // let newExpense = ExpenseItem(currency: CurrencyManager.shared.currentCurrency.code)
-            let newExpense = ExpenseItem()  // Temporary: use default currency
+            let newExpense = ExpenseItem(currency: CurrencyManager.shared.currentCurrency.code)
             self._expense = State(initialValue: newExpense)
             self._isNewExpense = State(initialValue: true)
-            // self._selectedCurrency = State(initialValue: CurrencyManager.shared.currentCurrency)
+            self._selectedCurrency = State(initialValue: CurrencyManager.shared.currentCurrency)
         }
         self.onSave = onSave
     }
@@ -1034,7 +1055,7 @@ struct ExpenseDetailView: View {
                                 .cornerRadius(10)
                         }
                         
-                        // Price Field (temporarily simplified)
+                        // Price Field with Currency Selection
                         VStack(alignment: .leading, spacing: 8) {
                             HStack(spacing: 8) {
                                 Image(systemName: "dollarsign.circle.fill")
@@ -1045,7 +1066,8 @@ struct ExpenseDetailView: View {
                                     .foregroundColor(.expenseSecondaryText)
                             }
                             
-                            HStack {
+                            HStack(spacing: 12) {
+                                // Price input
                                 TextField("0.00", value: Binding(
                                     get: { NSDecimalNumber(decimal: expense.price).doubleValue },
                                     set: { expense.price = Decimal($0) }
@@ -1057,10 +1079,24 @@ struct ExpenseDetailView: View {
                                 .background(Color.expenseInputBackground)
                                 .cornerRadius(10)
                                 
-                                Text("USD")
-                                    .font(.caption)
-                                    .foregroundColor(.expenseSecondaryText)
-                                    .padding(.leading, 8)
+                                // Currency selector
+                                Button(action: { showingCurrencyPicker = true }) {
+                                    HStack(spacing: 6) {
+                                        Text(selectedCurrency.flag)
+                                            .font(.body)
+                                        Text(selectedCurrency.code)
+                                            .font(.caption)
+                                            .fontWeight(.medium)
+                                        Image(systemName: "chevron.down")
+                                            .font(.caption2)
+                                    }
+                                    .foregroundColor(.expenseAccent)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 12)
+                                    .background(Color.expenseInputBackground)
+                                    .cornerRadius(10)
+                                }
+                                .buttonStyle(PlainButtonStyle())
                             }
                         }
                         
@@ -1206,7 +1242,13 @@ struct ExpenseDetailView: View {
             .sheet(isPresented: $showingTimePicker) {
                 TimePickerView(time: $expense.time, title: "Select Time")
             }
-            // Currency picker temporarily removed until CurrencyManager is added to project
+            .sheet(isPresented: $showingCurrencyPicker) {
+                CurrencyPickerView(selectedCurrency: $selectedCurrency) { currency in
+                    selectedCurrency = currency
+                    expense.currency = currency.code
+                    showingCurrencyPicker = false
+                }
+            }
         }
     }
     
@@ -1780,186 +1822,583 @@ struct ExportDocument: FileDocument {
     }
 }
 
-// MARK: - Temporary Currency Page (until CurrencyManager is added to project)
-struct TemporaryCurrencyPage: View {
-    @Environment(\.dismiss) private var dismiss
-    @State private var selectedCurrency = "USD"
+// MARK: - Comprehensive Currency Management System
+class CurrencyManager: ObservableObject {
+    static let shared = CurrencyManager()
     
-    // Temporary currency list until CurrencyManager is available
-    private let temporaryCurrencies = [
-        ("🇺🇸", "USD", "US Dollar"),
-        ("🇲🇲", "MMK", "Myanmar Kyat"),
-        ("🇪🇺", "EUR", "Euro"),
-        ("🇯🇵", "JPY", "Japanese Yen"),
-        ("🇬🇧", "GBP", "British Pound"),
-        ("🇨🇳", "CNY", "Chinese Yuan"),
-        ("🇰🇷", "KRW", "Korean Won"),
-        ("🇹🇭", "THB", "Thai Baht"),
-        ("🇸🇬", "SGD", "Singapore Dollar"),
-        ("🇮🇳", "INR", "Indian Rupee")
-    ]
+    @Published var currentCurrency: Currency = .usd
+    @Published var exchangeRates: [String: Double] = [:]
+    @Published var isLoadingRates = false
+    @Published var lastUpdateTime: Date?
+    @Published var apiError: String?
     
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                // Header Card
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack(spacing: 12) {
-                        Text("💱")
-                            .font(.title)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Currency Settings")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.expensePrimaryText)
-                            
-                            Text("Currency conversion coming soon!")
-                                .font(.subheadline)
-                                .foregroundColor(.expenseSecondaryText)
-                        }
-                        
-                        Spacer()
-                    }
-                }
-                .padding(20)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color.expenseCardBackground)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color.expenseAccent.opacity(0.3), lineWidth: 1)
-                        )
-                )
+    private init() {
+        loadSavedCurrency()
+        loadSavedRates()
+    }
+    
+    // MARK: - Currency Definition
+    struct Currency: Identifiable, Equatable {
+        let id = UUID()
+        let code: String
+        let name: String
+        let symbol: String
+        let flag: String
+        
+        static let usd = Currency(code: "USD", name: "US Dollar", symbol: "$", flag: "🇺🇸")
+        static let mmk = Currency(code: "MMK", name: "Myanmar Kyat", symbol: "K", flag: "🇲🇲")
+        static let eur = Currency(code: "EUR", name: "Euro", symbol: "€", flag: "🇪🇺")
+        static let jpy = Currency(code: "JPY", name: "Japanese Yen", symbol: "¥", flag: "🇯🇵")
+        static let gbp = Currency(code: "GBP", name: "British Pound", symbol: "£", flag: "🇬🇧")
+        static let cny = Currency(code: "CNY", name: "Chinese Yuan", symbol: "¥", flag: "🇨🇳")
+        static let krw = Currency(code: "KRW", name: "Korean Won", symbol: "₩", flag: "🇰🇷")
+        static let thb = Currency(code: "THB", name: "Thai Baht", symbol: "฿", flag: "🇹🇭")
+        static let sgd = Currency(code: "SGD", name: "Singapore Dollar", symbol: "S$", flag: "🇸🇬")
+        static let inr = Currency(code: "INR", name: "Indian Rupee", symbol: "₹", flag: "🇮🇳")
+        
+        static let allCurrencies: [Currency] = [.usd, .mmk, .eur, .jpy, .gbp, .cny, .krw, .thb, .sgd, .inr]
+        
+        func format(_ amount: Decimal) -> String {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .currency
+            formatter.currencyCode = self.code
+            formatter.currencySymbol = self.symbol
+            formatter.maximumFractionDigits = (self.code == "JPY" || self.code == "KRW") ? 0 : 2
+            return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "\(symbol)0"
+        }
+    }
+    
+    // MARK: - Public Methods
+    func setCurrency(_ currency: Currency) {
+        currentCurrency = currency
+        saveCurrency()
+        NotificationCenter.default.post(name: .currencyChanged, object: nil)
+        
+        // Auto-fetch rates when currency changes
+        if exchangeRates.isEmpty || shouldRefreshRates() {
+            fetchExchangeRates()
+        }
+    }
+    
+    func convertAmount(_ amount: Decimal, from: String, to: String) -> Decimal {
+        guard from != to else { return amount }
+        
+        // Convert to USD first (base currency)
+        let usdAmount: Decimal
+        if from == "USD" {
+            usdAmount = amount
+        } else if let fromRate = exchangeRates[from] {
+            usdAmount = amount / Decimal(fromRate)
+        } else {
+            return amount // Fallback if no rate available
+        }
+        
+        // Convert from USD to target currency
+        if to == "USD" {
+            return usdAmount
+        } else if let toRate = exchangeRates[to] {
+            return usdAmount * Decimal(toRate)
+        } else {
+            return amount // Fallback if no rate available
+        }
+    }
+    
+    func fetchExchangeRates() {
+        guard !isLoadingRates else { return }
+        
+        isLoadingRates = true
+        apiError = nil
+        
+        guard let url = URL(string: "https://myanmar-currency-api.github.io/api/latest.json") else {
+            handleFetchError("Invalid API URL")
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            DispatchQueue.main.async {
+                self?.isLoadingRates = false
                 
-                // Currency List
-                VStack(alignment: .leading, spacing: 16) {
-                    HStack {
-                        Text("Available Currencies")
-                            .font(.headline)
-                            .foregroundColor(.expensePrimaryText)
-                        
-                        Spacer()
-                        
-                        Text("Currently: USD")
-                            .font(.caption)
-                            .foregroundColor(.expenseSecondaryText)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .fill(Color.expenseAccent.opacity(0.1))
-                            )
-                    }
-                    
-                    ScrollView {
-                        LazyVStack(spacing: 8) {
-                            ForEach(Array(temporaryCurrencies.enumerated()), id: \.offset) { index, currency in
-                                CurrencyRowView(
-                                    flag: currency.0,
-                                    code: currency.1,
-                                    name: currency.2,
-                                    isSelected: currency.1 == selectedCurrency
-                                ) {
-                                    selectedCurrency = currency.1
-                                }
-                            }
-                        }
-                    }
+                if let error = error {
+                    self?.handleFetchError("Network error: \(error.localizedDescription)")
+                    return
                 }
-                .padding(20)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color.expenseCardBackground)
-                )
                 
-                // Info Card
-                VStack(spacing: 12) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "info.circle.fill")
-                            .foregroundColor(.expenseAccent)
-                        
-                        Text("Coming Soon")
-                            .font(.headline)
-                            .foregroundColor(.expensePrimaryText)
-                        
-                        Spacer()
-                    }
-                    
-                    Text("Currency conversion with Myanmar Currency API integration will be available once the CurrencyManager system is added to the project.")
-                        .font(.subheadline)
-                        .foregroundColor(.expenseSecondaryText)
-                        .multilineTextAlignment(.leading)
+                guard let data = data else {
+                    self?.handleFetchError("No data received")
+                    return
                 }
-                .padding(16)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.expenseAccent.opacity(0.1))
-                )
                 
-                Spacer()
-            }
-            .padding(16)
-            .background(Color.expenseBackground)
-            .navigationTitle("Currency")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Back") {
-                        dismiss()
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                       let rates = json["rates"] as? [String: Double] {
+                        self?.exchangeRates = rates
+                        self?.lastUpdateTime = Date()
+                        self?.saveRates()
+                        self?.apiError = nil
+                    } else {
+                        self?.handleFetchError("Invalid response format")
                     }
-                    .foregroundColor(.expenseAccent)
+                } catch {
+                    self?.handleFetchError("JSON parsing error: \(error.localizedDescription)")
                 }
             }
+        }.resume()
+    }
+    
+    // MARK: - Private Methods
+    private func handleFetchError(_ message: String) {
+        apiError = message
+        if exchangeRates.isEmpty {
+            // Load fallback rates if no rates available
+            loadFallbackRates()
+        }
+    }
+    
+    private func loadFallbackRates() {
+        exchangeRates = [
+            "MMK": 2100.0,
+            "EUR": 0.85,
+            "JPY": 110.0,
+            "GBP": 0.72,
+            "CNY": 6.45,
+            "KRW": 1180.0,
+            "THB": 33.0,
+            "SGD": 1.35,
+            "INR": 74.0
+        ]
+    }
+    
+    private func shouldRefreshRates() -> Bool {
+        guard let lastUpdate = lastUpdateTime else { return true }
+        return Date().timeIntervalSince(lastUpdate) > 3600 // Refresh every hour
+    }
+    
+    private func saveCurrency() {
+        UserDefaults.standard.set(currentCurrency.code, forKey: "SelectedCurrency")
+    }
+    
+    private func loadSavedCurrency() {
+        if let savedCode = UserDefaults.standard.string(forKey: "SelectedCurrency"),
+           let currency = Currency.allCurrencies.first(where: { $0.code == savedCode }) {
+            currentCurrency = currency
+        }
+    }
+    
+    private func saveRates() {
+        if let data = try? JSONSerialization.data(withJSONObject: exchangeRates) {
+            UserDefaults.standard.set(data, forKey: "ExchangeRates")
+            UserDefaults.standard.set(Date(), forKey: "RatesUpdateTime")
+        }
+    }
+    
+    private func loadSavedRates() {
+        if let data = UserDefaults.standard.data(forKey: "ExchangeRates"),
+           let rates = try? JSONSerialization.jsonObject(with: data) as? [String: Double] {
+            exchangeRates = rates
+            lastUpdateTime = UserDefaults.standard.object(forKey: "RatesUpdateTime") as? Date
+        } else {
+            loadFallbackRates()
         }
     }
 }
 
-// MARK: - Temporary Currency Row View
-struct CurrencyRowView: View {
-    let flag: String
-    let code: String
-    let name: String
-    let isSelected: Bool
-    let onTap: () -> Void
+// MARK: - Notification Extension
+extension NSNotification.Name {
+    static let currencyChanged = NSNotification.Name("CurrencyChanged")
+}
+
+// MARK: - ExpenseItem Currency Extensions
+extension ExpenseItem {
+    func convertedPrice(to targetCurrency: String) -> Decimal {
+        return CurrencyManager.shared.convertAmount(price, from: currency, to: targetCurrency)
+    }
+    
+    func formattedPriceInCurrentCurrency() -> String {
+        let convertedPrice = convertedPrice(to: CurrencyManager.shared.currentCurrency.code)
+        return CurrencyManager.shared.currentCurrency.format(convertedPrice)
+    }
+    
+    func formattedPriceInOriginalCurrency() -> String {
+        if let originalCurrency = CurrencyManager.Currency.allCurrencies.first(where: { $0.code == currency }) {
+            return originalCurrency.format(price)
+        }
+        return CurrencyManager.Currency.usd.format(price)
+    }
+}
+
+// MARK: - Advanced Currency Settings View
+struct CurrencySettingsView: View {
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var currencyManager = CurrencyManager.shared
+    @State private var showingRateDetails = false
     
     var body: some View {
-        Button(action: onTap) {
-            HStack(spacing: 12) {
-                Text(flag)
-                    .font(.title2)
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Current Status Card
+                    currentStatusCard
+                    
+                    // Currency Selection
+                    currencySelectionCard
+                    
+                    // Exchange Rates Card
+                    exchangeRatesCard
+                    
+                    // API Status Card
+                    apiStatusCard
+                    
+                    Spacer(minLength: 20)
+                }
+                .padding(16)
+            }
+            .background(Color.expenseBackground)
+            .navigationTitle("Currency Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                    .foregroundColor(.expenseAccent)
+                }
                 
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(name)
-                        .font(.body)
-                        .fontWeight(.medium)
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { currencyManager.fetchExchangeRates() }) {
+                        if currencyManager.isLoadingRates {
+                            ProgressView()
+                                .scaleEffect(0.8)
+                        } else {
+                            Image(systemName: "arrow.clockwise")
+                                .foregroundColor(.expenseAccent)
+                        }
+                    }
+                    .disabled(currencyManager.isLoadingRates)
+                }
+            }
+        }
+        .onAppear {
+            if currencyManager.exchangeRates.isEmpty {
+                currencyManager.fetchExchangeRates()
+            }
+        }
+    }
+    
+    // MARK: - Card Views
+    private var currentStatusCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("💱 Current Currency")
+                    .font(.headline)
+                    .foregroundColor(.expensePrimaryText)
+                
+                Spacer()
+                
+                if currencyManager.isLoadingRates {
+                    ProgressView()
+                        .scaleEffect(0.7)
+                }
+            }
+            
+            HStack(spacing: 12) {
+                Text(currencyManager.currentCurrency.flag)
+                    .font(.largeTitle)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(currencyManager.currentCurrency.name)
+                        .font(.title2)
+                        .fontWeight(.semibold)
                         .foregroundColor(.expensePrimaryText)
                     
-                    Text(code)
-                        .font(.caption)
+                    Text("\(currencyManager.currentCurrency.symbol) \(currencyManager.currentCurrency.code)")
+                        .font(.subheadline)
                         .foregroundColor(.expenseSecondaryText)
                 }
                 
                 Spacer()
                 
-                if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.title3)
-                        .foregroundColor(.expenseGreen)
-                } else {
-                    Image(systemName: "circle")
-                        .font(.title3)
-                        .foregroundColor(.expenseSecondaryText.opacity(0.3))
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text("Active")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.expenseGreen)
+                        )
+                    
+                    if let lastUpdate = currencyManager.lastUpdateTime {
+                        Text("Updated \(timeAgoString(from: lastUpdate))")
+                            .font(.caption2)
+                            .foregroundColor(.expenseSecondaryText)
+                    }
                 }
             }
-            .padding(.vertical, 8)
-            .padding(.horizontal, 12)
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.expenseCardBackground)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.expenseAccent.opacity(0.3), lineWidth: 1)
+                )
+        )
+    }
+    
+    private var currencySelectionCard: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("🌍 Available Currencies")
+                .font(.headline)
+                .foregroundColor(.expensePrimaryText)
+            
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 8) {
+                ForEach(CurrencyManager.Currency.allCurrencies) { currency in
+                    CurrencySelectionRow(
+                        currency: currency,
+                        isSelected: currency.code == currencyManager.currentCurrency.code,
+                        exchangeRate: currencyManager.exchangeRates[currency.code]
+                    ) {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            currencyManager.setCurrency(currency)
+                        }
+                    }
+                }
+            }
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.expenseCardBackground)
+        )
+    }
+    
+    private var exchangeRatesCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("📊 Exchange Rates")
+                    .font(.headline)
+                    .foregroundColor(.expensePrimaryText)
+                
+                Spacer()
+                
+                Button("View All") {
+                    showingRateDetails = true
+                }
+                .font(.caption)
+                .foregroundColor(.expenseAccent)
+            }
+            
+            if currencyManager.exchangeRates.isEmpty {
+                Text("Loading exchange rates...")
+                    .font(.subheadline)
+                    .foregroundColor(.expenseSecondaryText)
+            } else {
+                VStack(spacing: 8) {
+                    ForEach(Array(currencyManager.exchangeRates.prefix(3).sorted(by: { $0.key < $1.key })), id: \.key) { code, rate in
+                        if let currency = CurrencyManager.Currency.allCurrencies.first(where: { $0.code == code }) {
+                            HStack {
+                                Text("\(currency.flag) \(code)")
+                                    .font(.subheadline)
+                                    .foregroundColor(.expensePrimaryText)
+                                
+                                Spacer()
+                                
+                                Text("1 USD = \(currency.symbol)\(String(format: "%.2f", rate))")
+                                    .font(.caption)
+                                    .foregroundColor(.expenseSecondaryText)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.expenseCardBackground)
+        )
+        .sheet(isPresented: $showingRateDetails) {
+            ExchangeRateDetailsView()
+        }
+    }
+    
+    private var apiStatusCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("🔄 API Status")
+                .font(.headline)
+                .foregroundColor(.expensePrimaryText)
+            
+            if let error = currencyManager.apiError {
+                HStack(spacing: 8) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(.expenseError)
+                    
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.expenseError)
+                        .multilineTextAlignment(.leading)
+                }
+            } else {
+                HStack(spacing: 8) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.expenseGreen)
+                    
+                    Text("Myanmar Currency API - Connected")
+                        .font(.caption)
+                        .foregroundColor(.expenseGreen)
+                }
+            }
+            
+            Text("https://myanmar-currency-api.github.io/api/latest.json")
+                .font(.caption2)
+                .foregroundColor(.expenseSecondaryText)
+                .lineLimit(1)
+                .truncationMode(.middle)
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.expenseCardBackground)
+        )
+    }
+    
+    private func timeAgoString(from date: Date) -> String {
+        let interval = Date().timeIntervalSince(date)
+        
+        if interval < 60 {
+            return "just now"
+        } else if interval < 3600 {
+            let minutes = Int(interval / 60)
+            return "\(minutes)m ago"
+        } else if interval < 86400 {
+            let hours = Int(interval / 3600)
+            return "\(hours)h ago"
+        } else {
+            let days = Int(interval / 86400)
+            return "\(days)d ago"
+        }
+    }
+}
+
+// MARK: - Currency Selection Row
+struct CurrencySelectionRow: View {
+    let currency: CurrencyManager.Currency
+    let isSelected: Bool
+    let exchangeRate: Double?
+    let onSelect: () -> Void
+    
+    var body: some View {
+        Button(action: onSelect) {
+            VStack(spacing: 8) {
+                HStack {
+                    Text(currency.flag)
+                        .font(.title2)
+                    
+                    Spacer()
+                    
+                    if isSelected {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.caption)
+                            .foregroundColor(.expenseGreen)
+                    }
+                }
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(currency.code)
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.expensePrimaryText)
+                    
+                    if let rate = exchangeRate {
+                        Text("1 USD = \(currency.symbol)\(String(format: "%.2f", rate))")
+                            .font(.caption2)
+                            .foregroundColor(.expenseSecondaryText)
+                    } else if currency.code == "USD" {
+                        Text("Base currency")
+                            .font(.caption2)
+                            .foregroundColor(.expenseSecondaryText)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(12)
             .background(
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(isSelected ? Color.expenseAccent.opacity(0.1) : Color.clear)
+                    .fill(isSelected ? Color.expenseAccent.opacity(0.1) : Color.expenseInputBackground)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(isSelected ? Color.expenseAccent : Color.clear, lineWidth: 1)
+                    )
             )
         }
         .buttonStyle(PlainButtonStyle())
+    }
+}
+
+// MARK: - Exchange Rate Details View
+struct ExchangeRateDetailsView: View {
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var currencyManager = CurrencyManager.shared
+    
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(CurrencyManager.Currency.allCurrencies) { currency in
+                    HStack {
+                        Text(currency.flag)
+                            .font(.title2)
+                        
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(currency.name)
+                                .font(.body)
+                                .fontWeight(.medium)
+                                .foregroundColor(.expensePrimaryText)
+                            
+                            Text(currency.code)
+                                .font(.caption)
+                                .foregroundColor(.expenseSecondaryText)
+                        }
+                        
+                        Spacer()
+                        
+                        VStack(alignment: .trailing, spacing: 2) {
+                            if currency.code == "USD" {
+                                Text("Base")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.expenseAccent)
+                            } else if let rate = currencyManager.exchangeRates[currency.code] {
+                                Text("\(currency.symbol)\(String(format: "%.4f", rate))")
+                                    .font(.body)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.expensePrimaryText)
+                            } else {
+                                Text("N/A")
+                                    .font(.caption)
+                                    .foregroundColor(.expenseSecondaryText)
+                            }
+                            
+                            Text("per USD")
+                                .font(.caption2)
+                                .foregroundColor(.expenseSecondaryText)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+            .navigationTitle("Exchange Rates")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+        }
     }
 }
 
