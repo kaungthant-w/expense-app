@@ -1227,13 +1227,14 @@ struct TimePickerView: View {
 // MARK: - Navigation Drawer View (equivalent to NavigationView)
 struct NavigationDrawerView: View {
     @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 0) {
-                // Header
+                // Header Section (matching Android design)
                 VStack(alignment: .leading, spacing: 8) {
                     SafeImage(
-                        imageName: "ExpenseLogo",
+                        imageName: "app_logo",
                         systemFallback: "dollarsign.circle.fill",
                         width: 60,
                         height: 60
@@ -1246,33 +1247,65 @@ struct NavigationDrawerView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                     
-                    Text("Expense Tracker")
+                    Text("📊 Track your expenses efficiently")
                         .font(.subheadline)
-                        .foregroundColor(.white.opacity(0.8))
+                        .foregroundColor(.white.opacity(0.9))
+                        .multilineTextAlignment(.leading)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(20)
-                .background(Color.expenseAccent)
+                .background(Color.expenseAccent) // Purple background #6200EE
                 
-                // Menu Items
-                VStack(spacing: 0) {
-                    NavigationMenuItem(icon: "house.fill", title: "Home") {
-                        dismiss()
-                    }
-                    NavigationMenuItem(icon: "chart.bar.fill", title: "Reports") {
-                        dismiss()
-                    }
-                    NavigationMenuItem(icon: "gear", title: "Settings") {
-                        dismiss()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            NotificationCenter.default.post(name: NSNotification.Name("ShowSettingsPage"), object: nil)
+                // Menu Items Container
+                ScrollView {
+                    VStack(spacing: 0) {
+                        // Main Group
+                        NavigationMenuSection(title: "MAIN") {
+                            NavigationMenuItem(icon: "house.fill", title: "Home", emoji: "🏠") {
+                                dismiss()
+                            }
+                            NavigationMenuItem(icon: "list.clipboard.fill", title: "All Expense", emoji: "📋") {
+                                dismiss()
+                            }
+                            NavigationMenuItem(icon: "archivebox.fill", title: "History", emoji: "🗃️") {
+                                dismiss()
+                            }
+                            NavigationMenuItem(icon: "chart.bar.fill", title: "Summary", emoji: "📊") {
+                                dismiss()
+                            }
+                            NavigationMenuItem(icon: "dollarsign.circle.fill", title: "Currency", emoji: "💱") {
+                                dismiss()
+                            }
+                            NavigationMenuItem(icon: "printer.fill", title: "Printer", emoji: "🖨️") {
+                                dismiss()
+                            }
+                        }
+                        
+                        // Group Separator
+                        Divider()
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 20)
+                        
+                        // Settings Group
+                        NavigationMenuSection(title: "SETTINGS") {
+                            NavigationMenuItem(icon: "gear", title: "Settings", emoji: "⚙️") {
+                                dismiss()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    NotificationCenter.default.post(name: NSNotification.Name("ShowSettingsPage"), object: nil)
+                                }
+                            }
+                            NavigationMenuItem(icon: "message.fill", title: "Feedback", emoji: "💬") {
+                                dismiss()
+                                // Handle feedback action
+                            }
+                            NavigationMenuItem(icon: "info.circle.fill", title: "About Us", emoji: "ℹ️") {
+                                dismiss()
+                                // Handle about action
+                            }
                         }
                     }
-                    NavigationMenuItem(icon: "info.circle", title: "About") {
-                        dismiss()
-                    }
                 }
-                .padding(.top, 20)
+                .background(Color.expenseCardBackground)
                 
                 Spacer()
             }
@@ -1282,19 +1315,54 @@ struct NavigationDrawerView: View {
     }
 }
 
+// MARK: - Navigation Menu Section
+struct NavigationMenuSection<Content: View>: View {
+    let title: String
+    let content: Content
+    
+    init(title: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Section Header
+            if !title.isEmpty {
+                Text(title)
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.expenseSecondaryText)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 16)
+                    .padding(.bottom, 8)
+            }
+            
+            // Section Content
+            content
+        }
+    }
+}
+
 // MARK: - Navigation Menu Item
 struct NavigationMenuItem: View {
     let icon: String
     let title: String
+    let emoji: String
     let action: () -> Void
     
     var body: some View {
         Button(action: action) {
             HStack(spacing: 16) {
-                Image(systemName: icon)
-                    .font(.title3)
-                    .foregroundColor(.expenseAccent)
-                    .frame(width: 24)
+                // Emoji + System Icon
+                HStack(spacing: 4) {
+                    Text(emoji)
+                        .font(.body)
+                    Image(systemName: icon)
+                        .font(.caption)
+                        .foregroundColor(.expenseAccent)
+                }
+                .frame(width: 32, alignment: .leading)
                 
                 Text(title)
                     .font(.body)
@@ -1303,9 +1371,18 @@ struct NavigationMenuItem: View {
                 Spacer()
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 16)
+            .padding(.vertical, 14)
+            .background(
+                Color.clear
+                    .contentShape(Rectangle())
+            )
         }
         .buttonStyle(PlainButtonStyle())
+        .background(
+            Color.expenseAccent
+                .opacity(0.05)
+                .opacity(0) // Remove this line to show selection highlight
+        )
     }
 }
 
