@@ -309,7 +309,7 @@ struct ContentView: View {
             CurrencySettingsView()
         }
         .sheet(isPresented: $showSummaryView) {
-            SummaryView()
+            InlineSummaryView()
         }
         .sheet(isPresented: $showingAddExpense) {
             ExpenseDetailView(expense: nil) { newExpense in
@@ -2060,131 +2060,131 @@ extension ExpenseItem {
     }
 }
 
-// MARK: - Advanced Currency Settings View
-struct CurrencySettingsView: View {
-    @Environment(\.dismiss) private var dismiss
+// MARK: - Inline Summary View (to avoid separate file import issues)
+struct InlineSummaryView: View {
     @StateObject private var currencyManager = CurrencyManager.shared
-    @State private var showingRateDetails = false
+    @State private var summaryData = InlineSummaryData()
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(spacing: 20) {
-                    // Current Status Card
-                    currentStatusCard
+                VStack(spacing: 16) {
+                    // Header with Back Button
+                    headerSection
                     
-                    // Currency Selection
-                    currencySelectionCard
+                    // Overall Summary Card
+                    overallSummaryCard
                     
-                    // Exchange Rates Card
-                    exchangeRatesCard
+                    // Today's Summary Card
+                    todaySummaryCard
                     
-                    // API Status Card
-                    apiStatusCard
+                    // Weekly Summary Card
+                    weeklySummaryCard
+                    
+                    // Monthly Summary Card
+                    monthlySummaryCard
+                    
+                    // Extremes Card
+                    extremesCard
                     
                     Spacer(minLength: 20)
                 }
                 .padding(16)
             }
             .background(Color.expenseBackground)
-            .navigationTitle("Currency Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Done") {
-                        dismiss()
-                    }
-                    .foregroundColor(.expenseAccent)
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { currencyManager.fetchExchangeRates() }) {
-                        if currencyManager.isLoadingRates {
-                            ProgressView()
-                                .scaleEffect(0.8)
-                        } else {
-                            Image(systemName: "arrow.clockwise")
-                                .foregroundColor(.expenseAccent)
-                        }
-                    }
-                    .disabled(currencyManager.isLoadingRates)
-                }
-            }
+            .navigationBarHidden(true)
         }
         .onAppear {
-            if currencyManager.exchangeRates.isEmpty {
-                currencyManager.fetchExchangeRates()
-            }
+            loadSummaryData()
         }
     }
     
-    // MARK: - Card Views
-    private var currentStatusCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("💱 Current Currency")
-                    .font(.headline)
+    // MARK: - Header Section
+    private var headerSection: some View {
+        HStack(spacing: 16) {
+            // Back Button
+            Button(action: {
+                presentationMode.wrappedValue.dismiss()
+            }) {
+                Image(systemName: "arrow.left")
+                    .font(.title2)
                     .foregroundColor(.expensePrimaryText)
-                
-                Spacer()
-                
-                if currencyManager.isLoadingRates {
-                    ProgressView()
-                        .scaleEffect(0.7)
-                }
+                    .frame(width: 48, height: 48)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.expenseInputBackground)
+                    )
             }
             
-            HStack(spacing: 12) {
-                Text(currencyManager.currentCurrency.flag)
-                    .font(.largeTitle)
+            // Title
+            Text("Summary")
+                .font(.title)
+                .fontWeight(.bold)
+                .foregroundColor(.expensePrimaryText)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.bottom, 14)
+    }
+    
+    // MARK: - Overall Summary Card
+    private var overallSummaryCard: some View {
+        InlineGlassmorphismCard {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Overall Statistics")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.expensePrimaryText)
                 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(currencyManager.currentCurrency.name)
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.expensePrimaryText)
+                VStack(spacing: 8) {
+                    summaryRow(
+                        label: "Total Expenses",
+                        value: "\(summaryData.totalExpenseCount)",
+                        valueColor: .expensePrimaryText
+                    )
                     
-                    Text("\(currencyManager.currentCurrency.symbol) \(currencyManager.currentCurrency.code)")
-                        .font(.subheadline)
-                        .foregroundColor(.expenseSecondaryText)
-                }
-                
-                Spacer()
-                
-                VStack(alignment: .trailing, spacing: 4) {
-                    Text("Active")
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(Color.expenseGreen)
-                        )
+                    summaryRow(
+                        label: "Total Amount",
+                        value: currencyManager.currentCurrency.format(Decimal(summaryData.totalAmount)),
+                        valueColor: Color.expenseGreen
+                    )
                     
-                    if let lastUpdate = currencyManager.lastUpdateTime {
-                        Text("Updated \(timeAgoString(from: lastUpdate))")
-                            .font(.caption2)
-                            .foregroundColor(.expenseSecondaryText)
-                    }
+                    summaryRow(
+                        label: "Average Amount",
+                        value: currencyManager.currentCurrency.format(Decimal(summaryData.averageAmount)),
+                        valueColor: Color(red: 1.0, green: 0.596, blue: 0.0) // #FF9800
+                    )
                 }
             }
         }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.expenseCardBackground)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.expenseAccent.opacity(0.3), lineWidth: 1)
-                )
-        )
     }
     
-    private var currencySelectionCard: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("🌍 Available Currencies")
+    // MARK: - Today's Summary Card
+    private var todaySummaryCard: some View {
+        InlineGlassmorphismCard {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Today's Summary")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.expensePrimaryText)
+                
+                VStack(spacing: 8) {
+                    summaryRow(
+                        label: "Today's Expenses",
+                        value: "\(summaryData.todayExpenseCount)",
+                        valueColor: .expensePrimaryText
+                    )
+                    
+                    summaryRow(
+                        label: "Today's Total",
+                        value: currencyManager.currentCurrency.format(Decimal(summaryData.todayTotalAmount)),
+                        valueColor: Color.expenseGreen
+                    )
+                }
+            }
+        }
+    }
+    
                 .font(.headline)
                 .foregroundColor(.expensePrimaryText)
             
