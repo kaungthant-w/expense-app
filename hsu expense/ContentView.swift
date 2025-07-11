@@ -131,21 +131,6 @@ struct ExpenseItem: Identifiable {
         formatter.timeStyle = .short
         return formatter.string(from: time)
     }
-    
-    // MARK: - Currency Conversion Methods (Temporary - will be replaced when CurrencyManager is added)
-    func convertedPrice(to targetCurrency: String) -> Decimal {
-        // Temporary: return original price until CurrencyManager is properly added
-        return price
-    }
-    
-    func formattedPriceInCurrentCurrency() -> String {
-        // Temporary: return original formatted price
-        return formattedPrice
-    }
-    
-    func formattedPriceInOriginalCurrency() -> String {
-        return formattedPrice
-    }
 }
 
 // MARK: - Design System Colors (matching Android design)
