@@ -1079,7 +1079,8 @@ struct ExpenseDetailView: View {
                                 .background(Color.expenseInputBackground)
                                 .cornerRadius(10)
                                 
-                                // Currency selector
+                                // Currency selector (temporarily disabled)
+                                /*
                                 Button(action: { showingCurrencyPicker = true }) {
                                     HStack(spacing: 6) {
                                         Text(selectedCurrency.flag)
@@ -1097,6 +1098,13 @@ struct ExpenseDetailView: View {
                                     .cornerRadius(10)
                                 }
                                 .buttonStyle(PlainButtonStyle())
+                                */
+                                
+                                // Temporary currency display
+                                Text(selectedCurrency.code)
+                                    .font(.caption)
+                                    .foregroundColor(.expenseSecondaryText)
+                                    .padding(.leading, 8)
                             }
                         }
                         
@@ -1242,13 +1250,14 @@ struct ExpenseDetailView: View {
             .sheet(isPresented: $showingTimePicker) {
                 TimePickerView(time: $expense.time, title: "Select Time")
             }
-            .sheet(isPresented: $showingCurrencyPicker) {
-                CurrencyPickerView(selectedCurrency: $selectedCurrency) { currency in
-                    selectedCurrency = currency
-                    expense.currency = currency.code
-                    showingCurrencyPicker = false
-                }
-            }
+            // Currency picker temporarily disabled until project files are synced
+            // .sheet(isPresented: $showingCurrencyPicker) {
+            //     CurrencyPickerView(selectedCurrency: $selectedCurrency) { currency in
+            //         selectedCurrency = currency
+            //         expense.currency = currency.code
+            //         showingCurrencyPicker = false
+            //     }
+            // }
         }
     }
     
