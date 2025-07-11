@@ -2182,249 +2182,257 @@ struct InlineSummaryView: View {
                         valueColor: Color.expenseGreen
                     )
                 }
-            }
+ }
         }
     }
     
-                .font(.headline)
-                .foregroundColor(.expensePrimaryText)
-            
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
-                ForEach(CurrencyManager.Currency.allCurrencies) { currency in
-                    CurrencySelectionRow(
-                        currency: currency,
-                        isSelected: currency.code == currencyManager.currentCurrency.code,
-                        exchangeRate: currencyManager.exchangeRates[currency.code]
-                    ) {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            currencyManager.setCurrency(currency)
-                        }
-                    }
-                }
-            }
-        }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.expenseCardBackground)
-        )
-    }
-    
-    private var exchangeRatesCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("📊 Exchange Rates")
+    // MARK: - Weekly Summary Card
+    private var weeklySummaryCard: some View {
+        InlineGlassmorphismCard {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("This Week's Summary")
                     .font(.headline)
+                    .fontWeight(.bold)
                     .foregroundColor(.expensePrimaryText)
                 
-                Spacer()
-                
-                Button("View All") {
-                    showingRateDetails = true
-                }
-                .font(.caption)
-                .foregroundColor(.expenseAccent)
-            }
-            
-            if currencyManager.exchangeRates.isEmpty {
-                Text("Loading exchange rates...")
-                    .font(.subheadline)
-                    .foregroundColor(.expenseSecondaryText)
-            } else {
                 VStack(spacing: 8) {
-                    ForEach(Array(currencyManager.exchangeRates.prefix(3).sorted(by: { $0.key < $1.key })), id: \.key) { code, rate in
-                        if let currency = CurrencyManager.Currency.allCurrencies.first(where: { $0.code == code }) {
-                            HStack {
-                                Text("\(currency.flag) \(code)")
-                                    .font(.subheadline)
-                                    .foregroundColor(.expensePrimaryText)
-                                
-                                Spacer()
-                                
-                                Text("1 USD = \(currency.symbol)\(String(format: "%.2f", rate))")
-                                    .font(.caption)
-                                    .foregroundColor(.expenseSecondaryText)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.expenseCardBackground)
-        )
-        .sheet(isPresented: $showingRateDetails) {
-            ExchangeRateDetailsView()
-        }
-    }
-    
-    private var apiStatusCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("🔄 API Status")
-                .font(.headline)
-                .foregroundColor(.expensePrimaryText)
-            
-            if let error = currencyManager.apiError {
-                HStack(spacing: 8) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundColor(.expenseError)
-                    
-                    Text(error)
-                        .font(.caption)
-                        .foregroundColor(.expenseError)
-                        .multilineTextAlignment(.leading)
-                }
-            } else {
-                HStack(spacing: 8) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.expenseGreen)
-                    
-                    Text("Myanmar Currency API - Connected")
-                        .font(.caption)
-                        .foregroundColor(.expenseGreen)
-                }
-            }
-            
-            Text("https://myanmar-currency-api.github.io/api/latest.json")
-                .font(.caption2)
-                .foregroundColor(.expenseSecondaryText)
-                .lineLimit(1)
-                .truncationMode(.middle)
-        }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.expenseCardBackground)
-        )
-    }
-    
-    private func timeAgoString(from date: Date) -> String {
-        let interval = Date().timeIntervalSince(date)
-        
-        if interval < 60 {
-            return "just now"
-        } else if interval < 3600 {
-            let minutes = Int(interval / 60)
-            return "\(minutes)m ago"
-        } else if interval < 86400 {
-            let hours = Int(interval / 3600)
-            return "\(hours)h ago"
-        } else {
-            let days = Int(interval / 86400)
-            return "\(days)d ago"
-        }
-    }
-}
-
-// MARK: - Currency Selection Row
-struct CurrencySelectionRow: View {
-    let currency: CurrencyManager.Currency
-    let isSelected: Bool
-    let exchangeRate: Double?
-    let onSelect: () -> Void
-    
-    var body: some View {
-        Button(action: onSelect) {
-            VStack(spacing: 8) {
-                HStack {
-                    Text(currency.flag)
-                        .font(.title2)
-                    
-                    Spacer()
-                    
-                    if isSelected {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.caption)
-                            .foregroundColor(.expenseGreen)
-                    }
-                }
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(currency.code)
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.expensePrimaryText)
-                    
-                    if let rate = exchangeRate {
-                        Text("1 USD = \(currency.symbol)\(String(format: "%.2f", rate))")
-                            .font(.caption2)
-                            .foregroundColor(.expenseSecondaryText)
-                    } else if currency.code == "USD" {
-                        Text("Base currency")
-                            .font(.caption2)
-                            .foregroundColor(.expenseSecondaryText)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .padding(12)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(isSelected ? Color.expenseAccent.opacity(0.1) : Color.expenseInputBackground)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(isSelected ? Color.expenseAccent : Color.clear, lineWidth: 1)
+                    summaryRow(
+                        label: "This Week's Expenses",
+                        value: "\(summaryData.weeklyExpenseCount)",
+                        valueColor: .expensePrimaryText
                     )
-            )
+                    
+                    summaryRow(
+                        label: "This Week's Total",
+                        value: currencyManager.currentCurrency.format(Decimal(summaryData.weeklyTotalAmount)),
+                        valueColor: Color.expenseGreen
+                    )
+                }
+            }
         }
-        .buttonStyle(PlainButtonStyle())
+    }
+    
+    // MARK: - Monthly Summary Card
+    private var monthlySummaryCard: some View {
+        InlineGlassmorphismCard {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("This Month's Summary")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.expensePrimaryText)
+                
+                VStack(spacing: 8) {
+                    summaryRow(
+                        label: "This Month's Expenses",
+                        value: "\(summaryData.monthlyExpenseCount)",
+                        valueColor: .expensePrimaryText
+                    )
+                    
+                    summaryRow(
+                        label: "This Month's Total",
+                        value: currencyManager.currentCurrency.format(Decimal(summaryData.monthlyTotalAmount)),
+                        valueColor: Color.expenseGreen
+                    )
+                }
+            }
+        }
+    }
+    
+    // MARK: - Extremes Card
+    private var extremesCard: some View {
+        InlineGlassmorphismCard {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Expense Extremes")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.expensePrimaryText)
+                
+                VStack(spacing: 8) {
+                    HStack {
+                        Text("Highest Expense")
+                            .font(.subheadline)
+                            .foregroundColor(.expenseSecondaryText)
+                        
+                        Spacer()
+                        
+                        Text(currencyManager.currentCurrency.format(Decimal(summaryData.highestExpenseAmount)))
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.expensePrimaryText)
+                    }
+                    
+                    HStack {
+                        Text("Lowest Expense")
+                            .font(.subheadline)
+                            .foregroundColor(.expenseSecondaryText)
+                        
+                        Spacer()
+                        
+                        Text(currencyManager.currentCurrency.format(Decimal(summaryData.lowestExpenseAmount)))
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.expensePrimaryText)
+                    }
+                }
+            }
+        }
+    }
+    
+    // MARK: - Load Summary Data
+    private func loadSummaryData() {
+        let expenses = loadExpenses()
+        
+        // Calculate overall statistics
+        summaryData.totalExpenseCount = expenses.count
+        summaryData.totalAmount = expenses.reduce(0) { $0 + Double($1.price) }
+        summaryData.averageAmount = expenses.isEmpty ? 0 : summaryData.totalAmount / Double(expenses.count)
+        
+        // Calculate today's statistics
+        let today = Calendar.current.startOfDay(for: Date())
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+        let todayExpenses = expenses.filter { $0.date >= today && $0.date < tomorrow }
+        summaryData.todayExpenseCount = todayExpenses.count
+        summaryData.todayTotalAmount = todayExpenses.reduce(0) { $0 + Double($1.price) }
+        
+        // Calculate weekly statistics
+        let calendar = Calendar.current
+        if let weekInterval = calendar.dateInterval(of: .weekOfYear, for: Date()) {
+            let weeklyExpenses = expenses.filter { $0.date >= weekInterval.start && $0.date < weekInterval.end }
+            summaryData.weeklyExpenseCount = weeklyExpenses.count
+            summaryData.weeklyTotalAmount = weeklyExpenses.reduce(0) { $0 + Double($1.price) }
+        }
+        
+        // Calculate monthly statistics
+        if let monthInterval = calendar.dateInterval(of: .month, for: Date()) {
+            let monthlyExpenses = expenses.filter { $0.date >= monthInterval.start && $0.date < monthInterval.end }
+            summaryData.monthlyExpenseCount = monthlyExpenses.count
+            summaryData.monthlyTotalAmount = monthlyExpenses.reduce(0) { $0 + Double($1.price) }
+        }
+        
+        // Calculate extremes
+        if !expenses.isEmpty {
+            let sortedByPrice = expenses.sorted { $0.price > $1.price }
+            if let highest = sortedByPrice.first {
+                summaryData.highestExpenseAmount = Double(highest.price)
+                summaryData.highestExpenseName = highest.name
+            }
+            if let lowest = sortedByPrice.last {
+                summaryData.lowestExpenseAmount = Double(lowest.price)
+                summaryData.lowestExpenseName = lowest.name
+            }
+        }
+    }
+    
+    private func loadExpenses() -> [ExpenseItem] {
+        let dictArray = UserDefaults.standard.array(forKey: ExpenseUserDefaultsKeys.expenses) as? [[String: Any]] ?? []
+        return dictArray.compactMap { ExpenseItem.fromDictionary($0) }
+    }
+    
+    // MARK: - Summary Row Helper
+    private func summaryRow(label: String, value: String, valueColor: Color) -> some View {
+        SummaryRowView(label: label, value: value, valueColor: valueColor)
     }
 }
 
-// MARK: - Exchange Rate Details View
-struct ExchangeRateDetailsView: View {
+// MARK: - Currency Settings View
+struct CurrencySettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var currencyManager = CurrencyManager.shared
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(CurrencyManager.Currency.allCurrencies) { currency in
-                    HStack {
-                        Text(currency.flag)
-                            .font(.title2)
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Current Currency Card
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Current Currency")
+                            .font(.headline)
+                            .foregroundColor(.expensePrimaryText)
                         
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(currency.name)
-                                .font(.body)
-                                .fontWeight(.medium)
-                                .foregroundColor(.expensePrimaryText)
+                        HStack(spacing: 12) {
+                            Text(currencyManager.currentCurrency.flag)
+                                .font(.title)
                             
-                            Text(currency.code)
-                                .font(.caption)
-                                .foregroundColor(.expenseSecondaryText)
-                        }
-                        
-                        Spacer()
-                        
-                        VStack(alignment: .trailing, spacing: 2) {
-                            if currency.code == "USD" {
-                                Text("Base")
-                                    .font(.caption)
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.expenseAccent)
-                            } else if let rate = currencyManager.exchangeRates[currency.code] {
-                                Text("\(currency.symbol)\(String(format: "%.4f", rate))")
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(currencyManager.currentCurrency.name)
                                     .font(.body)
                                     .fontWeight(.medium)
                                     .foregroundColor(.expensePrimaryText)
-                            } else {
-                                Text("N/A")
+                                
+                                Text(currencyManager.currentCurrency.code)
                                     .font(.caption)
                                     .foregroundColor(.expenseSecondaryText)
                             }
                             
-                            Text("per USD")
-                                .font(.caption2)
-                                .foregroundColor(.expenseSecondaryText)
+                            Spacer()
+                            
+                            Text(currencyManager.currentCurrency.symbol)
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.expenseAccent)
                         }
                     }
-                    .padding(.vertical, 4)
+                    .padding(16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.expenseCardBackground)
+                    )
+                    
+                    // Currency Selection
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Select Currency")
+                            .font(.headline)
+                            .foregroundColor(.expensePrimaryText)
+                        
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 2), spacing: 12) {
+                            ForEach(CurrencyManager.Currency.allCurrencies) { currency in
+                                Button(action: {
+                                    currencyManager.setCurrency(currency)
+                                }) {
+                                    HStack(spacing: 12) {
+                                        Text(currency.flag)
+                                            .font(.title2)
+                                        
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text(currency.code)
+                                                .font(.caption)
+                                                .fontWeight(.semibold)
+                                                .foregroundColor(.expensePrimaryText)
+                                            
+                                            Text(currency.name)
+                                                .font(.caption2)
+                                                .foregroundColor(.expenseSecondaryText)
+                                                .lineLimit(1)
+                                        }
+                                        
+                                        Spacer()
+                                        
+                                        if currency.code == currencyManager.currentCurrency.code {
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .foregroundColor(.expenseAccent)
+                                        }
+                                    }
+                                    .padding(12)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(currency.code == currencyManager.currentCurrency.code ? 
+                                                  Color.expenseAccent.opacity(0.1) : Color.expenseInputBackground)
+                                    )
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                    }
+                    .padding(16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.expenseCardBackground)
+                    )
                 }
+                .padding(16)
             }
-            .navigationTitle("Exchange Rates")
+            .background(Color.expenseBackground)
+            .navigationTitle("Currency Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -2434,6 +2442,42 @@ struct ExchangeRateDetailsView: View {
                 }
             }
         }
+    }
+}
+
+// MARK: - Summary Data Structure
+struct InlineSummaryData {
+    var totalExpenseCount: Int = 0
+    var totalAmount: Double = 0.0
+    var averageAmount: Double = 0.0
+    var todayExpenseCount: Int = 0
+    var todayTotalAmount: Double = 0.0
+    var weeklyExpenseCount: Int = 0
+    var weeklyTotalAmount: Double = 0.0
+    var monthlyExpenseCount: Int = 0
+    var monthlyTotalAmount: Double = 0.0
+    var highestExpenseAmount: Double = 0.0
+    var lowestExpenseAmount: Double = 0.0
+    var highestExpenseName: String = ""
+    var lowestExpenseName: String = ""
+}
+
+// MARK: - Inline Glassmorphism Card
+struct InlineGlassmorphismCard<Content: View>: View {
+    let content: Content
+    
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+    
+    var body: some View {
+        content
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.expenseCardBackground)
+                    .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+            )
     }
 }
 
