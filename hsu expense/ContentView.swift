@@ -1852,15 +1852,9 @@ class CurrencyManager: ObservableObject {
             formatter.currencyCode = self.code
             formatter.currencySymbol = self.symbol
             
-            if self.code == "JPY" || self.code == "KRW" {
-                // Japanese Yen and Korean Won don't use decimal places
-                formatter.maximumFractionDigits = 0
-                formatter.minimumFractionDigits = 0
-            } else {
-                // All other currencies show 2 decimal places
-                formatter.maximumFractionDigits = 2
-                formatter.minimumFractionDigits = 2
-            }
+            // All currencies show 2 decimal places
+            formatter.maximumFractionDigits = 2
+            formatter.minimumFractionDigits = 2
             
             return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "\(symbol)0.00"
         }
