@@ -133,18 +133,56 @@ struct ExpenseItem: Identifiable {
     }
 }
 
-// MARK: - Design System Colors
+// MARK: - Design System Colors (matching Android design)
 extension Color {
-    static let expenseBackground = Color(.systemBackground)
-    static let expenseCardBackground = Color(.secondarySystemBackground)
-    static let expensePrimaryText = Color(.label)
-    static let expenseSecondaryText = Color(.secondaryLabel)
-    static let expenseAccent = Color(red: 33/255, green: 64/255, blue: 154/255) // #21409A
-    static let expenseError = Color(red: 244/255, green: 67/255, blue: 54/255) // #FFF44336
-    static let expenseEdit = Color(red: 33/255, green: 150/255, blue: 243/255) // #FF2196F3
-    static let expenseInputBackground = Color(.tertiarySystemBackground)
-    static let expenseSurface = Color(red: 245/255, green: 245/255, blue: 245/255) // #FFF5F5F5
-    static let expenseCardBorder = Color(red: 224/255, green: 224/255, blue: 224/255) // #FFE0E0E0
+    // Light/Dark theme background colors
+    static let expenseBackground = Color(UIColor { traitCollection in
+        return traitCollection.userInterfaceStyle == .dark ? 
+            UIColor(red: 0.071, green: 0.071, blue: 0.071, alpha: 1.0) : // #FF121212
+            UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) // #FFFFFFFF
+    })
+    
+    static let expenseCardBackground = Color(UIColor { traitCollection in
+        return traitCollection.userInterfaceStyle == .dark ? 
+            UIColor(red: 0.176, green: 0.176, blue: 0.176, alpha: 1.0) : // #FF2D2D2D
+            UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) // #FFFFFFFF
+    })
+    
+    static let expensePrimaryText = Color(UIColor { traitCollection in
+        return traitCollection.userInterfaceStyle == .dark ? 
+            UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : // #FFFFFFFF
+            UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0) // #FF000000
+    })
+    
+    static let expenseSecondaryText = Color(UIColor { traitCollection in
+        return traitCollection.userInterfaceStyle == .dark ? 
+            UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0) : // #FFCCCCCC
+            UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0) // #FF555555
+    })
+    
+    static let expenseInputBackground = Color(UIColor { traitCollection in
+        return traitCollection.userInterfaceStyle == .dark ? 
+            UIColor(red: 0.220, green: 0.220, blue: 0.220, alpha: 1.0) : // #FF383838
+            UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 1.0) // #FFF8F8F8
+    })
+    
+    // Primary accent color (green from Android)
+    static let expenseAccent = Color(red: 0.298, green: 0.686, blue: 0.314) // #FF4CAF50
+    static let expenseError = Color(red: 0.957, green: 0.263, blue: 0.212) // #FFF44336
+    static let expenseEdit = Color(red: 0.129, green: 0.588, blue: 0.953) // #FF2196F3
+    
+    // Surface and border colors
+    static let expenseSurface = Color(UIColor { traitCollection in
+        return traitCollection.userInterfaceStyle == .dark ? 
+            UIColor(red: 0.118, green: 0.118, blue: 0.118, alpha: 1.0) : // #FF1E1E1E
+            UIColor(red: 0.961, green: 0.961, blue: 0.961, alpha: 1.0) // #FFF5F5F5
+    })
+    
+    static let expenseCardBorder = Color(UIColor { traitCollection in
+        return traitCollection.userInterfaceStyle == .dark ? 
+            UIColor(red: 0.251, green: 0.251, blue: 0.251, alpha: 1.0) : // #FF404040
+            UIColor(red: 0.878, green: 0.878, blue: 0.878, alpha: 1.0) // #FFE0E0E0
+    })
 }
 
 // MARK: - Safe Image View (handles asset loading with fallbacks)

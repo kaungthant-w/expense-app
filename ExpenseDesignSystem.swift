@@ -3,24 +3,51 @@ import UIKit
 // MARK: - Color Extensions
 extension UIColor {
     
-    // MARK: - Primary Colors
-    static let expenseBackgroundColor = UIColor.systemBackground
-    static let expenseCardBackground = UIColor.secondarySystemBackground
-    static let expensePrimaryText = UIColor.label
-    static let expenseSecondaryText = UIColor.secondaryLabel
-    static let expenseAccentColor = UIColor.systemBlue
-    static let expenseErrorColor = UIColor.systemRed
+    // MARK: - Primary Colors (matching Android design)
+    static let expenseBackgroundColor = expenseCustomColor(
+        light: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), // #FFFFFFFF
+        dark: UIColor(red: 0.071, green: 0.071, blue: 0.071, alpha: 1.0) // #FF121212
+    )
+    static let expenseCardBackground = expenseCustomColor(
+        light: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), // #FFFFFFFF
+        dark: UIColor(red: 0.176, green: 0.176, blue: 0.176, alpha: 1.0) // #FF2D2D2D
+    )
+    static let expensePrimaryText = expenseCustomColor(
+        light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), // #FF000000
+        dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) // #FFFFFFFF
+    )
+    static let expenseSecondaryText = expenseCustomColor(
+        light: UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0), // #FF555555
+        dark: UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0) // #FFCCCCCC
+    )
+    static let expenseAccentColor = UIColor(red: 0.298, green: 0.686, blue: 0.314, alpha: 1.0) // #FF4CAF50
+    static let expenseErrorColor = UIColor(red: 0.957, green: 0.263, blue: 0.212, alpha: 1.0) // #FFF44336
     
-    // MARK: - Input Field Colors
-    static let expenseInputBackground = UIColor.tertiarySystemBackground
-    static let expenseInputBorder = UIColor.separator
-    static let expenseInputText = UIColor.label
-    static let expenseInputPlaceholder = UIColor.placeholderText
+    // MARK: - Input Field Colors (matching Android design)
+    static let expenseInputBackground = expenseCustomColor(
+        light: UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 1.0), // #FFF8F8F8
+        dark: UIColor(red: 0.220, green: 0.220, blue: 0.220, alpha: 1.0) // #FF383838
+    )
+    static let expenseInputBorder = expenseCustomColor(
+        light: UIColor(red: 0.933, green: 0.933, blue: 0.933, alpha: 1.0), // #FFEEEEEE
+        dark: UIColor(red: 0.314, green: 0.314, blue: 0.314, alpha: 1.0) // #FF505050
+    )
+    static let expenseInputText = expenseCustomColor(
+        light: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), // #FF000000
+        dark: UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) // #FFFFFFFF
+    )
+    static let expenseInputPlaceholder = expenseCustomColor(
+        light: UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0), // #FF555555
+        dark: UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0) // #FFCCCCCC
+    )
     
-    // MARK: - Button Colors
-    static let expensePrimaryButton = UIColor.systemBlue
-    static let expenseSecondaryButton = UIColor.systemGray
-    static let expenseDestructiveButton = UIColor.systemRed
+    // MARK: - Button Colors (matching Android design)
+    static let expensePrimaryButton = UIColor(red: 0.298, green: 0.686, blue: 0.314, alpha: 1.0) // #FF4CAF50
+    static let expenseSecondaryButton = expenseCustomColor(
+        light: UIColor(red: 0.878, green: 0.878, blue: 0.878, alpha: 1.0), // #FFE0E0E0
+        dark: UIColor(red: 0.251, green: 0.251, blue: 0.251, alpha: 1.0) // #FF404040
+    )
+    static let expenseDestructiveButton = UIColor(red: 0.957, green: 0.263, blue: 0.212, alpha: 1.0) // #FFF44336
     static let expenseButtonText = UIColor.white
     
     // MARK: - Shadow Colors

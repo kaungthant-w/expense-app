@@ -281,7 +281,7 @@ class ExpenseDetailViewController: UIViewController {
         // Description text view
         descriptionTextView.font = UIFont.systemFont(ofSize: 16)
         descriptionTextView.textColor = UIColor.label
-        descriptionTextView.backgroundColor = UIColor.tertiarySystemBackground
+        descriptionTextView.backgroundColor = UIColor.expenseInputBackground
         descriptionTextView.layer.cornerRadius = 8
         descriptionTextView.layer.borderWidth = 1
         descriptionTextView.layer.borderColor = UIColor.separator.cgColor
@@ -322,7 +322,7 @@ class ExpenseDetailViewController: UIViewController {
         
         dateTextField.font = UIFont.boldSystemFont(ofSize: 16)
         dateTextField.textColor = UIColor.label
-        dateTextField.backgroundColor = UIColor.tertiarySystemBackground
+        dateTextField.backgroundColor = UIColor.expenseInputBackground
         dateTextField.layer.cornerRadius = 8
         dateTextField.layer.borderWidth = 1
         dateTextField.layer.borderColor = UIColor.separator.cgColor
@@ -346,7 +346,7 @@ class ExpenseDetailViewController: UIViewController {
         
         timeTextField.font = UIFont.boldSystemFont(ofSize: 16)
         timeTextField.textColor = UIColor.label
-        timeTextField.backgroundColor = UIColor.tertiarySystemBackground
+        timeTextField.backgroundColor = UIColor.expenseInputBackground
         timeTextField.layer.cornerRadius = 8
         timeTextField.layer.borderWidth = 1
         timeTextField.layer.borderColor = UIColor.separator.cgColor
