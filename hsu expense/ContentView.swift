@@ -2064,6 +2064,7 @@ extension ExpenseItem {
 struct InlineSummaryView: View {
     @StateObject private var currencyManager = CurrencyManager.shared
     @State private var summaryData = InlineSummaryData()
+    @State private var showingRateDetails = false
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
