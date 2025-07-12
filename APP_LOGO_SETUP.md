@@ -13,7 +13,18 @@
 **Recommended Sizes for Assets:**
 - 1x: 60x60 pixels
 - 2x: 120x120 pixels  
-- 3x: 180x180 pixels
+- 3x: 18**Since your project scheme is named "HSU expense" (with capitals), use these commands:**
+
+```bash
+# For iOS Simulator
+xcodebuild -project "hsu expense.xcodeproj" -scheme "HSU expense" -destination "generic/platform=iOS Simulator" build
+
+# For specific iOS Simulator (iPhone 14)
+xcodebuild -project "hsu expense.xcodeproj" -scheme "HSU expense" -destination "platform=iOS Simulator,name=iPhone 14" build
+
+# List available schemes
+xcodebuild -project "hsu expense.xcodeproj" -list
+```
 
 ### 2. Add Logo to Xcode Project
 
@@ -494,14 +505,14 @@ This enhanced approach provides maximum flexibility for logo handling while main
 
 **Correct Build Commands:**
 
-Since your project scheme is named "hsu expense" (not "HSU Expense"), use these commands:
+Since your project scheme is named "HSU expense" (not "hsu expense"), use these commands:
 
 ```bash
 # For iOS Simulator
-xcodebuild -project "hsu expense.xcodeproj" -scheme "hsu expense" -destination "generic/platform=iOS Simulator" build
+xcodebuild -project "hsu expense.xcodeproj" -scheme "HSU expense" -destination "generic/platform=iOS Simulator" build
 
 # For specific iOS Simulator (iPhone 14)
-xcodebuild -project "hsu expense.xcodeproj" -scheme "hsu expense" -destination "platform=iOS Simulator,name=iPhone 14" build
+xcodebuild -project "hsu expense.xcodeproj" -scheme "HSU expense" -destination "platform=iOS Simulator,name=iPhone 14" build
 
 # List available schemes
 xcodebuild -project "hsu expense.xcodeproj" -list
@@ -523,7 +534,7 @@ Your `.vscode/tasks.json` is correctly configured:
                 "-project",
                 "hsu expense.xcodeproj",
                 "-scheme",
-                "hsu expense",
+                "HSU expense",
                 "-destination",
                 "generic/platform=iOS Simulator",
                 "build"
@@ -560,13 +571,13 @@ return identifier
 Error: The workspace does not contain a scheme named "HSU Expense"
 ```
 
-**Solution:** Use the correct scheme name "hsu expense":
+**Solution:** Use the correct scheme name "HSU expense":
 ```bash
 # Wrong
-xcodebuild -scheme "HSU Expense"
+xcodebuild -scheme "hsu expense"
 
 # Correct
-xcodebuild -scheme "hsu expense"
+xcodebuild -scheme "HSU expense"
 ```
 
 **Issue 3: iOS Version Compatibility**
@@ -609,19 +620,78 @@ Before building, verify:
 - ✅ **AboutUsView.swift** has no compilation errors
 - ✅ **SafeImage component** is properly implemented
 - ✅ **App logo assets** are added to Assets.xcassets (optional)
-- ✅ **Scheme name** is "hsu expense" (not "HSU Expense")
+- ✅ **Scheme name** is "HSU expense" (with capitals)
 - ✅ **Deployment target** is set appropriately
 - ✅ **All Swift files** are included in target
 
 **Quick Build Test:**
 ```bash
 # Clean build
-xcodebuild -project "hsu expense.xcodeproj" -scheme "hsu expense" clean
+xcodebuild -project "hsu expense.xcodeproj" -scheme "HSU expense" clean
 
 # Build for simulator
-xcodebuild -project "hsu expense.xcodeproj" -scheme "hsu expense" -destination "generic/platform=iOS Simulator" build
+xcodebuild -project "hsu expense.xcodeproj" -scheme "HSU expense" -destination "generic/platform=iOS Simulator" build
 ```
 
 ### 19. Fixed Build Script Issues
 
 **Build Script Error Fixed:**
+```bash
+#!/bin/zsh
+# build_ipa.sh - Archive and export .ipa for hsu expense app
+
+set -e
+
+PROJECT="hsu expense.xcodeproj"
+SCHEME="HSU expense"  # ✅ CORRECTED: Capital HSU
+ARCHIVE_PATH="build/hsu_expense.xcarchive"
+EXPORT_PATH="build/ipa"
+EXPORT_OPTIONS="exportOptions.plist"
+
+echo "📱 Building HSU Expense App"
+echo "Project: $PROJECT"
+echo "Scheme: $SCHEME"
+echo ""
+
+# List available schemes for debugging
+echo "Available schemes:"
+xcodebuild -project "$PROJECT" -list
+
+echo ""
+echo "🧹 Cleaning previous build..."
+# Clean previous build
+rm -rf "$ARCHIVE_PATH" "$EXPORT_PATH"
+
+echo "🏗️ Archiving the app..."
+# Archive the app
+xcodebuild -project "$PROJECT" -scheme "$SCHEME" -configuration Release -archivePath "$ARCHIVE_PATH" archive
+
+echo "📦 Exporting IPA..."
+# Export the .ipa
+xcodebuild -exportArchive -archivePath "$ARCHIVE_PATH" -exportPath "$EXPORT_PATH" -exportOptionsPlist "$EXPORT_OPTIONS"
+
+echo "✅ IPA exported to $EXPORT_PATH"
+```
+
+**Fixed Issues Summary:**
+1. ✅ **AboutUsView.swift**: Fixed conditional binding error with UnicodeScalar
+   ```swift
+   // Fixed: Removed unnecessary optional binding
+   let scalar = UnicodeScalar(UInt8(value))
+   return identifier + String(scalar)
+   ```
+
+2. ✅ **Build Script**: Corrected scheme name from "hsu expense" to "HSU expense"
+   ```bash
+   SCHEME="HSU expense"  # Capital HSU is correct
+   ```
+
+3. ✅ **VS Code Tasks**: Updated scheme name in tasks.json
+
+**Ready to Build:**
+Your app should now build successfully with:
+```bash
+./build_ipa.sh
+```
+
+Or using VS Code task: `Cmd+Shift+P` → "Tasks: Run Task" → "Build iOS Expense App"

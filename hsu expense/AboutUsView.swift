@@ -391,10 +391,8 @@ extension UIDevice {
         let machineMirror = Mirror(reflecting: systemInfo.machine)
         let identifier = machineMirror.children.reduce("") { identifier, element in
             guard let value = element.value as? Int8, value != 0 else { return identifier }
-            if let scalar = UnicodeScalar(UInt8(value)) {
-                return identifier + String(scalar)
-            }
-            return identifier
+            let scalar = UnicodeScalar(UInt8(value))
+            return identifier + String(scalar)
         }
         
         // Convert identifier to readable name

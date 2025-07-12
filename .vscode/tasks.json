@@ -9,7 +9,7 @@
 				"-project",
 				"hsu expense.xcodeproj",
 				"-scheme",
-				"hsu expense",
+				"HSU expense",
 				"-destination",
 				"generic/platform=iOS Simulator",
 				"build"

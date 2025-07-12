@@ -4,7 +4,7 @@
 set -e
 
 PROJECT="hsu expense.xcodeproj"
-SCHEME="hsu expense"
+SCHEME="HSU expense"
 ARCHIVE_PATH="build/hsu_expense.xcarchive"
 EXPORT_PATH="build/ipa"
 EXPORT_OPTIONS="exportOptions.plist"
