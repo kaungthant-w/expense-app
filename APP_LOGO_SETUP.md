@@ -621,3 +621,7 @@ xcodebuild -project "hsu expense.xcodeproj" -scheme "hsu expense" clean
 # Build for simulator
 xcodebuild -project "hsu expense.xcodeproj" -scheme "hsu expense" -destination "generic/platform=iOS Simulator" build
 ```
+
+### 19. Fixed Build Script Issues
+
+**Build Script Error Fixed:**
