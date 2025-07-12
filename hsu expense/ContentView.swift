@@ -1,3 +1,6 @@
+import SwiftUI
+import Foundation
+
 // MARK: - UserDefaults Keys
 private enum ExpenseUserDefaultsKeys {
     static let expenses = "hsu_expense_items"
@@ -278,7 +281,7 @@ struct ContentView: View {
             NavigationDrawerView()
         }
         .sheet(isPresented: $showSettingsPage) {
-            EnhancedSettingsPage()
+            SettingsView()
         }
         .sheet(isPresented: $showCurrencySettings) {
             CurrencySettingsView()
@@ -300,7 +303,7 @@ struct ContentView: View {
             }
         }
         .sheet(isPresented: $showSettings) {
-            EnhancedSettingsPage()
+            SettingsView()
         }
         .onAppear {
             loadExpensesFromUserDefaults()
@@ -1858,8 +1861,15 @@ struct ExportDocument: FileDocument {
 
 // MARK: - CurrencyManager removed - now using CurrencyManager.swift
 // MARK: - Notification Extension
+extension NSNotification.Name {
+    static let currencyChanged = NSNotification.Name("CurrencyChanged")
+}
+
+// MARK: - Summary View
+struct InlineSummaryView: View {
     @State private var showingRateDetails = false
     @Environment(\.dismiss) private var dismiss
+    @State private var summaryData = InlineSummaryData()
 
     var body: some View {
         NavigationView {
@@ -2584,16 +2594,16 @@ struct SettingsView: View {
         }
         // Navigation sheets
         .sheet(isPresented: $showLanguageSettings) {
-            EnhancedLanguageSettingsView()
+            InlineLanguageSettingsView()
         }
         .sheet(isPresented: $showThemeSettings) {
-            EnhancedThemeSettingsView()
+            InlineThemeSettingsView()
         }
         .sheet(isPresented: $showExportData) {
-            EnhancedExportDataView()
+            InlineExportDataView()
         }
         .sheet(isPresented: $showImportData) {
-            EnhancedImportDataView()
+            SettingsPage()
         }
     }
 
@@ -2628,41 +2638,41 @@ struct SettingsView: View {
     private var settingsCardsSection: some View {
         VStack(spacing: 16) { // matching Android layout_marginBottom="16dp"
             // Language Settings Card
-            EnhancedSettingsCardView(
-                icon: "globe",
+            InlineSettingsCardView(
                 title: "Language Settings",
-                subtitle: "Change app language and region",
-                accentColor: Color(red: 0.298, green: 0.686, blue: 0.314) // #4CAF50
+                description: "Change app language and region",
+                icon: "globe",
+                iconColor: Color(red: 0.298, green: 0.686, blue: 0.314) // #4CAF50
             ) {
                 showLanguageSettings = true
             }
 
             // Theme Settings Card
-            EnhancedSettingsCardView(
-                icon: "paintbrush.fill",
+            InlineSettingsCardView(
                 title: "Theme Settings",
-                subtitle: "Switch between light and dark themes",
-                accentColor: Color(red: 0.612, green: 0.153, blue: 0.690) // #9C27B0
+                description: "Switch between light and dark themes",
+                icon: "paintbrush.fill",
+                iconColor: Color(red: 0.612, green: 0.153, blue: 0.690) // #9C27B0
             ) {
                 showThemeSettings = true
             }
 
             // Export Data Card
-            EnhancedSettingsCardView(
-                icon: "square.and.arrow.up.fill",
+            InlineSettingsCardView(
                 title: "Export Data",
-                subtitle: "Save your expense data to external file",
-                accentColor: Color(red: 1.0, green: 0.596, blue: 0.0) // #FF9800
+                description: "Save your expense data to external file",
+                icon: "square.and.arrow.up.fill",
+                iconColor: Color(red: 1.0, green: 0.596, blue: 0.0) // #FF9800
             ) {
                 showExportData = true
             }
 
             // Import Data Card
-            EnhancedSettingsCardView(
-                icon: "square.and.arrow.down.fill",
+            InlineSettingsCardView(
                 title: "Import Data",
-                subtitle: "Load expense data from external file",
-                accentColor: Color(red: 0.129, green: 0.588, blue: 0.953) // #2196F3
+                description: "Load expense data from external file",
+                icon: "square.and.arrow.down.fill",
+                iconColor: Color(red: 0.129, green: 0.588, blue: 0.953) // #2196F3
             ) {
                 showImportData = true
             }
