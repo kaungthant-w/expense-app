@@ -1450,50 +1450,20 @@ struct NavigationDrawerView: View {
                 // Enhanced Header Section (matching Android drawable design)
                 VStack(alignment: .leading, spacing: 12) {
                     // Logo and title section
-                    HStack(alignment: .center, spacing: 16) {
-                        // App logo with circular background
-                        ZStack {
-                            Circle()
-                                .fill(
-                                    RadialGradient(
-                                        gradient: Gradient(colors: [
-                                            Color.white.opacity(0.2),
-                                            Color.white.opacity(0.05)
-                                        ]),
-                                        center: .center,
-                                        startRadius: 5,
-                                        endRadius: 35
-                                    )
-                                )
-                                .frame(width: 70, height: 70)
-                            
-                            SafeImage(
-                                imageName: "ItunesArtwork@2x",
-                                systemFallback: "chart.bar.doc.horizontal.fill",
-                                width: 45,
-                                height: 45
-                            )
-                            .foregroundColor(.white)
-                        }
+                    VStack(alignment: .leading, spacing: 16) {
+                        // App icon image
+                        SafeImage(
+                            imageName: "ItunesArtwork@2x",
+                            systemFallback: "app.badge",
+                            width: 80,
+                            height: 80
+                        )
+                        .cornerRadius(16)
                         
-                        // Title and description
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("HSU Expense")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                                .shadow(color: .black.opacity(0.2), radius: 1, x: 0, y: 1)
-                            
-                            HStack(spacing: 4) {
-                                Image(systemName: "chart.line.uptrend.xyaxis")
-                                    .font(.caption)
-                                Text("Track your expenses efficiently")
-                                    .font(.subheadline)
-                            }
+                        // Description text
+                        Text("Track your expenses efficiently")
+                            .font(.subheadline)
                             .foregroundColor(.white.opacity(0.9))
-                        }
-                        
-                        Spacer()
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
