@@ -86,29 +86,13 @@ struct AboutUsView: View {
     // MARK: - App Info Section
     private var appInfoSection: some View {
         VStack(spacing: 16) {
-            // App Icon using iTunes Artwork with fallbacks
-            Group {
-                if let uiImage = UIImage(named: "ItunesArtwork@2x") {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                } else if let uiImage = UIImage(named: "Icon-App-76x76@2x") {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                } else if let uiImage = UIImage(named: "Icon-App-60x60@3x") {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                } else {
-                    Image(systemName: "app.badge")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.expenseAccent)
-                }
-            }
-            .frame(width: 100, height: 100)
-            .cornerRadius(20)
+            // App Icon using iTunes Artwork
+            SafeImage(
+                imageName: "ItunesArtwork@2x",
+                systemFallback: "app.badge",
+                width: 80,
+                height: 80
+            )
             
             // App Tagline
             Text("📊 Track your expenses efficiently")

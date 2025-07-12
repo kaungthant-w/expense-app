@@ -206,20 +206,12 @@ struct SafeImage: View {
     
     var body: some View {
         Group {
-            // Try to load images in priority order for better app icon support
-            if let uiImage = UIImage(named: imageName) {
+            // Try to load ItunesArtwork@2x.png first, then imageName, then system fallback
+            if let uiImage = UIImage(named: "ItunesArtwork@2x") {
                 Image(uiImage: uiImage)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-            } else if let uiImage = UIImage(named: "ItunesArtwork@2x") {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            } else if let uiImage = UIImage(named: "Icon-App-76x76@2x") {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            } else if let uiImage = UIImage(named: "Icon-App-60x60@3x") {
+            } else if let uiImage = UIImage(named: imageName) {
                 Image(uiImage: uiImage)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -1459,29 +1451,13 @@ struct NavigationDrawerView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     // Logo and title section
                     VStack(alignment: .leading, spacing: 16) {
-                        // App icon image - using larger icon for better quality
-                        Group {
-                            if let uiImage = UIImage(named: "ItunesArtwork@2x") {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                            } else if let uiImage = UIImage(named: "Icon-App-76x76@2x") {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                            } else if let uiImage = UIImage(named: "Icon-App-60x60@3x") {
-                                Image(uiImage: uiImage)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                            } else {
-                                Image(systemName: "app.badge")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .foregroundColor(.white)
-                            }
-                        }
-                        .frame(width: 80, height: 80)
-                        .cornerRadius(16)
+                        // App icon image
+                        SafeImage(
+                            imageName: "ItunesArtwork@2x",
+                            systemFallback: "app.badge",
+                            width: 60,
+                            height: 60
+                        )
                         
                         // Description text
                         Text("Track your expenses efficiently")
