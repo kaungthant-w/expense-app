@@ -624,21 +624,17 @@ struct EnhancedImportDataView: View {
         let description = components[3].trimmingCharacters(in: CharacterSet(charactersIn: "\""))
         let currency = components[6]
 
-        // Parse date and time
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        guard let date = dateFormatter.date(from: components[4]) else { return nil }
-
-        dateFormatter.dateFormat = "HH:mm:ss"
-        guard let time = dateFormatter.date(from: components[5]) else { return nil }
+        // Parse date and time strings
+        let dateString = components[4].trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+        let timeString = components[5].trimmingCharacters(in: CharacterSet(charactersIn: "\""))
 
         return ExpenseItem(
             id: id,
             name: name,
             price: Decimal(price),
             description: description,
-            date: date,
-            time: time,
+            date: dateString,
+            time: timeString,
             currency: currency
         )
     }
@@ -720,8 +716,8 @@ struct EnhancedImportDataView: View {
             name: name,
             price: 0, // Would need more sophisticated parsing for price
             description: "",
-            date: Date(),
-            time: Date(),
+            date: DateFormatter.displayDate.string(from: Date()),
+            time: DateFormatter.displayTime.string(from: Date()),
             currency: "USD"
         )
     }
@@ -759,7 +755,7 @@ struct EnhancedImportDataView: View {
                 let isDuplicate = existingExpenses.contains { existing in
                     existing.name == expense.name &&
                     existing.price == expense.price &&
-                    Calendar.current.isDate(existing.date, inSameDayAs: expense.date)
+                    existing.date == expense.date
                 }
 
                 if isDuplicate {
@@ -770,7 +766,7 @@ struct EnhancedImportDataView: View {
                         if let index = existingExpenses.firstIndex(where: { existing in
                             existing.name == expense.name &&
                             existing.price == expense.price &&
-                            Calendar.current.isDate(existing.date, inSameDayAs: expense.date)
+                            existing.date == expense.date
                         }) {
                             existingExpenses[index] = expense
                             importedCount += 1

@@ -433,8 +433,6 @@ struct EnhancedExportDataView: View {
                 return expenseDate >= monthInterval.start && expenseDate < monthInterval.end
             }
         case .custom:
-            let startDateString = DateFormatter.displayDate.string(from: customStartDate)
-            let endDateString = DateFormatter.displayDate.string(from: customEndDate)
             return expenses.filter { expense in
                 guard let expenseDate = DateFormatter.displayDate.date(from: expense.date) else { return false }
                 let startOfDay = Calendar.current.startOfDay(for: customStartDate)
@@ -501,7 +499,7 @@ struct EnhancedExportDataView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             do {
                 let exportData = try generateExportData()
-                let document = ExportDocument(data: exportData, format: selectedFormat)
+                let _ = ExportDocument(data: exportData, format: selectedFormat)
 
                 // In a real implementation, you would present a document picker here
                 // For now, we'll just show success

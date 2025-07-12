@@ -161,7 +161,7 @@ extension ExpenseItem {
         let calendar = Calendar.current
         let now = Date()
 
-        for i in 0..<count {
+        for _ in 0..<count {
             let randomDaysAgo = Int.random(in: 0...30)
             let expenseDate = calendar.date(byAdding: .day, value: -randomDaysAgo, to: now) ?? now
 
