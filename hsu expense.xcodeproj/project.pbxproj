@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		CEA9422E2E1E53A800D6683E /* hsu_expenseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9422D2E1E53A800D6683E /* hsu_expenseApp.swift */; };
 		CEA942302E1E53A800D6683E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9422F2E1E53A800D6683E /* ContentView.swift */; };
+		CEA9425C2E1E53AB00D6683E /* AboutUsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9425B2E1E53AB00D6683E /* AboutUsView.swift */; };
 		CEA942322E1E53AA00D6683E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA942312E1E53AA00D6683E /* Assets.xcassets */; };
 		CEA942352E1E53AA00D6683E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA942342E1E53AA00D6683E /* Preview Assets.xcassets */; };
 		CEA942372E1E53AA00D6683E /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA942362E1E53AA00D6683E /* Persistence.swift */; };
@@ -24,14 +25,14 @@
 			containerPortal = CEA942222E1E53A800D6683E /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = CEA942292E1E53A800D6683E;
-			remoteInfo = "hsu expense";
+			remoteInfo = "HSU expense";
 		};
 		CEA9424A2E1E53AA00D6683E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CEA942222E1E53A800D6683E /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = CEA942292E1E53A800D6683E;
-			remoteInfo = "hsu expense";
+			remoteInfo = "HSU expense";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -39,6 +40,7 @@
 		CEA9422A2E1E53A800D6683E /* hsu expense.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "hsu expense.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA9422D2E1E53A800D6683E /* hsu_expenseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hsu_expenseApp.swift; sourceTree = "<group>"; };
 		CEA9422F2E1E53A800D6683E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CEA9425B2E1E53AB00D6683E /* AboutUsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutUsView.swift; sourceTree = "<group>"; };
 		CEA942312E1E53AA00D6683E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEA942342E1E53AA00D6683E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CEA942362E1E53AA00D6683E /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 			children = (
 				CEA9422D2E1E53A800D6683E /* hsu_expenseApp.swift */,
 				CEA9422F2E1E53A800D6683E /* ContentView.swift */,
+				CEA9425B2E1E53AB00D6683E /* AboutUsView.swift */,
 				CEA942312E1E53AA00D6683E /* Assets.xcassets */,
 				CEA942362E1E53AA00D6683E /* Persistence.swift */,
 				CEA942382E1E53AA00D6683E /* hsu_expense.xcdatamodeld */,
@@ -148,8 +151,8 @@
 			);
 			dependencies = (
 			);
-			name = "hsu expense";
-			productName = "hsu expense";
+			name = "HSU expense";
+			productName = "HSU expense";
 			productReference = CEA9422A2E1E53A800D6683E /* hsu expense.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -265,6 +268,7 @@
 			files = (
 				CEA942372E1E53AA00D6683E /* Persistence.swift in Sources */,
 				CEA942302E1E53A800D6683E /* ContentView.swift in Sources */,
+				CEA9425C2E1E53AB00D6683E /* AboutUsView.swift in Sources */,
 				CEA9422E2E1E53A800D6683E /* hsu_expenseApp.swift in Sources */,
 				CEA9423A2E1E53AA00D6683E /* hsu_expense.xcdatamodeld in Sources */,
 			);

@@ -1,6 +1,6 @@
 //
 //  hsu_expenseApp.swift
-//  hsu expense
+//  HSU expense
 //
 //  Created by kmt on 7/9/25.
 //

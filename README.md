@@ -7,11 +7,12 @@ This implementation provides a complete iOS expense tracking app with both Swift
 ### Core Implementation Files
 
 1. **`ContentView.swift`** - Main SwiftUI home page with expense list and detail views
-2. **`ExpenseDetailViewController.swift`** - UIKit view controller implementing the expense detail screen
-3. **`ExpenseDesignSystem.swift`** - Design system with colors, fonts, spacing, and layout constants
-4. **`Localizable.strings`** - Localization strings for internationalization support
-5. **`SampleUsage.swift`** - Example implementations showing both SwiftUI and UIKit integration
-6. **`iOS_Design_Document.md`** - Comprehensive design specifications and guidelines
+2. **`AboutUsView.swift`** - Professional About Us page with contact integration
+3. **`ExpenseDetailViewController.swift`** - UIKit view controller implementing the expense detail screen
+4. **`ExpenseDesignSystem.swift`** - Design system with colors, fonts, spacing, and layout constants
+5. **`Localizable.strings`** - Localization strings for internationalization support
+6. **`SampleUsage.swift`** - Example implementations showing both SwiftUI and UIKit integration
+7. **`iOS_Design_Document.md`** - Comprehensive design specifications and guidelines
 
 ## SwiftUI Implementation (ContentView.swift)
 
@@ -22,6 +23,16 @@ This implementation provides a complete iOS expense tracking app with both Swift
 - **Empty State**: Beautiful empty state with call-to-action
 - **Search & Filter**: Built-in list management
 - **Dark Mode Support**: Full light/dark mode compatibility
+- **About Us Page**: Comprehensive app information with contact integration
+
+### ✅ Navigation Features
+- **Hamburger Menu**: Side navigation drawer with settings and information
+- **About Us Integration**: Professional page with:
+  - App information and features showcase
+  - Developer contact information
+  - Direct email and phone integration
+  - Version and legal information
+  - Glassmorphism design matching app aesthetic
 
 ### ✅ Expense Detail View (SwiftUI)
 - **Form Fields**: Name, price, description, date, and time inputs

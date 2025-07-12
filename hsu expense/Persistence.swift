@@ -1,6 +1,6 @@
 //
 //  Persistence.swift
-//  hsu expense
+//  HSU Expense
 //
 //  Created by kmt on 7/9/25.
 //

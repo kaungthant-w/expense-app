@@ -1,6 +1,6 @@
 //
 //  SummaryView.swift
-//  hsu expense
+//  HSU expense
 //
 //  Created by kmt on 7/12/25.
 //

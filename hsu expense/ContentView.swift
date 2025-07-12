@@ -84,7 +84,7 @@ extension ExpenseItem {
 }
 //
 //  ContentView.swift
-//  hsu expense
+//  HSU Expense
 //
 //  Created by kmt on 7/9/25.
 //
@@ -205,18 +205,38 @@ struct SafeImage: View {
     let height: CGFloat
     
     var body: some View {
-        ZStack {
-            // Try to load the custom image first
+        Group {
             if let uiImage = UIImage(named: imageName) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .scaledToFit()
-                    .frame(width: width, height: height)
+                    .aspectRatio(contentMode: .fit)
             } else {
-                // Fallback to system image
                 Image(systemName: systemFallback)
                     .font(.system(size: min(width, height) * 0.6))
-                    .frame(width: width, height: height)
+            }
+        }
+        .frame(width: width, height: height)
+    }
+}
+
+// MARK: - Custom Logo View (fallback when no custom image is available)
+struct CustomLogoView: View {
+    var body: some View {
+        ZStack {
+            // Background circle
+            Circle()
+                .fill(Color.white.opacity(0.2))
+                .frame(width: 70, height: 70)
+            
+            // Custom logo design
+            VStack(spacing: 2) {
+                Text("HSU")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(.white)
+                
+                Image(systemName: "dollarsign.circle")
+                    .font(.system(size: 18))
+                    .foregroundColor(.white)
             }
         }
     }
@@ -242,6 +262,7 @@ struct ContentView: View {
     @State private var showSettingsPage = false
     @State private var showCurrencySettings = false
     @State private var showSummaryView = false
+    @State private var showAboutUs = false
     
     var body: some View {
         ZStack {
@@ -311,6 +332,9 @@ struct ContentView: View {
         .sheet(isPresented: $showSummaryView) {
             InlineSummaryView()
         }
+        .sheet(isPresented: $showAboutUs) {
+            AboutUsView()
+        }
         .sheet(isPresented: $showingAddExpense) {
             ExpenseDetailView(expense: nil) { newExpense in
                 addExpense(newExpense)
@@ -333,6 +357,9 @@ struct ContentView: View {
             }
             NotificationCenter.default.addObserver(forName: NSNotification.Name("ShowSummary"), object: nil, queue: .main) { _ in
                 showSummaryView = true
+            }
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("ShowAboutUs"), object: nil, queue: .main) { _ in
+                showAboutUs = true
             }
             NotificationCenter.default.addObserver(forName: NSNotification.Name("ReloadExpensesFromUserDefaults"), object: nil, queue: .main) { _ in
                 loadExpensesFromUserDefaults()
@@ -1411,35 +1438,88 @@ struct CurrencyPickerView: View {
 
 struct NavigationDrawerView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var showingAboutUs = false
     
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 0) {
-                // Header Section (matching Android design)
-                VStack(alignment: .leading, spacing: 8) {
-                    SafeImage(
-                        imageName: "app_logo",
-                        systemFallback: "dollarsign.circle.fill",
-                        width: 60,
-                        height: 60
-                    )
-                    .clipShape(Circle())
-                    .foregroundColor(.white)
-                    
-                    Text("HSU Expense")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                    
-                    Text("📊 Track your expenses efficiently")
-                        .font(.subheadline)
-                        .foregroundColor(.white.opacity(0.9))
-                        .multilineTextAlignment(.leading)
+                // Enhanced Header Section (matching Android drawable design)
+                VStack(alignment: .leading, spacing: 12) {
+                    // Logo and title section
+                    HStack(alignment: .center, spacing: 16) {
+                        // App logo with circular background
+                        ZStack {
+                            Circle()
+                                .fill(
+                                    RadialGradient(
+                                        gradient: Gradient(colors: [
+                                            Color.white.opacity(0.2),
+                                            Color.white.opacity(0.05)
+                                        ]),
+                                        center: .center,
+                                        startRadius: 5,
+                                        endRadius: 35
+                                    )
+                                )
+                                .frame(width: 70, height: 70)
+                            
+                            SafeImage(
+                                imageName: "app_logo",
+                                systemFallback: "chart.bar.doc.horizontal.fill",
+                                width: 45,
+                                height: 45
+                            )
+                            .foregroundColor(.white)
+                        }
+                        
+                        // Title and description
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("HSU Expense")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
+                                .shadow(color: .black.opacity(0.2), radius: 1, x: 0, y: 1)
+                            
+                            HStack(spacing: 4) {
+                                Image(systemName: "chart.line.uptrend.xyaxis")
+                                    .font(.caption)
+                                Text("Track your expenses efficiently")
+                                    .font(.subheadline)
+                            }
+                            .foregroundColor(.white.opacity(0.9))
+                        }
+                        
+                        Spacer()
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(20)
-                .background(Color.expenseAccent) // Purple background #6200EE
+                .background(
+                    ZStack {
+                        // Main gradient background
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color(red: 98/255, green: 0/255, blue: 238/255), // #6200EE
+                                Color(red: 55/255, green: 0/255, blue: 179/255)
+                            ]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        
+                        // Subtle pattern overlay
+                        GeometryReader { geometry in
+                            Path { path in
+                                // Add subtle geometric patterns
+                                let width = geometry.size.width
+                                let height = geometry.size.height
+                                
+                                // Add some circles for visual interest
+                                path.addEllipse(in: CGRect(x: width * 0.8, y: -20, width: 60, height: 60))
+                                path.addEllipse(in: CGRect(x: -20, y: height * 0.6, width: 40, height: 40))
+                            }
+                            .fill(Color.white.opacity(0.05))
+                        }
+                    }
+                )
                 
                 // Menu Items Container
                 ScrollView {
@@ -1487,11 +1567,18 @@ struct NavigationDrawerView: View {
                             }
                             NavigationMenuItem(icon: "", title: "Feedback", emoji: "💬") {
                                 dismiss()
-                                // Handle feedback action
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    // Open feedback email
+                                    if let url = URL(string: "mailto:kyawmyothant.dev@gmail.com?subject=HSU%20Expense%20Feedback") {
+                                        UIApplication.shared.open(url)
+                                    }
+                                }
                             }
                             NavigationMenuItem(icon: "", title: "About Us", emoji: "ℹ️") {
                                 dismiss()
-                                showingAboutUs = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    NotificationCenter.default.post(name: NSNotification.Name("ShowAboutUs"), object: nil)
+                                }
                             }
                         }
                     }
@@ -1502,9 +1589,6 @@ struct NavigationDrawerView: View {
             }
             .background(Color.expenseCardBackground)
             .navigationBarHidden(true)
-        }
-        .sheet(isPresented: $showingAboutUs) {
-            AboutUsView()
         }
     }
 }
@@ -2056,6 +2140,7 @@ class CurrencyManager: ObservableObject {
            let rates = try? JSONSerialization.jsonObject(with: data) as? [String: Double] {
             exchangeRates = rates
             lastUpdateTime = UserDefaults.standard.object(forKey: "RatesUpdateTime") as? Date
+       
         } else {
             loadFallbackRates()
         }
@@ -2208,7 +2293,7 @@ struct InlineSummaryView: View {
                         valueColor: Color.expenseGreen
                     )
                 }
- }
+            }
         }
     }
     
