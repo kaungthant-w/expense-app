@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSU Expense - Install App</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .app-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            margin: 0 auto 20px;
+            background: #6200EE;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .version {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .description {
+            color: #777;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .install-btn {
+            background: #007AFF;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+            text-decoration: none;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+        .install-btn:hover {
+            background: #0056CC;
+        }
+        .requirements {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            margin-top: 20px;
+        }
+        .requirements h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .requirements ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .requirements li {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .telegram-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .telegram-info a {
+            color: #1976d2;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-icon">💰</div>
+        <h1>HSU Expense</h1>
+        <div class="version">Version 1.0.0</div>
+        <div class="description">
+            Track your expenses efficiently with multi-currency support, real-time exchange rates, and beautiful modern interface.
+        </div>
+        
+        <div class="warning">
+            ⚠️ This is a development version. Your device must be registered for testing.
+        </div>
+        
+        <!-- Replace with your actual IPA file URL -->
+        <a href="itms-services://?action=download-manifest&url=https://yourserver.com/manifest.plist" class="install-btn">
+            📱 Install HSU Expense
+        </a>
+        
+        <div class="requirements">
+            <h3>📋 Requirements:</h3>
+            <ul>
+                <li>iOS 16.2 or later</li>
+                <li>iPhone with arm64 processor</li>
+                <li>Device must be registered for testing</li>
+                <li>Trust developer certificate in Settings</li>
+            </ul>
+        </div>
+        
+        <div class="requirements">
+            <h3>📱 Installation Steps:</h3>
+            <ul>
+                <li>1. Tap "Install HSU Expense" button above</li>
+                <li>2. Tap "Install" when popup appears</li>
+                <li>3. Go to Settings → General → VPN & Device Management</li>
+                <li>4. Trust the developer profile</li>
+                <li>5. Return to home screen and launch the app</li>
+            </ul>
+        </div>
+        
+        <div class="telegram-info">
+            📞 <strong>Support:</strong><br>
+            <a href="https://t.me/hsuexpense">t.me/hsuexpense</a><br>
+            Get help or report issues
+        </div>
+    </div>
+</body>
+</html>

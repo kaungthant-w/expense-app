@@ -108,6 +108,45 @@
 			"group": "build",
 			"isBackground": false,
 			"problemMatcher": []
+		},
+		{
+			"label": "Build for App Store (PowerShell)",
+			"type": "shell",
+			"command": "powershell.exe",
+			"args": [
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"build_for_appstore.ps1"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Build for App Store (Bash)",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"build_for_appstore.sh"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Prepare for Free Sharing",
+			"type": "shell",
+			"command": "powershell.exe",
+			"args": [
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"prepare_for_sharing.ps1"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
 		}
 	]
 }

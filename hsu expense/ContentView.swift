@@ -268,11 +268,12 @@ struct ContentView: View {
     @State private var showCurrencySettings = false
     @State private var showSummaryView = false
     @State private var showAboutUs = false
+    @State private var showSettings = false
     
     var body: some View {
-        ZStack {
-            // Main Content (equivalent to CoordinatorLayout)
-            NavigationView {
+        NavigationView {
+            ZStack {
+                // Main Content (equivalent to CoordinatorLayout)
                 VStack(spacing: 0) {
                     // Main Content with proper layout behavior
                     VStack(spacing: 10) {
@@ -302,26 +303,23 @@ struct ContentView: View {
                 .toolbarBackground(Color.expenseAccent, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar) // Ensures white title text
-            }
-            
-            // Floating Action Button (equivalent to DraggableFloatingActionButton)
-            VStack {
-                Spacer()
-                HStack {
+                
+                VStack {
+                    // Main content area
                     Spacer()
-                    Button(action: { showingAddExpense = true }) {
-                        Image(systemName: "plus")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .foregroundColor(Color(red: 0.4, green: 0.4, blue: 0.4)) // Dark gray icon
-                            .frame(width: 56, height: 56)
-                            .background(Color(red: 0.933, green: 0.933, blue: 0.933)) // Light gray background #EEEEEE
-                            .clipShape(Circle())
-                            .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
+                    
+                    // Settings button in navigation or toolbar
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            showSettings = true
+                        }) {
+                            Image(systemName: "gear")
+                                .font(.title2)
+                                .foregroundColor(.primary)
+                        }
                     }
-                    .accessibilityLabel("Add expense")
-                    .padding(.trailing, 24)
-                    .padding(.bottom, 24)
+                    .padding()
                 }
             }
         }
@@ -349,6 +347,9 @@ struct ContentView: View {
             ExpenseDetailView(expense: expense) { updatedExpense in
                 updateExpense(updatedExpense)
             }
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsView()
         }
         .onAppear {
             loadExpensesFromUserDefaults()
@@ -2150,7 +2151,7 @@ struct InlineSummaryView: View {
     @StateObject private var currencyManager = CurrencyManager.shared
     @State private var summaryData = InlineSummaryData()
     @State private var showingRateDetails = false
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.resentationMode) var presentationMode
     
     var body: some View {
         NavigationView {
