@@ -281,7 +281,7 @@ struct ContentView: View {
                         .font(.system(size: 14))
                         .foregroundColor(.expenseSecondaryText)
                     Spacer()
-                    Text(currencyManager.currentCurrency.format(todayTotalAmountInCurrentCurrency))
+                    Text(currencyManager.formatDecimalAmount(todayTotalAmountInCurrentCurrency))
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(.expensePrimaryText)
                 }
@@ -364,36 +364,32 @@ struct ContentView: View {
 
     // MARK: - Helper Properties
     private var todayExpensesCount: Int {
-        let today = Calendar.current.startOfDay(for: Date())
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+        let today = DateFormatter.displayDate.string(from: Date())
         return expenses.filter { expense in
-            expense.date >= today && expense.date < tomorrow
+            expense.date == today
         }.count
     }
 
     private var todayTotalAmount: Decimal {
-        let today = Calendar.current.startOfDay(for: Date())
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+        let today = DateFormatter.displayDate.string(from: Date())
         return expenses.filter { expense in
-            expense.date >= today && expense.date < tomorrow
+            expense.date == today
         }.reduce(0) { $0 + $1.price }
     }
 
     private var todayTotalAmountInCurrentCurrency: Decimal {
-        let today = Calendar.current.startOfDay(for: Date())
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+        let today = DateFormatter.displayDate.string(from: Date())
         return expenses.filter { expense in
-            expense.date >= today && expense.date < tomorrow
+            expense.date == today
         }.reduce(0) { total, expense in
             total + expense.convertedPrice(to: currencyManager.currentCurrency.code)
         }
     }
 
     private var todayExpenses: [ExpenseItem] {
-        let today = Calendar.current.startOfDay(for: Date())
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+        let today = DateFormatter.displayDate.string(from: Date())
         return expenses.filter { expense in
-            expense.date >= today && expense.date < tomorrow
+            expense.date == today
         }.sorted { $0.date > $1.date }
     }
 
@@ -401,7 +397,8 @@ struct ContentView: View {
     private var allExpenses: [ExpenseItem] {
         let threeYearsAgo = Calendar.current.date(byAdding: .year, value: -3, to: Date()) ?? Date()
         return expenses.filter { expense in
-            expense.date >= threeYearsAgo
+            guard let expenseDate = DateFormatter.displayDate.date(from: expense.date) else { return false }
+            return expenseDate >= threeYearsAgo
         }.sorted { $0.date > $1.date }
     }
 
@@ -419,7 +416,8 @@ struct ContentView: View {
         let endOfWeek = weekInterval.end
 
         return expenses.filter { expense in
-            expense.date >= startOfWeek && expense.date < endOfWeek
+            guard let expenseDate = DateFormatter.displayDate.date(from: expense.date) else { return false }
+            return expenseDate >= startOfWeek && expenseDate < endOfWeek
         }.sorted { $0.date > $1.date }
     }
 
@@ -437,7 +435,8 @@ struct ContentView: View {
         let endOfMonth = monthInterval.end
 
         return expenses.filter { expense in
-            expense.date >= startOfMonth && expense.date < endOfMonth
+            guard let expenseDate = DateFormatter.displayDate.date(from: expense.date) else { return false }
+            return expenseDate >= startOfMonth && expenseDate < endOfMonth
         }.sorted { $0.date > $1.date }
     }
 
@@ -726,7 +725,9 @@ struct ExpenseDetailView_Previews: PreviewProvider {
         ExpenseDetailView(expense: ExpenseItem(
             name: "Sample Expense",
             price: 25.50,
-            description: "This is a sample expense for preview"
+            description: "This is a sample expense for preview",
+            date: DateFormatter.displayDate.string(from: Date()),
+            time: DateFormatter.displayTime.string(from: Date())
         )) { _ in }
             .preferredColorScheme(.dark)
     }
@@ -899,11 +900,32 @@ struct ExpenseDetailView: View {
     @State private var selectedCurrency: CurrencyManager.Currency
     @State private var originalCurrency: String
     @State private var originalPrice: Decimal
-    let onSave: (ExpenseItem) -> Void
 
-    @State private var showingDatePicker = false
-    @State private var showingTimePicker = false
-    @State private var showingCurrencyPicker = false
+    // MARK: - Computed Properties for Date Bindings
+    private var dateBinding: Binding<Date> {
+        Binding(
+            get: {
+                DateFormatter.displayDate.date(from: expense.date) ?? Date()
+            },
+            set: { newDate in
+                expense.date = DateFormatter.displayDate.string(from: newDate)
+            }
+        )
+    }
+
+    private var timeBinding: Binding<Date> {
+        Binding(
+            get: {
+                let dateTimeString = "\(expense.date) \(expense.time)"
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd HH:mm"
+                return formatter.date(from: dateTimeString) ?? Date()
+            },
+            set: { newDate in
+                expense.time = DateFormatter.displayTime.string(from: newDate)
+            }
+        )
+    }
 
     init(expense: ExpenseItem?, onSave: @escaping (ExpenseItem) -> Void) {
         if let expense = expense {
@@ -912,7 +934,15 @@ struct ExpenseDetailView: View {
             self._originalCurrency = State(initialValue: expense.currency)
             self._originalPrice = State(initialValue: expense.price)
         } else {
-            let newExpense = ExpenseItem(currency: CurrencyManager.shared.currentCurrency.code)
+            let currentDate = Date()
+            let newExpense = ExpenseItem(
+                name: "",
+                price: 0,
+                description: "",
+                date: DateFormatter.displayDate.string(from: currentDate),
+                time: DateFormatter.displayTime.string(from: currentDate),
+                currency: CurrencyManager.shared.currentCurrency.code
+            )
             self._expense = State(initialValue: newExpense)
             self._isNewExpense = State(initialValue: true)
             self._originalCurrency = State(initialValue: CurrencyManager.shared.currentCurrency.code)
@@ -1132,10 +1162,10 @@ struct ExpenseDetailView: View {
                 }
             }
             .sheet(isPresented: $showingDatePicker) {
-                DatePickerView(date: $expense.date, title: "Select Date")
+                DatePickerView(date: dateBinding, title: "Select Date")
             }
             .sheet(isPresented: $showingTimePicker) {
-                TimePickerView(time: $expense.time, title: "Select Time")
+                TimePickerView(time: timeBinding, title: "Select Time")
             }
             // Currency picker temporarily disabled until project files are synced
             // .sheet(isPresented: $showingCurrencyPicker) {
@@ -1630,7 +1660,7 @@ struct SettingsPage: View {
                     Button("Close") { dismiss() }
                 }
             }
-            .fileExporter(isPresented: $showExporter, document: ExportDocument(expenses: loadExpensesForExport()), contentType: .json, defaultFilename: exportFileName()) { result in
+            .fileExporter(isPresented: $showExporter, document: createExportDocument(), contentType: .json, defaultFilename: exportFileName()) { result in
                 if case .failure(let error) = result {
                     importError = "Export failed: \(error.localizedDescription)"
                 }
@@ -1704,10 +1734,31 @@ struct SettingsPage: View {
             importError = "Import failed: \(error.localizedDescription)"
         }
     }
+
+    private func createExportDocument() -> ExportDocument {
+        let expenses = loadExpensesForExport()
+        let exportData: [String: Any] = [
+            "app_name": "HSU Expense",
+            "export_version": "1.0",
+            "export_date": ISO8601DateFormatter().string(from: Date()),
+            "count": expenses.count,
+            "expenses": expenses.map { $0.asDictionary }
+        ]
+
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: exportData, options: .prettyPrinted)
+            return ExportDocument(data: jsonData, format: .json)
+        } catch {
+            // Return empty document on error
+            let emptyData = Data("{}".utf8)
+            return ExportDocument(data: emptyData, format: .json)
+        }
+    }
 }
 
 // MARK: - Summary View
 struct InlineSummaryView: View {
+    @StateObject private var currencyManager = CurrencyManager.shared
     @State private var showingRateDetails = false
     @Environment(\.dismiss) private var dismiss
     @State private var summaryData = InlineSummaryData()
@@ -1791,13 +1842,13 @@ struct InlineSummaryView: View {
 
                     summaryRow(
                         label: "Total Amount",
-                        value: currencyManager.currentCurrency.format(Decimal(summaryData.totalAmount)),
+                        value: currencyManager.formatDecimalAmount(Decimal(summaryData.totalAmount)),
                         valueColor: Color.expenseGreen
                     )
 
                     summaryRow(
                         label: "Average Amount",
-                        value: currencyManager.currentCurrency.format(Decimal(summaryData.averageAmount)),
+                        value: currencyManager.formatDecimalAmount(Decimal(summaryData.averageAmount)),
                         valueColor: Color(red: 1.0, green: 0.596, blue: 0.0) // #FF9800
                     )
                 }
@@ -1823,7 +1874,7 @@ struct InlineSummaryView: View {
 
                     summaryRow(
                         label: "Today's Total",
-                        value: currencyManager.currentCurrency.format(Decimal(summaryData.todayTotalAmount)),
+                        value: currencyManager.formatDecimalAmount(Decimal(summaryData.todayTotalAmount)),
                         valueColor: Color.expenseGreen
                     )
                 }
@@ -1849,7 +1900,7 @@ struct InlineSummaryView: View {
 
                     summaryRow(
                         label: "This Week's Total",
-                        value: currencyManager.currentCurrency.format(Decimal(summaryData.weeklyTotalAmount)),
+                        value: currencyManager.formatDecimalAmount(Decimal(summaryData.weeklyTotalAmount)),
                         valueColor: Color.expenseGreen
                     )
                 }
@@ -1900,7 +1951,7 @@ struct InlineSummaryView: View {
 
                         Spacer()
 
-                        Text(currencyManager.currentCurrency.format(Decimal(summaryData.highestExpenseAmount)))
+                        Text(currencyManager.formatDecimalAmount(Decimal(summaryData.highestExpenseAmount)))
                             .font(.subheadline)
                             .fontWeight(.semibold)
                             .foregroundColor(.expensePrimaryText)
@@ -1913,7 +1964,7 @@ struct InlineSummaryView: View {
 
                         Spacer()
 
-                        Text(currencyManager.currentCurrency.format(Decimal(summaryData.lowestExpenseAmount)))
+                        Text(currencyManager.formatDecimalAmount(Decimal(summaryData.lowestExpenseAmount)))
                             .font(.subheadline)
                             .fontWeight(.semibold)
                             .foregroundColor(.expensePrimaryText)
@@ -1942,14 +1993,20 @@ struct InlineSummaryView: View {
         // Calculate weekly statistics
         let calendar = Calendar.current
         if let weekInterval = calendar.dateInterval(of: .weekOfYear, for: Date()) {
-            let weeklyExpenses = expenses.filter { $0.date >= weekInterval.start && $0.date < weekInterval.end }
+            let weeklyExpenses = expenses.filter { expense in
+                guard let expenseDate = DateFormatter.displayDate.date(from: expense.date) else { return false }
+                return expenseDate >= weekInterval.start && expenseDate < weekInterval.end
+            }
             summaryData.weeklyExpenseCount = weeklyExpenses.count
             summaryData.weeklyTotalAmount = weeklyExpenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
         }
 
         // Calculate monthly statistics
         if let monthInterval = calendar.dateInterval(of: .month, for: Date()) {
-            let monthlyExpenses = expenses.filter { $0.date >= monthInterval.start && $0.date < monthInterval.end }
+            let monthlyExpenses = expenses.filter { expense in
+                guard let expenseDate = DateFormatter.displayDate.date(from: expense.date) else { return false }
+                return expenseDate >= monthInterval.start && expenseDate < monthInterval.end
+            }
             summaryData.monthlyExpenseCount = monthlyExpenses.count
             summaryData.monthlyTotalAmount = monthlyExpenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
         }
