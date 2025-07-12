@@ -284,8 +284,8 @@ struct SummaryView: View {
         let highest = sortedExpenses.first
         let lowest = sortedExpenses.last
 
-        let highestText = highest != nil ? "\(highest!.name) - \(currencyManager.currentCurrency.format(highest!.price))" : ""
-        let lowestText = lowest != nil ? "\(lowest!.name) - \(currencyManager.currentCurrency.format(lowest!.price))" : ""
+        let highestText = highest != nil ? "\(highest!.name) - \(currencyManager.formatDecimalAmount(highest!.price))" : ""
+        let lowestText = lowest != nil ? "\(lowest!.name) - \(currencyManager.formatDecimalAmount(lowest!.price))" : ""
 
         summaryData = SummaryData(
             totalExpenseCount: totalCount,
