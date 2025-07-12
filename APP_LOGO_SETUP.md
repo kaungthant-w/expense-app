@@ -489,3 +489,135 @@ EnhancedSafeImage(
 ```
 
 This enhanced approach provides maximum flexibility for logo handling while maintaining fallback safety and professional appearance.
+
+### 15. Build and Compilation Instructions
+
+**Correct Build Commands:**
+
+Since your project scheme is named "hsu expense" (not "HSU Expense"), use these commands:
+
+```bash
+# For iOS Simulator
+xcodebuild -project "hsu expense.xcodeproj" -scheme "hsu expense" -destination "generic/platform=iOS Simulator" build
+
+# For specific iOS Simulator (iPhone 14)
+xcodebuild -project "hsu expense.xcodeproj" -scheme "hsu expense" -destination "platform=iOS Simulator,name=iPhone 14" build
+
+# List available schemes
+xcodebuild -project "hsu expense.xcodeproj" -list
+```
+
+**VS Code Build Task:**
+
+Your `.vscode/tasks.json` is correctly configured:
+
+```json
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build iOS Expense App",
+            "type": "shell",
+            "command": "xcodebuild",
+            "args": [
+                "-project",
+                "hsu expense.xcodeproj",
+                "-scheme",
+                "hsu expense",
+                "-destination",
+                "generic/platform=iOS Simulator",
+                "build"
+            ],
+            "group": "build",
+            "isBackground": false,
+            "problemMatcher": []
+        }
+    ]
+}
+```
+
+### 16. Common Compilation Issues and Fixes
+
+**Issue 1: Force Unwrap Error (FIXED)**
+```
+Error: Cannot force unwrap value of non-optional type 'UnicodeScalar'
+```
+
+**Solution:** Fixed in AboutUsView.swift by using safe unwrapping:
+```swift
+// Before (problematic)
+return identifier + String(UnicodeScalar(UInt8(value))!)
+
+// After (safe)
+if let scalar = UnicodeScalar(UInt8(value)) {
+    return identifier + String(scalar)
+}
+return identifier
+```
+
+**Issue 2: Scheme Name Mismatch**
+```
+Error: The workspace does not contain a scheme named "HSU Expense"
+```
+
+**Solution:** Use the correct scheme name "hsu expense":
+```bash
+# Wrong
+xcodebuild -scheme "HSU Expense"
+
+# Correct
+xcodebuild -scheme "hsu expense"
+```
+
+**Issue 3: iOS Version Compatibility**
+```
+Error: The device may be running iOS 18.5 that is not supported
+```
+
+**Solutions:**
+1. **Update Xcode** to the latest version
+2. **Use iOS Simulator** instead of physical device
+3. **Set deployment target** to supported iOS version
+
+**Issue 4: Missing AboutUsView in Build**
+
+If AboutUsView.swift is not compiling, ensure it's added to the project:
+
+1. **Check project.pbxproj** - should include AboutUsView.swift
+2. **Verify target membership** in Xcode
+3. **Clean and rebuild** project
+
+### 17. Deployment Target Settings
+
+**Recommended iOS Deployment Target:**
+
+```swift
+// In project settings, set minimum iOS version
+IPHONEOS_DEPLOYMENT_TARGET = 16.0  // or higher for better compatibility
+```
+
+**Xcode Project Settings:**
+1. Select project in navigator
+2. Go to Build Settings
+3. Set "iOS Deployment Target" to 16.0 or higher
+4. Ensure all targets have same deployment target
+
+### 18. Final Verification Checklist
+
+Before building, verify:
+
+- ✅ **AboutUsView.swift** has no compilation errors
+- ✅ **SafeImage component** is properly implemented
+- ✅ **App logo assets** are added to Assets.xcassets (optional)
+- ✅ **Scheme name** is "hsu expense" (not "HSU Expense")
+- ✅ **Deployment target** is set appropriately
+- ✅ **All Swift files** are included in target
+
+**Quick Build Test:**
+```bash
+# Clean build
+xcodebuild -project "hsu expense.xcodeproj" -scheme "hsu expense" clean
+
+# Build for simulator
+xcodebuild -project "hsu expense.xcodeproj" -scheme "hsu expense" -destination "generic/platform=iOS Simulator" build
+```
