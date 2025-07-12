@@ -2151,7 +2151,7 @@ struct InlineSummaryView: View {
     @StateObject private var currencyManager = CurrencyManager.shared
     @State private var summaryData = InlineSummaryData()
     @State private var showingRateDetails = false
-    @Environment(\. dismiss) private var dismiss
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationView {
@@ -2884,7 +2884,7 @@ struct SettingsView: View {
             InlineExportDataView()
         }
         .sheet(isPresented: $showImportData) {
-            InlineImportDataView()
+            ImportDataView()
         }
     }
     
