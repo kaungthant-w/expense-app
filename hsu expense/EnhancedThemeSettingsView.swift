@@ -350,7 +350,7 @@ struct EnhancedThemeSettingsView: View {
                             .frame(height: 50)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.expenseCardBorder, lineWidth: 1, lineCap: .round, dash: [3, 3])
+                                    .stroke(Color.expenseCardBorder, style: StrokeStyle(lineWidth: 1, dash: [3, 3]))
                             )
 
                         Image(systemName: "plus")

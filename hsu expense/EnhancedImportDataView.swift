@@ -269,7 +269,7 @@ struct EnhancedImportDataView: View {
                             .fill(Color.expenseInputBackground)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 16)
-                                    .stroke(Color.expenseCardBorder, lineWidth: 1, lineCap: .round, dash: [5, 5])
+                                    .stroke(Color.expenseCardBorder, style: StrokeStyle(lineWidth: 1, dash: [5, 5]))
                             )
                     )
                 }
