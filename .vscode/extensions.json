@@ -1,0 +1,10 @@
+{
+    "recommendations": [],
+    "unwantedRecommendations": [
+        "ms-vscode.swift",
+        "swift-server.swift",
+        "kasik96.swift",
+        "kiadstudios.sourcekit-lsp-vscode",
+        "vknabel.vscode-swift-development-environment"
+    ]
+}

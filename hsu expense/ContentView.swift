@@ -102,7 +102,7 @@ struct ExpenseItem: Identifiable {
     var date: Date
     var time: Date
     var currency: String
-    
+
     init(id: UUID = UUID(), name: String = "", price: Decimal = 0, description: String = "", date: Date = Date(), time: Date = Date(), currency: String = "USD") {
         self.id = id
         self.name = name
@@ -112,12 +112,12 @@ struct ExpenseItem: Identifiable {
         self.time = time
         self.currency = currency
     }
-    
+
     var formattedPrice: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencyCode = currency
-        
+
         if currency == "JPY" || currency == "KRW" {
             // Japanese Yen and Korean Won don't use decimal places
             formatter.maximumFractionDigits = 0
@@ -127,16 +127,16 @@ struct ExpenseItem: Identifiable {
             formatter.maximumFractionDigits = 2
             formatter.minimumFractionDigits = 2
         }
-        
+
         return formatter.string(from: NSDecimalNumber(decimal: price)) ?? "$0.00"
     }
-    
+
     var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         return formatter.string(from: date)
     }
-    
+
     var formattedTime: String {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
@@ -148,50 +148,50 @@ struct ExpenseItem: Identifiable {
 extension Color {
     // Light/Dark theme background colors
     static let expenseBackground = Color(UIColor { traitCollection in
-        return traitCollection.userInterfaceStyle == .dark ? 
+        return traitCollection.userInterfaceStyle == .dark ?
             UIColor(red: 0.071, green: 0.071, blue: 0.071, alpha: 1.0) : // #FF121212
             UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) // #FFFFFFFF
     })
-    
+
     static let expenseCardBackground = Color(UIColor { traitCollection in
-        return traitCollection.userInterfaceStyle == .dark ? 
+        return traitCollection.userInterfaceStyle == .dark ?
             UIColor(red: 0.176, green: 0.176, blue: 0.176, alpha: 1.0) : // #FF2D2D2D
             UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) // #FFFFFFFF
     })
-    
+
     static let expensePrimaryText = Color(UIColor { traitCollection in
-        return traitCollection.userInterfaceStyle == .dark ? 
+        return traitCollection.userInterfaceStyle == .dark ?
             UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) : // #FFFFFFFF
             UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0) // #FF000000
     })
-    
+
     static let expenseSecondaryText = Color(UIColor { traitCollection in
-        return traitCollection.userInterfaceStyle == .dark ? 
+        return traitCollection.userInterfaceStyle == .dark ?
             UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0) : // #FFCCCCCC
             UIColor(red: 0.333, green: 0.333, blue: 0.333, alpha: 1.0) // #FF555555
     })
-    
+
     static let expenseInputBackground = Color(UIColor { traitCollection in
-        return traitCollection.userInterfaceStyle == .dark ? 
+        return traitCollection.userInterfaceStyle == .dark ?
             UIColor(red: 0.220, green: 0.220, blue: 0.220, alpha: 1.0) : // #FF383838
             UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 1.0) // #FFF8F8F8
     })
-    
+
     // Primary accent color (purple from Android App Bar)
     static let expenseAccent = Color(red: 0.384, green: 0.0, blue: 0.933) // #FF6200EE
     static let expenseError = Color(red: 0.957, green: 0.263, blue: 0.212) // #FFF44336
     static let expenseEdit = Color(red: 0.129, green: 0.588, blue: 0.953) // #FF2196F3
     static let expenseGreen = Color(red: 0.298, green: 0.686, blue: 0.314) // #4CAF50
-    
+
     // Surface and border colors
     static let expenseSurface = Color(UIColor { traitCollection in
-        return traitCollection.userInterfaceStyle == .dark ? 
+        return traitCollection.userInterfaceStyle == .dark ?
             UIColor(red: 0.118, green: 0.118, blue: 0.118, alpha: 1.0) : // #FF1E1E1E
             UIColor(red: 0.961, green: 0.961, blue: 0.961, alpha: 1.0) // #FFF5F5F5
     })
-    
+
     static let expenseCardBorder = Color(UIColor { traitCollection in
-        return traitCollection.userInterfaceStyle == .dark ? 
+        return traitCollection.userInterfaceStyle == .dark ?
             UIColor(red: 0.251, green: 0.251, blue: 0.251, alpha: 1.0) : // #FF404040
             UIColor(red: 0.878, green: 0.878, blue: 0.878, alpha: 1.0) // #FFE0E0E0
     })
@@ -203,7 +203,7 @@ struct SafeImage: View {
     let systemFallback: String
     let width: CGFloat
     let height: CGFloat
-    
+
     var body: some View {
         Group {
             // Try to load ItunesArtwork@2x.png first, then imageName, then system fallback
@@ -232,13 +232,13 @@ struct CustomLogoView: View {
             Circle()
                 .fill(Color.white.opacity(0.2))
                 .frame(width: 70, height: 70)
-            
+
             // Custom logo design
             VStack(spacing: 2) {
                 Text("HSU")
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.white)
-                
+
                 Image(systemName: "dollarsign.circle")
                     .font(.system(size: 18))
                     .foregroundColor(.white)
@@ -269,7 +269,7 @@ struct ContentView: View {
     @State private var showSummaryView = false
     @State private var showAboutUs = false
     @State private var showSettings = false
-    
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -279,10 +279,10 @@ struct ContentView: View {
                     VStack(spacing: 10) {
                         // Today's Summary Card (matching Android CardView)
                         todaySummaryCardView
-                        
+
                         // Tab Layout equivalent
                         tabLayoutView
-                        
+
                         // ViewPager equivalent with TabView
                         viewPagerView
                     }
@@ -303,11 +303,11 @@ struct ContentView: View {
                 .toolbarBackground(Color.expenseAccent, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar) // Ensures white title text
-                
+
                 VStack {
                     // Main content area
                     Spacer()
-                    
+
                     // Settings button in navigation or toolbar
                     HStack {
                         Spacer()
@@ -327,7 +327,7 @@ struct ContentView: View {
             NavigationDrawerView()
         }
         .sheet(isPresented: $showSettingsPage) {
-            SettingsPage()
+            EnhancedSettingsPage()
         }
         .sheet(isPresented: $showCurrencySettings) {
             CurrencySettingsView()
@@ -349,7 +349,7 @@ struct ContentView: View {
             }
         }
         .sheet(isPresented: $showSettings) {
-            SettingsPage()
+            EnhancedSettingsPage()
         }
         .onAppear {
             loadExpensesFromUserDefaults()
@@ -377,7 +377,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     // MARK: - Today's Summary Card View (matching Android CardView)
     private var todaySummaryCardView: some View {
         VStack(spacing: 0) {
@@ -388,11 +388,11 @@ struct ContentView: View {
                         Text("📅 Today's Summary")
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(.expensePrimaryText)
-                        
+
                         Spacer()
                     }
                 .padding(.bottom, 2)
-                
+
                 // Total Number row
                 HStack {
                     Text("Total Number:")
@@ -404,7 +404,7 @@ struct ContentView: View {
                         .foregroundColor(.expensePrimaryText)
                 }
                 .padding(.bottom, 8)
-                
+
                 // Total Amount row
                 HStack {
                     Text("Total Amount:")
@@ -423,7 +423,7 @@ struct ContentView: View {
         }
         .padding(.bottom, 20)
     }
-    
+
     // MARK: - Tab Layout View (equivalent to TabLayout)
     private var tabLayoutView: some View {
         HStack(spacing: 0) {
@@ -454,7 +454,7 @@ struct ContentView: View {
                                 .font(.system(size: 14, weight: .medium))
                                 .foregroundColor(selectedTab == index ? Color.expensePrimaryText : Color.expenseSecondaryText)
                         }
-                        
+
                         // Tab indicator
                         Rectangle()
                             .fill(selectedTab == index ? Color.expenseAccent : Color.clear)
@@ -468,29 +468,29 @@ struct ContentView: View {
         }
         .background(Color.clear)
     }
-    
+
     // MARK: - ViewPager equivalent with TabView
     private var viewPagerView: some View {
         TabView(selection: $selectedTab) {
             // Today's Expenses Tab
             todayExpenseListView
                 .tag(0)
-            
+
             // This Week's Expenses Tab
             thisWeekExpenseListView
                 .tag(1)
-            
+
             // This Month's Expenses Tab
             thisMonthExpenseListView
                 .tag(2)
-            
+
             // All Expenses Tab (3 years of data)
             allExpenseListView
                 .tag(3)
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
     }
-    
+
 
     // MARK: - Helper Properties
     private var todayExpensesCount: Int {
@@ -500,7 +500,7 @@ struct ContentView: View {
             expense.date >= today && expense.date < tomorrow
         }.count
     }
-    
+
     private var todayTotalAmount: Decimal {
         let today = Calendar.current.startOfDay(for: Date())
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
@@ -508,7 +508,7 @@ struct ContentView: View {
             expense.date >= today && expense.date < tomorrow
         }.reduce(0) { $0 + $1.price }
     }
-    
+
     private var todayTotalAmountInCurrentCurrency: Decimal {
         let today = Calendar.current.startOfDay(for: Date())
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
@@ -518,7 +518,7 @@ struct ContentView: View {
             total + expense.convertedPrice(to: currencyManager.currentCurrency.code)
         }
     }
-    
+
     private var todayExpenses: [ExpenseItem] {
         let today = Calendar.current.startOfDay(for: Date())
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
@@ -526,7 +526,7 @@ struct ContentView: View {
             expense.date >= today && expense.date < tomorrow
         }.sorted { $0.date > $1.date }
     }
-    
+
     // Three years of data for ALL tab
     private var allExpenses: [ExpenseItem] {
         let threeYearsAgo = Calendar.current.date(byAdding: .year, value: -3, to: Date()) ?? Date()
@@ -534,43 +534,43 @@ struct ContentView: View {
             expense.date >= threeYearsAgo
         }.sorted { $0.date > $1.date }
     }
-    
+
     // This week's expenses
     private var thisWeekExpenses: [ExpenseItem] {
         let calendar = Calendar.current
         let today = Date()
-        
+
         // Get the start of this week (Sunday or Monday depending on locale)
         guard let weekInterval = calendar.dateInterval(of: .weekOfYear, for: today) else {
             return []
         }
-        
+
         let startOfWeek = weekInterval.start
         let endOfWeek = weekInterval.end
-        
+
         return expenses.filter { expense in
             expense.date >= startOfWeek && expense.date < endOfWeek
         }.sorted { $0.date > $1.date }
     }
-    
+
     // This month's expenses
     private var thisMonthExpenses: [ExpenseItem] {
         let calendar = Calendar.current
         let today = Date()
-        
+
         // Get the start of this month
         guard let monthInterval = calendar.dateInterval(of: .month, for: today) else {
             return []
         }
-        
+
         let startOfMonth = monthInterval.start
         let endOfMonth = monthInterval.end
-        
+
         return expenses.filter { expense in
             expense.date >= startOfMonth && expense.date < endOfMonth
         }.sorted { $0.date > $1.date }
     }
-    
+
     // MARK: - Tab Views
     private var allExpenseListView: some View {
         ScrollView {
@@ -590,7 +590,7 @@ struct ContentView: View {
             .padding(.horizontal, 10)
         }
     }
-    
+
     private var todayExpenseListView: some View {
         ScrollView {
             LazyVStack(spacing: 12) {
@@ -609,7 +609,7 @@ struct ContentView: View {
             .padding(.horizontal, 10)
         }
     }
-    
+
     private var thisWeekExpenseListView: some View {
         ScrollView {
             LazyVStack(spacing: 12) {
@@ -628,7 +628,7 @@ struct ContentView: View {
             .padding(.horizontal, 10)
         }
     }
-    
+
     private var thisMonthExpenseListView: some View {
         ScrollView {
             LazyVStack(spacing: 12) {
@@ -647,12 +647,12 @@ struct ContentView: View {
             .padding(.horizontal, 10)
         }
     }
-    
+
     private var expenseCategories: [(category: String, count: Int, totalAmount: Decimal, iconName: String)] {
         let grouped = Dictionary(grouping: expenses) { expense in
             categoryName(for: expense.name)
         }
-        
+
         return grouped.map { (category, expenses) in
             let count = expenses.count
             let totalAmount = expenses.reduce(0) { $0 + $1.price }
@@ -660,7 +660,7 @@ struct ContentView: View {
             return (category: category, count: count, totalAmount: totalAmount, iconName: iconName)
         }.sorted { $0.totalAmount > $1.totalAmount }
     }
-    
+
     private func categoryName(for expenseName: String) -> String {
         let lowercaseName = expenseName.lowercased()
         if lowercaseName.contains("food") || lowercaseName.contains("restaurant") || lowercaseName.contains("grocery") || lowercaseName.contains("lunch") || lowercaseName.contains("coffee") {
@@ -675,7 +675,7 @@ struct ContentView: View {
             return "General"
         }
     }
-    
+
     private func tabTitle(for index: Int) -> String {
         switch index {
         case 0: return "TODAY"
@@ -687,7 +687,7 @@ struct ContentView: View {
             return ""
         }
     }
-    
+
     // MARK: - Helper Methods
     private func formatCurrency(_ amount: Decimal) -> String {
         let formatter = NumberFormatter()
@@ -697,7 +697,7 @@ struct ContentView: View {
         formatter.minimumFractionDigits = 2
         return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "$0.00"
     }
-    
+
     private func calculateTotal() {
         totalExpenses = expenses.reduce(0) { $0 + $1.price }
     }
@@ -758,12 +758,12 @@ struct ContentView: View {
         expenses = []
         calculateTotal()
     }
-    
+
     private func categoryIconName(for name: String) -> String {
         // Always return ExpenseIcon for all categories
         return "ExpenseIcon"
     }
-    
+
     // MARK: - Debug Helper (for testing - can be removed later)
     private func debugTabData() {
         print("=== TAB DATA DEBUG ===")
@@ -773,20 +773,20 @@ struct ContentView: View {
         print("This month expenses: \(thisMonthExpenses.count)")
         print("All expenses (3 years): \(allExpenses.count)")
         print("Total expenses: \(expenses.count)")
-        
+
         let calendar = Calendar.current
         let today = Date()
-        
+
         if let weekInterval = calendar.dateInterval(of: .weekOfYear, for: today) {
             print("Week range: \(weekInterval.start) to \(weekInterval.end)")
         }
-        
+
         if let monthInterval = calendar.dateInterval(of: .month, for: today) {
             print("Month range: \(monthInterval.start) to \(monthInterval.end)")
         }
-        
+
         print("Today's date: \(today)")
-        
+
         // Print each expense with its date for debugging
         print("\n--- Expense Details ---")
         for (index, expense) in expenses.enumerated() {
@@ -809,7 +809,7 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
             .preferredColorScheme(.light)
-        
+
         ContentView()
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
             .preferredColorScheme(.dark)
@@ -820,7 +820,7 @@ struct NavigationDrawerView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationDrawerView()
             .preferredColorScheme(.light)
-        
+
         NavigationDrawerView()
             .preferredColorScheme(.dark)
     }
@@ -836,7 +836,7 @@ struct CategoryRowView_Previews: PreviewProvider {
         )
         .padding()
         .preferredColorScheme(.light)
-        
+
         CategoryRowView(
             category: "Transportation",
             count: 3,
@@ -852,7 +852,7 @@ struct ExpenseDetailView_Previews: PreviewProvider {
     static var previews: some View {
         ExpenseDetailView(expense: nil) { _ in }
             .preferredColorScheme(.light)
-        
+
         ExpenseDetailView(expense: ExpenseItem(
             name: "Sample Expense",
             price: 25.50,
@@ -866,7 +866,7 @@ struct EmptyStateView_Previews: PreviewProvider {
     static var previews: some View {
         EmptyStateView { }
             .preferredColorScheme(.light)
-        
+
         EmptyStateView { }
             .preferredColorScheme(.dark)
     }
@@ -879,17 +879,17 @@ struct StatItemView: View {
     let icon: String
     let title: String
     let value: String
-    
+
     var body: some View {
         VStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.title3)
                 .foregroundColor(.expenseAccent)
-            
+
             Text(title)
                 .font(.caption)
                 .foregroundColor(.expenseSecondaryText)
-            
+
             Text(value)
                 .font(.caption)
                 .fontWeight(.semibold)
@@ -903,7 +903,7 @@ struct ExpenseRowView: View {
     let expense: ExpenseItem
     let onTap: () -> Void
     @StateObject private var currencyManager = CurrencyManager.shared
-    
+
     var body: some View {
         Button(action: onTap) {
             VStack(spacing: 0) {
@@ -914,7 +914,7 @@ struct ExpenseRowView: View {
                         .foregroundColor(.expensePrimaryText)
                         .lineLimit(1)
                     Spacer()
-                    
+
                     // Price display
                     Text(expense.formattedPriceInCurrentCurrency())
                         .font(.system(size: 16, weight: .bold))
@@ -944,7 +944,7 @@ struct ExpenseRowView: View {
                             .font(.system(size: 12))
                             .foregroundColor(.expenseSecondaryText)
                     }
-                    
+
                     Spacer()
                 }
                 .padding(.horizontal, 16)
@@ -962,7 +962,7 @@ struct ExpenseRowView: View {
         }
         .buttonStyle(PlainButtonStyle())
     }
-    
+
     private func categoryIconName(for name: String) -> String {
         // Always return ExpenseIcon for all categories
         return "ExpenseIcon"
@@ -972,7 +972,7 @@ struct ExpenseRowView: View {
 // MARK: - Empty State View
 struct EmptyStateView: View {
     let onAddExpense: () -> Void
-    
+
     var body: some View {
         VStack(spacing: 24) {
             VStack(spacing: 16) {
@@ -981,13 +981,13 @@ struct EmptyStateView: View {
                     .font(.system(size: 80))
                     .foregroundColor(.expenseSecondaryText)
                     .opacity(0.6)
-                
+
                 VStack(spacing: 8) {
                     Text("No Expenses Yet")
                         .font(.title2)
                         .fontWeight(.semibold)
                         .foregroundColor(.expensePrimaryText)
-                    
+
                     Text("Start tracking your expenses by adding your first entry")
                         .font(.body)
                         .foregroundColor(.expenseSecondaryText)
@@ -995,12 +995,12 @@ struct EmptyStateView: View {
                         .padding(.horizontal, 32)
                 }
             }
-            
+
             Button(action: onAddExpense) {
                 HStack(spacing: 8) {
                     Image(systemName: "plus.circle.fill")
                         .font(.title3)
-                    
+
                     Text("Add Your First Expense")
                         .font(.body)
                         .fontWeight(.medium)
@@ -1030,11 +1030,11 @@ struct ExpenseDetailView: View {
     @State private var originalCurrency: String
     @State private var originalPrice: Decimal
     let onSave: (ExpenseItem) -> Void
-    
+
     @State private var showingDatePicker = false
     @State private var showingTimePicker = false
     @State private var showingCurrencyPicker = false
-    
+
     init(expense: ExpenseItem?, onSave: @escaping (ExpenseItem) -> Void) {
         if let expense = expense {
             self._expense = State(initialValue: expense)
@@ -1052,7 +1052,7 @@ struct ExpenseDetailView: View {
         self._selectedCurrency = State(initialValue: CurrencyManager.shared.currentCurrency)
         self.onSave = onSave
     }
-    
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -1069,7 +1069,7 @@ struct ExpenseDetailView: View {
                                     .font(.caption)
                                     .foregroundColor(.expenseSecondaryText)
                             }
-                            
+
                             TextField("Enter expense name", text: $expense.name)
                                 .font(.body)
                                 .fontWeight(.medium)
@@ -1077,7 +1077,7 @@ struct ExpenseDetailView: View {
                                 .background(Color.expenseInputBackground)
                                 .cornerRadius(10)
                         }
-                        
+
                         // Price Field with Currency Selection
                         VStack(alignment: .leading, spacing: 8) {
                             HStack(spacing: 8) {
@@ -1088,7 +1088,7 @@ struct ExpenseDetailView: View {
                                     .font(.caption)
                                     .foregroundColor(.expenseSecondaryText)
                             }
-                            
+
                             HStack(spacing: 12) {
                                 // Price input
                                 TextField("0.00", value: Binding(
@@ -1101,7 +1101,7 @@ struct ExpenseDetailView: View {
                                 .padding(12)
                                 .background(Color.expenseInputBackground)
                                 .cornerRadius(10)
-                                
+
                                 // Currency selector (temporarily disabled)
                                 /*
                                 Button(action: { showingCurrencyPicker = true }) {
@@ -1124,7 +1124,7 @@ struct ExpenseDetailView: View {
                                 */
                             }
                         }
-                        
+
                         // Description Field
                         VStack(alignment: .leading, spacing: 8) {
                             HStack(spacing: 8) {
@@ -1135,7 +1135,7 @@ struct ExpenseDetailView: View {
                                     .font(.caption)
                                     .foregroundColor(.expenseSecondaryText)
                             }
-                            
+
                             TextField("Enter description (optional)", text: $expense.description, axis: .vertical)
                                 .font(.body)
                                 .padding(12)
@@ -1143,7 +1143,7 @@ struct ExpenseDetailView: View {
                                 .cornerRadius(10)
                                 .lineLimit(3...6)
                         }
-                        
+
                         // Date & Time Fields
                         HStack(spacing: 12) {
                             // Date Field
@@ -1156,7 +1156,7 @@ struct ExpenseDetailView: View {
                                         .font(.caption)
                                         .foregroundColor(.expenseSecondaryText)
                                 }
-                                
+
                                 Button(action: { showingDatePicker = true }) {
                                     Text(expense.formattedDate)
                                         .font(.body)
@@ -1168,7 +1168,7 @@ struct ExpenseDetailView: View {
                                 }
                                 .buttonStyle(PlainButtonStyle())
                             }
-                            
+
                             // Time Field
                             VStack(alignment: .leading, spacing: 8) {
                                 HStack(spacing: 8) {
@@ -1179,7 +1179,7 @@ struct ExpenseDetailView: View {
                                         .font(.caption)
                                         .foregroundColor(.expenseSecondaryText)
                                 }
-                                
+
                                 Button(action: { showingTimePicker = true }) {
                                     Text(expense.formattedTime)
                                         .font(.body)
@@ -1199,7 +1199,7 @@ struct ExpenseDetailView: View {
                             .fill(Color.expenseCardBackground)
                             .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
                     )
-                    
+
                     // Action Buttons
                     HStack(spacing: 12) {
                         // Save Button
@@ -1207,7 +1207,7 @@ struct ExpenseDetailView: View {
                             HStack(spacing: 8) {
                                 Image(systemName: "checkmark.circle.fill")
                                     .font(.body)
-                                
+
                                 Text(isNewExpense ? "Save" : "Update")
                                     .font(.body)
                                     .fontWeight(.bold)
@@ -1222,7 +1222,7 @@ struct ExpenseDetailView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                         .disabled(expense.name.isEmpty)
-                        
+
                         // Delete Button (only for existing expenses)
                         if !isNewExpense {
                             Button(action: {
@@ -1233,7 +1233,7 @@ struct ExpenseDetailView: View {
                                 HStack(spacing: 8) {
                                     Image(systemName: "trash.fill")
                                         .font(.body)
-                                    
+
                                     Text("Delete")
                                         .font(.body)
                                         .fontWeight(.bold)
@@ -1279,7 +1279,7 @@ struct ExpenseDetailView: View {
                 // Update selected currency to current currency manager currency
                 selectedCurrency = currencyManager.currentCurrency
                 expense.currency = currencyManager.currentCurrency.code
-                
+
                 // Convert price if editing existing expense and currency is different
                 if !isNewExpense && originalCurrency != currencyManager.currentCurrency.code {
                     expense.price = currencyManager.convertAmount(originalPrice, from: originalCurrency, to: currencyManager.currentCurrency.code)
@@ -1290,7 +1290,7 @@ struct ExpenseDetailView: View {
                 let oldCurrency = selectedCurrency.code
                 selectedCurrency = currencyManager.currentCurrency
                 expense.currency = currencyManager.currentCurrency.code
-                
+
                 // Convert price when currency changes
                 if oldCurrency != currencyManager.currentCurrency.code {
                     expense.price = currencyManager.convertAmount(expense.price, from: oldCurrency, to: currencyManager.currentCurrency.code)
@@ -1298,7 +1298,7 @@ struct ExpenseDetailView: View {
             }
         }
     }
-    
+
     private func saveExpense() {
         // Set the expense currency to the current selected currency
         expense.currency = selectedCurrency.code
@@ -1312,7 +1312,7 @@ struct DatePickerView: View {
     @Environment(\.dismiss) private var dismiss
     @Binding var date: Date
     let title: String
-    
+
     var body: some View {
         NavigationView {
             VStack {
@@ -1323,7 +1323,7 @@ struct DatePickerView: View {
                 )
                 .datePickerStyle(.wheel)
                 .padding()
-                
+
                 Spacer()
             }
             .navigationTitle(title)
@@ -1334,7 +1334,7 @@ struct DatePickerView: View {
                         dismiss()
                     }
                 }
-                
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") {
                         dismiss()
@@ -1351,7 +1351,7 @@ struct TimePickerView: View {
     @Environment(\.dismiss) private var dismiss
     @Binding var time: Date
     let title: String
-    
+
     var body: some View {
         NavigationView {
             VStack {
@@ -1362,7 +1362,7 @@ struct TimePickerView: View {
                 )
                 .datePickerStyle(.wheel)
                 .padding()
-                
+
                 Spacer()
             }
             .navigationTitle(title)
@@ -1373,7 +1373,7 @@ struct TimePickerView: View {
                         dismiss()
                     }
                 }
-                
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") {
                         dismiss()
@@ -1391,7 +1391,7 @@ struct CurrencyPickerView: View {
     @Environment(\.dismiss) private var dismiss
     @Binding var selectedCurrency: CurrencyManager.Currency
     let onSelect: (CurrencyManager.Currency) -> Void
-    
+
     var body: some View {
         NavigationView {
             List {
@@ -1402,20 +1402,20 @@ struct CurrencyPickerView: View {
                         HStack(spacing: 12) {
                             Text(currency.flag)
                                 .font(.title2)
-                            
+
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(currency.name)
                                     .font(.body)
                                     .fontWeight(.medium)
                                     .foregroundColor(.expensePrimaryText)
-                                
+
                                 Text("\(currency.symbol) \(currency.code)")
                                     .font(.caption)
                                     .foregroundColor(.expenseSecondaryText)
                             }
-                            
+
                             Spacer()
-                            
+
                             if currency.code == selectedCurrency.code {
                                 Image(systemName: "checkmark.circle.fill")
                                     .font(.body)
@@ -1444,7 +1444,7 @@ struct CurrencyPickerView: View {
 
 struct NavigationDrawerView: View {
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 0) {
@@ -1459,7 +1459,7 @@ struct NavigationDrawerView: View {
                             width: 60,
                             height: 60
                         )
-                        
+
                         // Description text
                         Text("Track your expenses efficiently")
                             .font(.subheadline)
@@ -1479,14 +1479,14 @@ struct NavigationDrawerView: View {
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
-                        
+
                         // Subtle pattern overlay
                         GeometryReader { geometry in
                             Path { path in
                                 // Add subtle geometric patterns
                                 let width = geometry.size.width
                                 let height = geometry.size.height
-                                
+
                                 // Add some circles for visual interest
                                 path.addEllipse(in: CGRect(x: width * 0.8, y: -20, width: 60, height: 60))
                                 path.addEllipse(in: CGRect(x: -20, y: height * 0.6, width: 40, height: 40))
@@ -1495,7 +1495,7 @@ struct NavigationDrawerView: View {
                         }
                     }
                 )
-                
+
                 // Menu Items Container
                 ScrollView {
                     VStack(spacing: 0) {
@@ -1526,12 +1526,12 @@ struct NavigationDrawerView: View {
                                 dismiss()
                             }
                         }
-                        
+
                         // Group Separator
                         Divider()
                             .padding(.vertical, 8)
                             .padding(.horizontal, 20)
-                        
+
                         // Settings Group
                         NavigationMenuSection(title: "SETTINGS") {
                             NavigationMenuItem(icon: "", title: "Settings", emoji: "⚙️") {
@@ -1559,7 +1559,7 @@ struct NavigationDrawerView: View {
                     }
                 }
                 .background(Color.expenseCardBackground)
-                
+
                 Spacer()
             }
             .background(Color.expenseCardBackground)
@@ -1572,12 +1572,12 @@ struct NavigationDrawerView: View {
 struct NavigationMenuSection<Content: View>: View {
     let title: String
     let content: Content
-    
+
     init(title: String, @ViewBuilder content: () -> Content) {
         self.title = title
         self.content = content()
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Section Header
@@ -1590,7 +1590,7 @@ struct NavigationMenuSection<Content: View>: View {
                     .padding(.top, 16)
                     .padding(.bottom, 8)
             }
-            
+
             // Section Content
             content
         }
@@ -1603,7 +1603,7 @@ struct NavigationMenuItem: View {
     let title: String
     let emoji: String
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             HStack(spacing: 16) {
@@ -1611,11 +1611,11 @@ struct NavigationMenuItem: View {
                 Text(emoji)
                     .font(.title3)
                     .frame(width: 32, alignment: .leading)
-                
+
                 Text(title)
                     .font(.body)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 Spacer()
             }
             .padding(.horizontal, 20)
@@ -1640,7 +1640,7 @@ struct CategoryRowView: View {
     let count: Int
     let totalAmount: Decimal
     let iconName: String
-    
+
     var body: some View {
         HStack(spacing: 16) {
             // Category Icon
@@ -1648,7 +1648,7 @@ struct CategoryRowView: View {
                 Circle()
                     .fill(Color.expenseAccent.opacity(0.1))
                     .frame(width: 48, height: 48)
-                
+
                 SafeImage(
                     imageName: iconName,
                     systemFallback: "tag.circle",
@@ -1657,21 +1657,21 @@ struct CategoryRowView: View {
                 )
                 .foregroundColor(.expenseAccent)
             }
-            
+
             // Category Info
             VStack(alignment: .leading, spacing: 4) {
                 Text(category)
                     .font(.body)
                     .fontWeight(.medium)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 Text("\(count) items")
                     .font(.caption)
                     .foregroundColor(.expenseSecondaryText)
             }
-            
+
             Spacer()
-            
+
             // Total Amount (show as $2.00 style)
             Text("$" + String(format: "%.2f", NSDecimalNumber(decimal: totalAmount).doubleValue))
                 .font(.body)
@@ -1685,7 +1685,7 @@ struct CategoryRowView: View {
                 .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
         )
     }
-    
+
     private func formatCurrency(_ amount: Decimal) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
@@ -1908,18 +1908,18 @@ struct ExportDocument: FileDocument {
 // MARK: - Comprehensive Currency Management System
 class CurrencyManager: ObservableObject {
     static let shared = CurrencyManager()
-    
+
     @Published var currentCurrency: Currency = .usd
     @Published var exchangeRates: [String: Double] = [:]
     @Published var isLoadingRates = false
     @Published var lastUpdateTime: Date?
     @Published var apiError: String?
-    
+
     private init() {
         loadSavedCurrency()
         loadSavedRates()
     }
-    
+
     // MARK: - Currency Definition
     struct Currency: Identifiable, Equatable {
         let id = UUID()
@@ -1927,7 +1927,7 @@ class CurrencyManager: ObservableObject {
         let name: String
         let symbol: String
         let flag: String
-        
+
         static let usd = Currency(code: "USD", name: "US Dollar", symbol: "$", flag: "🇺🇸")
         static let mmk = Currency(code: "MMK", name: "Myanmar Kyat", symbol: "MMK", flag: "🇲🇲")
         static let eur = Currency(code: "EUR", name: "Euro", symbol: "€", flag: "🇪🇺")
@@ -1938,38 +1938,38 @@ class CurrencyManager: ObservableObject {
         static let thb = Currency(code: "THB", name: "Thai Baht", symbol: "฿", flag: "🇹🇭")
         static let sgd = Currency(code: "SGD", name: "Singapore Dollar", symbol: "S$", flag: "🇸🇬")
         static let inr = Currency(code: "INR", name: "Indian Rupee", symbol: "₹", flag: "🇮🇳")
-        
+
         static let allCurrencies: [Currency] = [.usd, .mmk, .eur, .jpy, .gbp, .cny, .krw, .thb, .sgd, .inr]
-        
+
         func format(_ amount: Decimal) -> String {
             let formatter = NumberFormatter()
             formatter.numberStyle = .currency
             formatter.currencyCode = self.code
             formatter.currencySymbol = self.symbol
-            
+
             // All currencies show 2 decimal places
             formatter.maximumFractionDigits = 2
             formatter.minimumFractionDigits = 2
-            
+
             return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "\(symbol)0.00"
         }
     }
-    
+
     // MARK: - Public Methods
     func setCurrency(_ currency: Currency) {
         currentCurrency = currency
         saveCurrency()
         NotificationCenter.default.post(name: .currencyChanged, object: nil)
-        
+
         // Auto-fetch rates when currency changes
         if exchangeRates.isEmpty || shouldRefreshRates() {
             fetchExchangeRates()
         }
     }
-    
+
     func convertAmount(_ amount: Decimal, from: String, to: String) -> Decimal {
         guard from != to else { return amount }
-        
+
         // Convert to USD first (base currency)
         let usdAmount: Decimal
         if from == "USD" {
@@ -1979,7 +1979,7 @@ class CurrencyManager: ObservableObject {
         } else {
             return amount // Fallback if no rate available
         }
-        
+
         // Convert from USD to target currency
         if to == "USD" {
             return usdAmount
@@ -1989,38 +1989,38 @@ class CurrencyManager: ObservableObject {
             return amount // Fallback if no rate available
         }
     }
-    
+
     func fetchExchangeRates() {
         guard !isLoadingRates else { return }
-        
+
         isLoadingRates = true
         apiError = nil
-        
+
         guard let url = URL(string: "https://myanmar-currency-api.github.io/api/latest.json") else {
             handleFetchError("Invalid API URL")
             return
         }
-        
+
         URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             DispatchQueue.main.async {
                 self?.isLoadingRates = false
-                
+
                 if let error = error {
                     self?.handleFetchError("Network error: \(error.localizedDescription)")
                     return
                 }
-                
+
                 guard let data = data else {
                     self?.handleFetchError("No data received")
                     return
                 }
-                
+
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                        let dataArray = json["data"] as? [[String: Any]] {
-                        
+
                         var newRates: [String: Double] = [:]
-                        
+
                         // Parse Myanmar API format
                         for currencyData in dataArray {
                             if let currency = currencyData["currency"] as? String,
@@ -2043,13 +2043,13 @@ class CurrencyManager: ObservableObject {
                                 }
                             }
                         }
-                        
+
                         // Add some missing currencies with fallback rates
                         if newRates["EUR"] == nil { newRates["EUR"] = 0.85 }
                         if newRates["GBP"] == nil { newRates["GBP"] = 0.72 }
                         if newRates["KRW"] == nil { newRates["KRW"] = 1180.0 }
                         if newRates["INR"] == nil { newRates["INR"] = 74.0 }
-                        
+
                         self?.exchangeRates = newRates
                         self?.lastUpdateTime = Date()
                         self?.saveRates()
@@ -2063,7 +2063,7 @@ class CurrencyManager: ObservableObject {
             }
         }.resume()
     }
-    
+
     // MARK: - Private Methods
     private func handleFetchError(_ message: String) {
         apiError = message
@@ -2072,7 +2072,7 @@ class CurrencyManager: ObservableObject {
             loadFallbackRates()
         }
     }
-    
+
     private func loadFallbackRates() {
         exchangeRates = [
             "MMK": 2100.0,
@@ -2086,36 +2086,36 @@ class CurrencyManager: ObservableObject {
             "INR": 74.0
         ]
     }
-    
+
     private func shouldRefreshRates() -> Bool {
         guard let lastUpdate = lastUpdateTime else { return true }
         return Date().timeIntervalSince(lastUpdate) > 3600 // Refresh every hour
     }
-    
+
     private func saveCurrency() {
         UserDefaults.standard.set(currentCurrency.code, forKey: "SelectedCurrency")
     }
-    
+
     private func loadSavedCurrency() {
         if let savedCode = UserDefaults.standard.string(forKey: "SelectedCurrency"),
            let currency = Currency.allCurrencies.first(where: { $0.code == savedCode }) {
             currentCurrency = currency
         }
     }
-    
+
     private func saveRates() {
         if let data = try? JSONSerialization.data(withJSONObject: exchangeRates) {
             UserDefaults.standard.set(data, forKey: "ExchangeRates")
             UserDefaults.standard.set(Date(), forKey: "RatesUpdateTime")
         }
     }
-    
+
     private func loadSavedRates() {
         if let data = UserDefaults.standard.data(forKey: "ExchangeRates"),
            let rates = try? JSONSerialization.jsonObject(with: data) as? [String: Double] {
             exchangeRates = rates
             lastUpdateTime = UserDefaults.standard.object(forKey: "RatesUpdateTime") as? Date
-       
+
         } else {
             loadFallbackRates()
         }
@@ -2132,12 +2132,12 @@ extension ExpenseItem {
     func convertedPrice(to targetCurrency: String) -> Decimal {
         return CurrencyManager.shared.convertAmount(price, from: currency, to: targetCurrency)
     }
-    
+
     func formattedPriceInCurrentCurrency() -> String {
         let convertedPrice = convertedPrice(to: CurrencyManager.shared.currentCurrency.code)
         return CurrencyManager.shared.currentCurrency.format(convertedPrice)
     }
-    
+
     func formattedPriceInOriginalCurrency() -> String {
         if let originalCurrency = CurrencyManager.Currency.allCurrencies.first(where: { $0.code == currency }) {
             return originalCurrency.format(price)
@@ -2152,29 +2152,29 @@ struct InlineSummaryView: View {
     @State private var summaryData = InlineSummaryData()
     @State private var showingRateDetails = false
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 16) {
                     // Header with Back Button
                     headerSection
-                    
+
                     // Overall Summary Card
                     overallSummaryCard
-                    
+
                     // Today's Summary Card
                     todaySummaryCard
-                    
+
                     // Weekly Summary Card
                     weeklySummaryCard
-                    
+
                     // Monthly Summary Card
                     monthlySummaryCard
-                    
+
                     // Extremes Card
                     extremesCard
-                    
+
                     Spacer(minLength: 20)
                 }
                 .padding(16)
@@ -2186,7 +2186,7 @@ struct InlineSummaryView: View {
             loadSummaryData()
         }
     }
-    
+
     // MARK: - Header Section
     private var headerSection: some View {
         HStack(spacing: 16) {
@@ -2203,7 +2203,7 @@ struct InlineSummaryView: View {
                             .fill(Color.expenseInputBackground)
                     )
             }
-            
+
             // Title
             Text("Summary")
                 .font(.title)
@@ -2213,7 +2213,7 @@ struct InlineSummaryView: View {
         }
         .padding(.bottom, 14)
     }
-    
+
     // MARK: - Overall Summary Card
     private var overallSummaryCard: some View {
         InlineGlassmorphismCard {
@@ -2222,20 +2222,20 @@ struct InlineSummaryView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 VStack(spacing: 8) {
                     summaryRow(
                         label: "Total Expenses",
                         value: "\(summaryData.totalExpenseCount)",
                         valueColor: .expensePrimaryText
                     )
-                    
+
                     summaryRow(
                         label: "Total Amount",
                         value: currencyManager.currentCurrency.format(Decimal(summaryData.totalAmount)),
                         valueColor: Color.expenseGreen
                     )
-                    
+
                     summaryRow(
                         label: "Average Amount",
                         value: currencyManager.currentCurrency.format(Decimal(summaryData.averageAmount)),
@@ -2245,7 +2245,7 @@ struct InlineSummaryView: View {
             }
         }
     }
-    
+
     // MARK: - Today's Summary Card
     private var todaySummaryCard: some View {
         InlineGlassmorphismCard {
@@ -2254,14 +2254,14 @@ struct InlineSummaryView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 VStack(spacing: 8) {
                     summaryRow(
                         label: "Today's Expenses",
                         value: "\(summaryData.todayExpenseCount)",
                         valueColor: .expensePrimaryText
                     )
-                    
+
                     summaryRow(
                         label: "Today's Total",
                         value: currencyManager.currentCurrency.format(Decimal(summaryData.todayTotalAmount)),
@@ -2271,7 +2271,7 @@ struct InlineSummaryView: View {
             }
         }
     }
-    
+
     // MARK: - Weekly Summary Card
     private var weeklySummaryCard: some View {
         InlineGlassmorphismCard {
@@ -2280,14 +2280,14 @@ struct InlineSummaryView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 VStack(spacing: 8) {
                     summaryRow(
                         label: "This Week's Expenses",
                         value: "\(summaryData.weeklyExpenseCount)",
                         valueColor: .expensePrimaryText
                     )
-                    
+
                     summaryRow(
                         label: "This Week's Total",
                         value: currencyManager.currentCurrency.format(Decimal(summaryData.weeklyTotalAmount)),
@@ -2297,7 +2297,7 @@ struct InlineSummaryView: View {
             }
         }
     }
-    
+
     // MARK: - Monthly Summary Card
     private var monthlySummaryCard: some View {
         InlineGlassmorphismCard {
@@ -2306,14 +2306,14 @@ struct InlineSummaryView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 VStack(spacing: 8) {
                     summaryRow(
                         label: "This Month's Expenses",
                         value: "\(summaryData.monthlyExpenseCount)",
                         valueColor: .expensePrimaryText
                     )
-                    
+
                     summaryRow(
                         label: "This Month's Total",
                         value: currencyManager.currentCurrency.format(Decimal(summaryData.monthlyTotalAmount)),
@@ -2323,7 +2323,7 @@ struct InlineSummaryView: View {
             }
         }
     }
-    
+
     // MARK: - Extremes Card
     private var extremesCard: some View {
         InlineGlassmorphismCard {
@@ -2332,28 +2332,28 @@ struct InlineSummaryView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 VStack(spacing: 8) {
                     HStack {
                         Text("Highest Expense")
                             .font(.subheadline)
                             .foregroundColor(.expenseSecondaryText)
-                        
+
                         Spacer()
-                        
+
                         Text(currencyManager.currentCurrency.format(Decimal(summaryData.highestExpenseAmount)))
                             .font(.subheadline)
                             .fontWeight(.semibold)
                             .foregroundColor(.expensePrimaryText)
                     }
-                    
+
                     HStack {
                         Text("Lowest Expense")
                             .font(.subheadline)
                             .foregroundColor(.expenseSecondaryText)
-                        
+
                         Spacer()
-                        
+
                         Text(currencyManager.currentCurrency.format(Decimal(summaryData.lowestExpenseAmount)))
                             .font(.subheadline)
                             .fontWeight(.semibold)
@@ -2363,23 +2363,23 @@ struct InlineSummaryView: View {
             }
         }
     }
-    
+
     // MARK: - Load Summary Data
     private func loadSummaryData() {
         let expenses = loadExpenses()
-        
+
         // Calculate overall statistics
         summaryData.totalExpenseCount = expenses.count
         summaryData.totalAmount = expenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
         summaryData.averageAmount = expenses.isEmpty ? 0 : summaryData.totalAmount / Double(expenses.count)
-        
+
         // Calculate today's statistics
         let today = Calendar.current.startOfDay(for: Date())
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
         let todayExpenses = expenses.filter { $0.date >= today && $0.date < tomorrow }
         summaryData.todayExpenseCount = todayExpenses.count
         summaryData.todayTotalAmount = todayExpenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
-        
+
         // Calculate weekly statistics
         let calendar = Calendar.current
         if let weekInterval = calendar.dateInterval(of: .weekOfYear, for: Date()) {
@@ -2387,14 +2387,14 @@ struct InlineSummaryView: View {
             summaryData.weeklyExpenseCount = weeklyExpenses.count
             summaryData.weeklyTotalAmount = weeklyExpenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
         }
-        
+
         // Calculate monthly statistics
         if let monthInterval = calendar.dateInterval(of: .month, for: Date()) {
             let monthlyExpenses = expenses.filter { $0.date >= monthInterval.start && $0.date < monthInterval.end }
             summaryData.monthlyExpenseCount = monthlyExpenses.count
             summaryData.monthlyTotalAmount = monthlyExpenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
         }
-        
+
         // Calculate extremes
         if !expenses.isEmpty {
             let sortedByPrice = expenses.sorted { $0.price > $1.price }
@@ -2408,21 +2408,21 @@ struct InlineSummaryView: View {
             }
         }
     }
-    
+
     private func loadExpenses() -> [ExpenseItem] {
         let dictArray = UserDefaults.standard.array(forKey: ExpenseUserDefaultsKeys.expenses) as? [[String: Any]] ?? []
         return dictArray.compactMap { ExpenseItem.fromDictionary($0) }
     }
-    
+
     // MARK: - Summary Row Helper
     private func summaryRow(label: String, value: String, valueColor: Color) -> some View {
         HStack {
             Text(label)
                 .font(.subheadline)
                 .foregroundColor(.expenseSecondaryText)
-            
+
             Spacer()
-            
+
             Text(value)
                 .font(.subheadline)
                 .fontWeight(.semibold)
@@ -2436,23 +2436,23 @@ struct CurrencySettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var currencyManager = CurrencyManager.shared
     @State private var showingRateDetails = false
-    
+
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 20) {
                     // Current Status Card
                     currentStatusCard
-                    
+
                     // Currency Selection
                     currencySelectionCard
-                    
+
                     // Exchange Rates Card
                     exchangeRatesCard
-                    
+
                     // API Status Card
                     apiStatusCard
-                    
+
                     Spacer(minLength: 20)
                 }
                 .padding(16)
@@ -2467,7 +2467,7 @@ struct CurrencySettingsView: View {
                     }
                     .foregroundColor(.expenseAccent)
                 }
-                
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { currencyManager.fetchExchangeRates() }) {
                         if currencyManager.isLoadingRates {
@@ -2488,7 +2488,7 @@ struct CurrencySettingsView: View {
             }
         }
     }
-    
+
     // MARK: - Card Views
     private var currentStatusCard: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -2496,32 +2496,32 @@ struct CurrencySettingsView: View {
                 Text("💱 Current Currency")
                     .font(.headline)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 Spacer()
-                
+
                 if currencyManager.isLoadingRates {
                     ProgressView()
                         .scaleEffect(0.7)
                 }
             }
-            
+
             HStack(spacing: 12) {
                 Text(currencyManager.currentCurrency.flag)
                     .font(.largeTitle)
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(currencyManager.currentCurrency.name)
                         .font(.title2)
                         .fontWeight(.semibold)
                         .foregroundColor(.expensePrimaryText)
-                    
+
                     Text("\(currencyManager.currentCurrency.symbol) \(currencyManager.currentCurrency.code)")
                         .font(.subheadline)
                         .foregroundColor(.expenseSecondaryText)
                 }
-                
+
                 Spacer()
-                
+
                 VStack(alignment: .trailing, spacing: 4) {
                     Text("Active")
                         .font(.caption)
@@ -2533,7 +2533,7 @@ struct CurrencySettingsView: View {
                             RoundedRectangle(cornerRadius: 6)
                                 .fill(Color.expenseGreen)
                         )
-                    
+
                     if let lastUpdate = currencyManager.lastUpdateTime {
                         Text("Updated \(timeAgoString(from: lastUpdate))")
                             .font(.caption2)
@@ -2552,13 +2552,13 @@ struct CurrencySettingsView: View {
                 )
         )
     }
-    
+
     private var currencySelectionCard: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("🌍 Available Currencies")
                 .font(.headline)
                 .foregroundColor(.expensePrimaryText)
-            
+
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
                 ForEach(CurrencyManager.Currency.allCurrencies) { currency in
                     CurrencySelectionRow(
@@ -2579,23 +2579,23 @@ struct CurrencySettingsView: View {
                 .fill(Color.expenseCardBackground)
         )
     }
-    
+
     private var exchangeRatesCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("📊 Exchange Rates")
                     .font(.headline)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 Spacer()
-                
+
                 Button("View All") {
                     showingRateDetails = true
                 }
                 .font(.caption)
                 .foregroundColor(.expenseAccent)
             }
-            
+
             if currencyManager.exchangeRates.isEmpty {
                 Text("Loading exchange rates...")
                     .font(.subheadline)
@@ -2608,9 +2608,9 @@ struct CurrencySettingsView: View {
                                 Text("\(currency.flag) \(code)")
                                     .font(.subheadline)
                                     .foregroundColor(.expensePrimaryText)
-                                
+
                                 Spacer()
-                                
+
                                 Text("1 USD = \(currency.symbol)\(String(format: "%.2f", rate))")
                                     .font(.caption)
                                     .foregroundColor(.expenseSecondaryText)
@@ -2629,18 +2629,18 @@ struct CurrencySettingsView: View {
             ExchangeRateDetailsView()
         }
     }
-    
+
     private var apiStatusCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("🔄 API Status")
                 .font(.headline)
                 .foregroundColor(.expensePrimaryText)
-            
+
             if let error = currencyManager.apiError {
                 HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundColor(.expenseError)
-                    
+
                     Text(error)
                         .font(.caption)
                         .foregroundColor(.expenseError)
@@ -2650,13 +2650,13 @@ struct CurrencySettingsView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(.expenseGreen)
-                    
+
                     Text("Myanmar Currency API - Connected")
                         .font(.caption)
                         .foregroundColor(.expenseGreen)
                 }
             }
-            
+
             Text("https://myanmar-currency-api.github.io/api/latest.json")
                 .font(.caption2)
                 .foregroundColor(.expenseSecondaryText)
@@ -2669,10 +2669,10 @@ struct CurrencySettingsView: View {
                 .fill(Color.expenseCardBackground)
         )
     }
-    
+
     private func timeAgoString(from date: Date) -> String {
         let interval = Date().timeIntervalSince(date)
-        
+
         if interval < 60 {
             return "just now"
         } else if interval < 3600 {
@@ -2694,29 +2694,29 @@ struct CurrencySelectionRow: View {
     let isSelected: Bool
     let exchangeRate: Double?
     let onSelect: () -> Void
-    
+
     var body: some View {
         Button(action: onSelect) {
             VStack(spacing: 8) {
                 HStack {
                     Text(currency.flag)
                         .font(.title2)
-                    
+
                     Spacer()
-                    
+
                     if isSelected {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.caption)
                             .foregroundColor(.expenseGreen)
                     }
                 }
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text(currency.code)
                         .font(.caption)
                         .fontWeight(.semibold)
                         .foregroundColor(.expensePrimaryText)
-                    
+
                     if let rate = exchangeRate {
                         Text("1 USD = \(currency.symbol)\(String(format: "%.2f", rate))")
                             .font(.caption2)
@@ -2747,7 +2747,7 @@ struct CurrencySelectionRow: View {
 struct ExchangeRateDetailsView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var currencyManager = CurrencyManager.shared
-    
+
     var body: some View {
         NavigationView {
             List {
@@ -2755,20 +2755,20 @@ struct ExchangeRateDetailsView: View {
                     HStack {
                         Text(currency.flag)
                             .font(.title2)
-                        
+
                         VStack(alignment: .leading, spacing: 2) {
                             Text(currency.name)
                                 .font(.body)
                                 .fontWeight(.medium)
                                 .foregroundColor(.expensePrimaryText)
-                            
+
                             Text(currency.code)
                                 .font(.caption)
                                 .foregroundColor(.expenseSecondaryText)
                         }
-                        
+
                         Spacer()
-                        
+
                         VStack(alignment: .trailing, spacing: 2) {
                             if currency.code == "USD" {
                                 Text("Base Currency")
@@ -2780,7 +2780,7 @@ struct ExchangeRateDetailsView: View {
                                     .font(.body)
                                     .fontWeight(.semibold)
                                     .foregroundColor(.expensePrimaryText)
-                                
+
                                 Text("per 1 USD")
                                     .font(.caption2)
                                     .foregroundColor(.expenseSecondaryText)
@@ -2827,11 +2827,11 @@ struct InlineSummaryData {
 // MARK: - Inline Glassmorphism Card
 struct InlineGlassmorphismCard<Content: View>: View {
     let content: Content
-    
+
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
-    
+
     var body: some View {
         content
             .padding(16)
@@ -2849,24 +2849,24 @@ struct InlineSettingsCardView: View {
     let icon: String
     let iconColor: Color
     let action: () -> Void
-    
+
     @State private var isPressed = false
-    
+
     var body: some View {
         NavigationView {
             ZStack {
                 // Background matching Android
                 Color(.systemBackground)
                     .ignoresSafeArea()
-                
+
                 ScrollView {
                     VStack(spacing: 16) {
                         // Header with Back Button (matching Android LinearLayout header)
                         headerSection
-                        
+
                         // Settings Cards (matching Android CardViews)
                         settingsCardsSection
-                        
+
                         Spacer(minLength: 20)
                     }
                     .padding(16) // matching Android padding="16dp"
@@ -2888,7 +2888,7 @@ struct InlineSettingsCardView: View {
             ImportDataView()
         }
     }
-    
+
     // MARK: - Header Section (matching Android LinearLayout header)
     private var headerSection: some View {
         HStack(spacing: 16) {
@@ -2905,7 +2905,7 @@ struct InlineSettingsCardView: View {
                             .fill(Color(.systemGray6))
                     )
             }
-            
+
             // Title (matching Android TextView)
             Text("Settings")
                 .font(.title) // matching Android textSize="24sp"
@@ -2915,7 +2915,7 @@ struct InlineSettingsCardView: View {
         }
         .padding(.bottom, 14) // matching Android layout_marginBottom="30dp"
     }
-    
+
     // MARK: - Settings Cards Section
     private var settingsCardsSection: some View {
         VStack(spacing: 16) { // matching Android layout_marginBottom="16dp"
@@ -2928,7 +2928,7 @@ struct InlineSettingsCardView: View {
             ) {
                 showLanguageSettings = true
             }
-            
+
             // Theme Settings Card
             SettingsCardView(
                 title: "Theme Settings",
@@ -2938,7 +2938,7 @@ struct InlineSettingsCardView: View {
             ) {
                 showThemeSettings = true
             }
-            
+
             // Export Data Card
             SettingsCardView(
                 title: "Export Data",
@@ -2948,7 +2948,7 @@ struct InlineSettingsCardView: View {
             ) {
                 showExportData = true
             }
-            
+
             // Import Data Card
             SettingsCardView(
                 title: "Import Data",
@@ -2968,22 +2968,22 @@ struct SettingsView: View {
     @State private var showThemeSettings = false
     @State private var showExportData = false
     @State private var showImportData = false
-    
+
     var body: some View {
         NavigationView {
             ZStack {
                 // Background matching Android
                 Color(.systemBackground)
                     .ignoresSafeArea()
-                
+
                 ScrollView {
                     VStack(spacing: 16) {
                         // Header with Back Button (matching Android LinearLayout header)
                         headerSection
-                        
+
                         // Settings Cards (matching Android CardViews)
                         settingsCardsSection
-                        
+
                         Spacer(minLength: 20)
                     }
                     .padding(16) // matching Android padding="16dp"
@@ -3005,7 +3005,7 @@ struct SettingsView: View {
             ImportDataView()
         }
     }
-    
+
     // MARK: - Header Section (matching Android LinearLayout header)
     private var headerSection: some View {
         HStack(spacing: 16) {
@@ -3022,7 +3022,7 @@ struct SettingsView: View {
                             .fill(Color(.systemGray6))
                     )
             }
-            
+
             // Title (matching Android TextView)
             Text("Settings")
                 .font(.title) // matching Android textSize="24sp"
@@ -3032,7 +3032,7 @@ struct SettingsView: View {
         }
         .padding(.bottom, 14) // matching Android layout_marginBottom="30dp"
     }
-    
+
     // MARK: - Settings Cards Section
     private var settingsCardsSection: some View {
         VStack(spacing: 16) { // matching Android layout_marginBottom="16dp"
@@ -3045,7 +3045,7 @@ struct SettingsView: View {
             ) {
                 showLanguageSettings = true
             }
-            
+
             // Theme Settings Card
             SettingsCardView(
                 title: "Theme Settings",
@@ -3055,7 +3055,7 @@ struct SettingsView: View {
             ) {
                 showThemeSettings = true
             }
-            
+
             // Export Data Card
             SettingsCardView(
                 title: "Export Data",
@@ -3065,7 +3065,7 @@ struct SettingsView: View {
             ) {
                 showExportData = true
             }
-            
+
             // Import Data Card
             SettingsCardView(
                 title: "Import Data",
@@ -3086,9 +3086,9 @@ struct InlineSettingsCardView: View {
     let icon: String
     let iconColor: Color
     let action: () -> Void
-    
+
     @State private var isPressed = false
-    
+
     var body: some View {
         Button(action: action) {
             // Card layout matching Android CardView
@@ -3098,7 +3098,7 @@ struct InlineSettingsCardView: View {
                     .font(.title2)
                     .foregroundColor(iconColor)
                     .frame(width: 30, height: 30)
-                
+
                 // Text content section (matching Android nested LinearLayout)
                 VStack(alignment: .leading, spacing: 8) { // matching Android layout_marginBottom="8dp"
                     Text(title)
@@ -3106,14 +3106,14 @@ struct InlineSettingsCardView: View {
                         .fontWeight(.bold) // matching Android textStyle="bold"
                         .foregroundColor(.primary)
                         .multilineTextAlignment(.leading)
-                    
+
                     Text(description)
                         .font(.subheadline) // matching Android textSize="14sp"
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.leading)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                
+
                 // Chevron (matching Android ">" TextView)
                 Image(systemName: "chevron.right")
                     .font(.title2) // matching Android textSize="24sp"
@@ -3146,20 +3146,20 @@ struct InlineSettingsCardView: View {
 struct InlineLanguageSettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedLanguage = "English"
-    
+
     let languages = [
         ("English", "🇺🇸", "en"),
         ("မြန်မာ", "🇲🇲", "mm"),
         ("中文", "🇨🇳", "zh"),
         ("日本語", "🇯🇵", "ja")
     ]
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: 16) {
                 // Header
                 headerSection
-                
+
                 // Language options
                 ForEach(languages, id: \.2) { language in
                     languageRow(
@@ -3168,14 +3168,14 @@ struct InlineLanguageSettingsView: View {
                         code: language.2
                     )
                 }
-                
+
                 Spacer()
             }
             .padding(16)
             .navigationBarHidden(true)
         }
     }
-    
+
     private var headerSection: some View {
         HStack(spacing: 16) {
             Button(action: {
@@ -3190,14 +3190,14 @@ struct InlineLanguageSettingsView: View {
                             .fill(Color(.systemGray6))
                     )
             }
-            
+
             Text("Language Settings")
                 .font(.title)
                 .fontWeight(.bold)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
-    
+
     private func languageRow(name: String, flag: String, code: String) -> some View {
         Button(action: {
             selectedLanguage = name
@@ -3205,13 +3205,13 @@ struct InlineLanguageSettingsView: View {
             HStack(spacing: 16) {
                 Text(flag)
                     .font(.title)
-                
+
                 Text(name)
                     .font(.headline)
                     .foregroundColor(.primary)
-                
+
                 Spacer()
-                
+
                 if selectedLanguage == name {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(.green)
@@ -3231,27 +3231,27 @@ struct InlineLanguageSettingsView: View {
 struct InlineThemeSettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedTheme = "System"
-    
+
     let themes = ["Light", "Dark", "System"]
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: 16) {
                 // Header
                 headerSection
-                
+
                 // Theme options
                 ForEach(themes, id: \.self) { theme in
                     themeRow(theme: theme)
                 }
-                
+
                 Spacer()
             }
             .padding(16)
             .navigationBarHidden(true)
         }
     }
-    
+
     private var headerSection: some View {
         HStack(spacing: 16) {
             Button(action: {
@@ -3266,14 +3266,14 @@ struct InlineThemeSettingsView: View {
                             .fill(Color(.systemGray6))
                     )
             }
-            
+
             Text("Theme Settings")
                 .font(.title)
                 .fontWeight(.bold)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
-    
+
     private func themeRow(theme: String) -> some View {
         Button(action: {
             selectedTheme = theme
@@ -3282,13 +3282,13 @@ struct InlineThemeSettingsView: View {
                 Image(systemName: themeIcon(for: theme))
                     .font(.title2)
                     .foregroundColor(themeColor(for: theme))
-                
+
                 Text(theme)
                     .font(.headline)
                     .foregroundColor(.primary)
-                
+
                 Spacer()
-                
+
                 if selectedTheme == theme {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(.green)
@@ -3306,7 +3306,7 @@ struct InlineThemeSettingsView: View {
         }
         .buttonStyle(PlainButtonStyle())
     }
-    
+
     private func themeIcon(for theme: String) -> String {
         switch theme {
         case "Light": return "sun.max.fill"
@@ -3315,7 +3315,7 @@ struct InlineThemeSettingsView: View {
         default: return "gear"
         }
     }
-    
+
     private func themeColor(for theme: String) -> Color {
         switch theme {
         case "Light": return .orange
@@ -3335,24 +3335,24 @@ struct InlineExportDataView: View {
     @State private var showingAlert = false
     @State private var alertMessage = ""
     @State private var isExporting = false
-    
+
     let exportFormats = ["JSON", "CSV"]
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: 16) {
                 // Header
                 headerSection
-                
+
                 // Export options
                 exportOptionsSection
-                
+
                 // Format selection
                 formatSelectionSection
-                
+
                 // Export button
                 exportButtonSection
-                
+
                 Spacer()
             }
             .padding(16)
@@ -3371,7 +3371,7 @@ struct InlineExportDataView: View {
             }
         }
     }
-    
+
     private var headerSection: some View {
         HStack(spacing: 16) {
             Button(action: {
@@ -3386,20 +3386,20 @@ struct InlineExportDataView: View {
                             .fill(Color(.systemGray6))
                     )
             }
-            
+
             Text("Export Data")
                 .font(.title)
                 .fontWeight(.bold)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
-    
+
     private var exportOptionsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Export Instructions")
                 .font(.headline)
                 .fontWeight(.bold)
-            
+
             VStack(alignment: .leading, spacing: 8) {
                 Text("• Select your preferred export format")
                 Text("• JSON format preserves all data structure")
@@ -3415,19 +3415,19 @@ struct InlineExportDataView: View {
                 .fill(Color(.systemGray6))
         )
     }
-    
+
     private var formatSelectionSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Export Format")
                 .font(.headline)
                 .fontWeight(.bold)
-            
+
             ForEach(exportFormats, id: \.self) { format in
                 formatRow(format: format)
             }
         }
     }
-    
+
     private func formatRow(format: String) -> some View {
         Button(action: {
             selectedFormat = format
@@ -3436,19 +3436,19 @@ struct InlineExportDataView: View {
                 Image(systemName: formatIcon(for: format))
                     .font(.title2)
                     .foregroundColor(formatColor(for: format))
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(format)
                         .font(.headline)
                         .foregroundColor(.primary)
-                    
+
                     Text(formatDescription(for: format))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
-                
+
                 Spacer()
-                
+
                 if selectedFormat == format {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(.green)
@@ -3466,7 +3466,7 @@ struct InlineExportDataView: View {
         }
         .buttonStyle(PlainButtonStyle())
     }
-    
+
     private var exportButtonSection: some View {
         Button(action: {
             exportData()
@@ -3480,7 +3480,7 @@ struct InlineExportDataView: View {
                     Image(systemName: "square.and.arrow.up.fill")
                         .font(.headline)
                 }
-                
+
                 Text(isExporting ? "Exporting..." : "Export Data")
                     .font(.headline)
             }
@@ -3494,7 +3494,7 @@ struct InlineExportDataView: View {
         }
         .disabled(isExporting)
     }
-    
+
     // MARK: - Helper Functions
     private func formatIcon(for format: String) -> String {
         switch format {
@@ -3503,7 +3503,7 @@ struct InlineExportDataView: View {
         default: return "doc.fill"
         }
     }
-    
+
     private func formatColor(for format: String) -> Color {
         switch format {
         case "JSON": return .blue
@@ -3511,7 +3511,7 @@ struct InlineExportDataView: View {
         default: return .gray
         }
     }
-    
+
     private func formatDescription(for format: String) -> String {
         switch format {
         case "JSON": return "Structured data format with full details"
@@ -3519,16 +3519,16 @@ struct InlineExportDataView: View {
         default: return "Standard document format"
         }
     }
-    
+
     private func exportData() {
         isExporting = true
-        
+
         DispatchQueue.global(qos: .userInitiated).async {
             do {
                 let sampleData = loadSampleData()
                 let exportContent: String
                 let fileName: String
-                
+
                 switch selectedFormat {
                 case "JSON":
                     exportContent = try createJSONExport(from: sampleData)
@@ -3540,16 +3540,16 @@ struct InlineExportDataView: View {
                     exportContent = try createJSONExport(from: sampleData)
                     fileName = "expense_export_\(dateString()).json"
                 }
-                
+
                 let fileURL = try saveToFile(content: exportContent, fileName: fileName)
-                
+
                 DispatchQueue.main.async {
                     self.isExporting = false
                     self.exportedFileURL = fileURL
                     self.showingShareSheet = true
                     self.alertMessage = "Export completed successfully!"
                 }
-                
+
             } catch {
                 DispatchQueue.main.async {
                     self.isExporting = false
@@ -3559,12 +3559,12 @@ struct InlineExportDataView: View {
             }
         }
     }
-    
+
     private func loadSampleData() -> [ExpenseItem] {
         let dictArray = UserDefaults.standard.array(forKey: ExpenseUserDefaultsKeys.expenses) as? [[String: Any]] ?? []
         return dictArray.compactMap { ExpenseItem.fromDictionary($0) }
     }
-    
+
     private func createJSONExport(from expenses: [ExpenseItem]) throws -> String {
         let exportData: [String: Any] = [
             "app_name": "HSU Expense",
@@ -3583,14 +3583,14 @@ struct InlineExportDataView: View {
             },
             "total_expenses": expenses.count
         ]
-        
+
         let jsonData = try JSONSerialization.data(withJSONObject: exportData, options: .prettyPrinted)
         return String(data: jsonData, encoding: .utf8) ?? ""
     }
-    
+
     private func createCSVExport(from expenses: [ExpenseItem]) -> String {
         var csv = "ID,Name,Price,Description,Date,Time,Currency\n"
-        
+
         for expense in expenses {
             let row = [
                 expense.id.uuidString,
@@ -3604,33 +3604,33 @@ struct InlineExportDataView: View {
                 let escaped = field.replacingOccurrences(of: "\"", with: "\"\"")
                 return field.contains(",") || field.contains("\"") || field.contains("\n") ? "\"\(escaped)\"" : escaped
             }.joined(separator: ",")
-            
+
             csv += row + "\n"
         }
-        
+
         return csv
     }
-    
+
     private func saveToFile(content: String, fileName: String) throws -> URL {
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let fileURL = documentsPath.appendingPathComponent(fileName)
-        
+
         try content.write(to: fileURL, atomically: true, encoding: .utf8)
         return fileURL
     }
-    
+
     private func dateString() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
         return formatter.string(from: Date())
     }
-    
+
     private func dateString(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy"
         return formatter.string(from: date)
     }
-    
+
     private func timeString(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
@@ -3641,11 +3641,11 @@ struct InlineExportDataView: View {
 // MARK: - Inline ShareSheet
 struct InlineShareSheet: UIViewControllerRepresentable {
     let activityItems: [Any]
-    
+
     func makeUIViewController(context: Context) -> UIActivityViewController {
         UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
     }
-    
+
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
         // No updates needed
     }
