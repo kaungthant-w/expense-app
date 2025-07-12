@@ -11,35 +11,35 @@ struct AboutUsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showContactAlert = false
     @State private var selectedContactType = ""
-    
+
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 20) {
                     // Header with Back Button
                     headerSection
-                    
+
                     // App Logo and Name
                     appInfoSection
-                    
+
                     // About App Card
                     aboutAppCard
-                    
+
                     // Features Card
                     featuresCard
-                    
+
                     // Developer Info Card
                     developerInfoCard
-                    
+
                     // Contact Us Card
                     contactUsCard
-                    
+
                     // Version Info Card
                     versionInfoCard
-                    
+
                     // Legal Card
                     legalCard
-                    
+
                     Spacer(minLength: 20)
                 }
                 .padding(16)
@@ -55,7 +55,7 @@ struct AboutUsView: View {
             )
         }
     }
-    
+
     // MARK: - Header Section
     private var headerSection: some View {
         HStack(spacing: 16) {
@@ -72,7 +72,7 @@ struct AboutUsView: View {
                             .fill(Color.expenseInputBackground)
                     )
             }
-            
+
             // Title
             Text("About Us")
                 .font(.title)
@@ -82,7 +82,7 @@ struct AboutUsView: View {
         }
         .padding(.bottom, 14)
     }
-    
+
     // MARK: - App Info Section
     private var appInfoSection: some View {
         VStack(spacing: 16) {
@@ -99,7 +99,7 @@ struct AboutUsView: View {
                     .stroke(Color.expenseAccent.opacity(0.2), lineWidth: 2)
             )
             .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
-            
+
             // App Tagline
             Text("📊 Track your expenses efficiently")
                 .font(.subheadline)
@@ -109,7 +109,7 @@ struct AboutUsView: View {
         .frame(maxWidth: .infinity)
         .padding(.bottom, 10)
     }
-    
+
     // MARK: - About App Card
     private var aboutAppCard: some View {
         InlineGlassmorphismCard {
@@ -118,7 +118,7 @@ struct AboutUsView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 Text("HSU Expense is a comprehensive expense tracking application designed to help you manage your finances efficiently. With support for multiple currencies, real-time exchange rates, and detailed analytics, it's your perfect companion for personal finance management.")
                     .font(.subheadline)
                     .foregroundColor(.expenseSecondaryText)
@@ -127,7 +127,7 @@ struct AboutUsView: View {
             }
         }
     }
-    
+
     // MARK: - Features Card
     private var featuresCard: some View {
         InlineGlassmorphismCard {
@@ -136,7 +136,7 @@ struct AboutUsView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 VStack(alignment: .leading, spacing: 12) {
                     featureRow(icon: "💰", title: "Multi-Currency Support", description: "Support for USD, EUR, JPY, KRW, MMK, and more")
                     featureRow(icon: "📊", title: "Analytics Dashboard", description: "Detailed expense analysis and summary reports")
@@ -148,7 +148,7 @@ struct AboutUsView: View {
             }
         }
     }
-    
+
     // MARK: - Developer Info Card
     private var developerInfoCard: some View {
         InlineGlassmorphismCard {
@@ -157,7 +157,7 @@ struct AboutUsView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 VStack(alignment: .leading, spacing: 12) {
                     developerRow(label: "Developer", value: "Kyaw Myo Thant")
                     developerRow(label: "Location", value: "Yangon, Myanmar")
@@ -172,7 +172,7 @@ struct AboutUsView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.expenseSecondaryText)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            
+
                             Text("t.me/hsuexpense")
                                 .font(.subheadline)
                                 .fontWeight(.medium)
@@ -185,7 +185,7 @@ struct AboutUsView: View {
             }
         }
     }
-    
+
     // MARK: - Contact Us Card
     private var contactUsCard: some View {
         InlineGlassmorphismCard {
@@ -194,7 +194,7 @@ struct AboutUsView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 VStack(spacing: 12) {
                     contactButton(
                         icon: "envelope.fill",
@@ -209,7 +209,7 @@ struct AboutUsView: View {
                             UIApplication.shared.open(url)
                         }
                     }
-                    
+
                     contactButton(
                         icon: "phone.fill",
                         title: "Phone Support",
@@ -223,7 +223,7 @@ struct AboutUsView: View {
                             UIApplication.shared.open(url)
                         }
                     }
-                    
+
                     contactButton(
                         icon: "message.fill",
                         title: "Feedback",
@@ -241,7 +241,7 @@ struct AboutUsView: View {
             }
         }
     }
-    
+
     // MARK: - Version Info Card
     private var versionInfoCard: some View {
         InlineGlassmorphismCard {
@@ -250,7 +250,7 @@ struct AboutUsView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 VStack(alignment: .leading, spacing: 8) {
                     versionRow(label: "App Version", value: "1.0.0")
                     versionRow(label: "Build Number", value: "100")
@@ -261,7 +261,7 @@ struct AboutUsView: View {
             }
         }
     }
-    
+
     // MARK: - Legal Card
     private var legalCard: some View {
         InlineGlassmorphismCard {
@@ -270,27 +270,27 @@ struct AboutUsView: View {
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 VStack(spacing: 12) {
                     legalButton(title: "Privacy Policy") {
                         // Open privacy policy
                         selectedContactType = "Privacy Policy"
                         showContactAlert = true
                     }
-                    
+
                     legalButton(title: "Terms of Service") {
                         // Open terms of service
                         selectedContactType = "Terms of Service"
                         showContactAlert = true
                     }
-                    
+
                     legalButton(title: "Open Source Licenses") {
                         // Open licenses
                         selectedContactType = "Open Source Licenses"
                         showContactAlert = true
                     }
                 }
-                
+
                 Text("© 2025 Kyaw Myo Thant. All rights reserved.")
                     .font(.caption)
                     .foregroundColor(.expenseSecondaryText)
@@ -300,35 +300,35 @@ struct AboutUsView: View {
             }
         }
     }
-    
+
     // MARK: - Helper Views
     private func featureRow(icon: String, title: String, description: String) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Text(icon)
                 .font(.title2)
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.subheadline)
                     .fontWeight(.medium)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 Text(description)
                     .font(.caption)
                     .foregroundColor(.expenseSecondaryText)
             }
-            
+
             Spacer()
         }
     }
-    
+
     private func developerRow(label: String, value: String) -> some View {
         HStack {
             Text(label)
                 .font(.subheadline)
                 .foregroundColor(.expenseSecondaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            
+
             Text(value)
                 .font(.subheadline)
                 .fontWeight(.medium)
@@ -336,7 +336,7 @@ struct AboutUsView: View {
                 .multilineTextAlignment(.trailing)
         }
     }
-    
+
     private func contactButton(icon: String, title: String, subtitle: String, color: Color, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: 12) {
@@ -344,20 +344,20 @@ struct AboutUsView: View {
                     .font(.title2)
                     .foregroundColor(color)
                     .frame(width: 30)
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundColor(.expensePrimaryText)
-                    
+
                     Text(subtitle)
                         .font(.caption)
                         .foregroundColor(.expenseSecondaryText)
                 }
-                
+
                 Spacer()
-                
+
                 Image(systemName: "chevron.right")
                     .font(.caption)
                     .foregroundColor(.expenseSecondaryText)
@@ -366,31 +366,31 @@ struct AboutUsView: View {
         }
         .buttonStyle(PlainButtonStyle())
     }
-    
+
     private func versionRow(label: String, value: String) -> some View {
         HStack {
             Text(label)
                 .font(.subheadline)
                 .foregroundColor(.expenseSecondaryText)
-            
+
             Spacer()
-            
+
             Text(value)
                 .font(.subheadline)
                 .fontWeight(.medium)
                 .foregroundColor(.expensePrimaryText)
         }
     }
-    
+
     private func legalButton(title: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack {
                 Text(title)
                     .font(.subheadline)
                     .foregroundColor(.expensePrimaryText)
-                
+
                 Spacer()
-                
+
                 Image(systemName: "chevron.right")
                     .font(.caption)
                     .foregroundColor(.expenseSecondaryText)
@@ -412,7 +412,7 @@ extension UIDevice {
             let scalar = UnicodeScalar(UInt8(value))
             return identifier + String(scalar)
         }
-        
+
         // Convert identifier to readable name
         switch identifier {
         case "iPhone14,7": return "iPhone 14"
@@ -428,40 +428,12 @@ extension UIDevice {
     }
 }
 
-// MARK: - Color Extension for Hex Colors
-extension Color {
-    init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
-        let a, r, g, b: UInt64
-        switch hex.count {
-        case 3: // RGB (12-bit)
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6: // RGB (24-bit)
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8: // ARGB (32-bit)
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            (a, r, g, b) = (1, 1, 1, 0)
-        }
-
-        self.init(
-            .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue:  Double(b) / 255,
-            opacity: Double(a) / 255
-        )
-    }
-}
-
 // MARK: - Preview
 struct AboutUsView_Previews: PreviewProvider {
     static var previews: some View {
         AboutUsView()
             .preferredColorScheme(.light)
-        
+
         AboutUsView()
             .preferredColorScheme(.dark)
     }
