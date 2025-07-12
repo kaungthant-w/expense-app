@@ -397,9 +397,30 @@ struct ContentView: View {
             ForEach(0..<4) { index in
                 Button(action: { selectedTab = index }) {
                     VStack(spacing: 8) {
-                        Text(tabTitle(for: index))
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(selectedTab == index ? Color.expensePrimaryText : Color.expenseSecondaryText)
+                        // Multi-line tab title
+                        if index == 1 { // THIS WEEK
+                            VStack(spacing: 2) {
+                                Text("THIS")
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundColor(selectedTab == index ? Color.expensePrimaryText : Color.expenseSecondaryText)
+                                Text("WEEK")
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundColor(selectedTab == index ? Color.expensePrimaryText : Color.expenseSecondaryText)
+                            }
+                        } else if index == 2 { // THIS MONTH
+                            VStack(spacing: 2) {
+                                Text("THIS")
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundColor(selectedTab == index ? Color.expensePrimaryText : Color.expenseSecondaryText)
+                                Text("MONTH")
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundColor(selectedTab == index ? Color.expensePrimaryText : Color.expenseSecondaryText)
+                            }
+                        } else {
+                            Text(tabTitle(for: index))
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(selectedTab == index ? Color.expensePrimaryText : Color.expenseSecondaryText)
+                        }
                         
                         // Tab indicator
                         Rectangle()
@@ -418,20 +439,20 @@ struct ContentView: View {
     // MARK: - ViewPager equivalent with TabView
     private var viewPagerView: some View {
         TabView(selection: $selectedTab) {
-            // All Expenses Tab (3 years of data)
-            allExpenseListView
-                .tag(0)
-            
             // Today's Expenses Tab
             todayExpenseListView
-                .tag(1)
+                .tag(0)
             
             // This Week's Expenses Tab
             thisWeekExpenseListView
-                .tag(2)
+                .tag(1)
             
             // This Month's Expenses Tab
             thisMonthExpenseListView
+                .tag(2)
+            
+            // All Expenses Tab (3 years of data)
+            allExpenseListView
                 .tag(3)
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
@@ -624,10 +645,10 @@ struct ContentView: View {
     
     private func tabTitle(for index: Int) -> String {
         switch index {
-        case 0: return "ALL"
-        case 1: return "TODAY"
-        case 2: return "THIS WEEK"
-        case 3: return "THIS MONTH"
+        case 0: return "TODAY"
+        case 1: return "THIS WEEK"
+        case 2: return "THIS MONTH"
+        case 3: return "ALL"
         default:
             assertionFailure("Invalid tab index: \(index)")
             return ""
@@ -713,11 +734,12 @@ struct ContentView: View {
     // MARK: - Debug Helper (for testing - can be removed later)
     private func debugTabData() {
         print("=== TAB DATA DEBUG ===")
-        print("Total expenses: \(expenses.count)")
+        print("Tab Order: TODAY(0), THIS WEEK(1), THIS MONTH(2), ALL(3)")
         print("Today expenses: \(todayExpenses.count)")
         print("This week expenses: \(thisWeekExpenses.count)")
         print("This month expenses: \(thisMonthExpenses.count)")
         print("All expenses (3 years): \(allExpenses.count)")
+        print("Total expenses: \(expenses.count)")
         
         let calendar = Calendar.current
         let today = Date()
