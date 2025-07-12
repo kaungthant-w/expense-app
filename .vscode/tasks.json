@@ -2,7 +2,7 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Build iOS Expense App",
+			"label": "Build iOS Expense App (Simulator)",
 			"type": "shell",
 			"command": "xcodebuild",
 			"args": [
@@ -13,6 +13,97 @@
 				"-destination",
 				"generic/platform=iOS Simulator",
 				"build"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Build iOS Expense App (Device)",
+			"type": "shell",
+			"command": "xcodebuild",
+			"args": [
+				"-project",
+				"hsu expense.xcodeproj",
+				"-scheme",
+				"HSU expense",
+				"-destination",
+				"generic/platform=iOS",
+				"-configuration",
+				"Release",
+				"build"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Archive iOS Expense App",
+			"type": "shell",
+			"command": "xcodebuild",
+			"args": [
+				"-project",
+				"hsu expense.xcodeproj",
+				"-scheme",
+				"HSU expense",
+				"-configuration",
+				"Release",
+				"-archivePath",
+				"build/hsu_expense.xcarchive",
+				"archive"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Export IPA for Diawi",
+			"type": "shell",
+			"command": "xcodebuild",
+			"args": [
+				"-exportArchive",
+				"-archivePath",
+				"build/hsu_expense.xcarchive",
+				"-exportPath",
+				"build/ipa",
+				"-exportOptionsPlist",
+				"exportOptions.plist"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": [],
+			"dependsOn": "Archive iOS Expense App"
+		},
+		{
+			"label": "Build Complete IPA for Diawi",
+			"dependsOrder": "sequence",
+			"dependsOn": [
+				"Archive iOS Expense App",
+				"Export IPA for Diawi"
+			],
+			"group": "build",
+			"isBackground": false
+		},
+		{
+			"label": "Build for Diawi (PowerShell)",
+			"type": "shell",
+			"command": "powershell.exe",
+			"args": [
+				"-ExecutionPolicy",
+				"Bypass",
+				"-File",
+				"build_for_diawi.ps1"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Build for Diawi (Bash)",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"build_for_diawi.sh"
 			],
 			"group": "build",
 			"isBackground": false,
