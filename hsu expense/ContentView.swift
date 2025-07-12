@@ -900,6 +900,10 @@ struct ExpenseDetailView: View {
     @State private var selectedCurrency: CurrencyManager.Currency
     @State private var originalCurrency: String
     @State private var originalPrice: Decimal
+    @State private var showingDatePicker = false
+    @State private var showingTimePicker = false
+
+    let onSave: (ExpenseItem) -> Void
 
     // MARK: - Computed Properties for Date Bindings
     private var dateBinding: Binding<Date> {
@@ -1926,7 +1930,7 @@ struct InlineSummaryView: View {
 
                     summaryRow(
                         label: "This Month's Total",
-                        value: currencyManager.currentCurrency.format(Decimal(summaryData.monthlyTotalAmount)),
+                        value: currencyManager.formatDecimalAmount(Decimal(summaryData.monthlyTotalAmount)),
                         valueColor: Color.expenseGreen
                     )
                 }
@@ -1984,9 +1988,8 @@ struct InlineSummaryView: View {
         summaryData.averageAmount = expenses.isEmpty ? 0 : summaryData.totalAmount / Double(expenses.count)
 
         // Calculate today's statistics
-        let today = Calendar.current.startOfDay(for: Date())
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
-        let todayExpenses = expenses.filter { $0.date >= today && $0.date < tomorrow }
+        let today = DateFormatter.displayDate.string(from: Date())
+        let todayExpenses = expenses.filter { $0.date == today }
         summaryData.todayExpenseCount = todayExpenses.count
         summaryData.todayTotalAmount = todayExpenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
 
