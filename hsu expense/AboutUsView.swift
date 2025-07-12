@@ -86,20 +86,14 @@ struct AboutUsView: View {
     // MARK: - App Info Section
     private var appInfoSection: some View {
         VStack(spacing: 16) {
-            // App Icon
+            // App Icon using iTunes Artwork
             SafeImage(
                 imageName: "ItunesArtwork@2x",
-                systemFallback: "dollarsign.circle.fill",
-                width: 80,
-                height: 80
+                systemFallback: "app.badge",
+                width: 100,
+                height: 100
             )
-            .foregroundColor(.expenseAccent)
-            
-            // App Name
-            Text("HSU Expense")
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundColor(.expensePrimaryText)
+            .cornerRadius(20)
             
             // App Tagline
             Text("📊 Track your expenses efficiently")
@@ -107,6 +101,7 @@ struct AboutUsView: View {
                 .foregroundColor(.expenseSecondaryText)
                 .multilineTextAlignment(.center)
         }
+        .frame(maxWidth: .infinity)
         .padding(.bottom, 10)
     }
     
