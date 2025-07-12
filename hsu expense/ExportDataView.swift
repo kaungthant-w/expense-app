@@ -10,24 +10,24 @@ struct ExportDataView: View {
     @State private var showingAlert = false
     @State private var alertMessage = ""
     @State private var isExporting = false
-    
+
     let exportFormats = ["JSON", "CSV"]
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: 16) {
                 // Header
                 headerSection
-                
+
                 // Export options
                 exportOptionsSection
-                
+
                 // Format selection
                 formatSelectionSection
-                
+
                 // Export button
                 exportButtonSection
-                
+
                 Spacer()
             }
             .padding(16)
@@ -46,7 +46,7 @@ struct ExportDataView: View {
             }
         }
     }
-    
+
     private var headerSection: some View {
         HStack(spacing: 16) {
             Button(action: {
@@ -61,20 +61,20 @@ struct ExportDataView: View {
                             .fill(Color(.systemGray6))
                     )
             }
-            
+
             Text("Export Data")
                 .font(.title)
                 .fontWeight(.bold)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
-    
+
     private var exportOptionsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Export Instructions")
                 .font(.headline)
                 .fontWeight(.bold)
-            
+
             VStack(alignment: .leading, spacing: 8) {
                 Text("• Select your preferred export format")
                 Text("• JSON format preserves all data structure")
@@ -90,19 +90,19 @@ struct ExportDataView: View {
                 .fill(Color(.systemGray6))
         )
     }
-    
+
     private var formatSelectionSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Export Format")
                 .font(.headline)
                 .fontWeight(.bold)
-            
+
             ForEach(exportFormats, id: \.self) { format in
                 formatRow(format: format)
             }
         }
     }
-    
+
     private func formatRow(format: String) -> some View {
         Button(action: {
             selectedFormat = format
@@ -111,19 +111,19 @@ struct ExportDataView: View {
                 Image(systemName: formatIcon(for: format))
                     .font(.title2)
                     .foregroundColor(formatColor(for: format))
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(format)
                         .font(.headline)
                         .foregroundColor(.primary)
-                    
+
                     Text(formatDescription(for: format))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
-                
+
                 Spacer()
-                
+
                 if selectedFormat == format {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(.green)
@@ -141,7 +141,7 @@ struct ExportDataView: View {
         }
         .buttonStyle(PlainButtonStyle())
     }
-    
+
     private var exportButtonSection: some View {
         Button(action: {
             exportData()
@@ -155,7 +155,7 @@ struct ExportDataView: View {
                     Image(systemName: "square.and.arrow.up.fill")
                         .font(.headline)
                 }
-                
+
                 Text(isExporting ? "Exporting..." : "Export Data")
                     .font(.headline)
             }
@@ -169,9 +169,9 @@ struct ExportDataView: View {
         }
         .disabled(isExporting)
     }
-    
+
     // MARK: - Helper Functions
-    
+
     private func formatIcon(for format: String) -> String {
         switch format {
         case "JSON": return "doc.text.fill"
@@ -179,7 +179,7 @@ struct ExportDataView: View {
         default: return "doc.fill"
         }
     }
-    
+
     private func formatColor(for format: String) -> Color {
         switch format {
         case "JSON": return .blue
@@ -187,7 +187,7 @@ struct ExportDataView: View {
         default: return .gray
         }
     }
-    
+
     private func formatDescription(for format: String) -> String {
         switch format {
         case "JSON": return "Structured data format with full details"
@@ -195,16 +195,16 @@ struct ExportDataView: View {
         default: return "Standard document format"
         }
     }
-    
+
     private func exportData() {
         isExporting = true
-        
+
         DispatchQueue.global(qos: .userInitiated).async {
             do {
                 let sampleData = loadSampleData()
                 let exportContent: String
                 let fileName: String
-                
+
                 switch selectedFormat {
                 case "JSON":
                     exportContent = try createJSONExport(from: sampleData)
@@ -216,16 +216,16 @@ struct ExportDataView: View {
                     exportContent = try createJSONExport(from: sampleData)
                     fileName = "expense_export_\(dateString()).json"
                 }
-                
+
                 let fileURL = try saveToFile(content: exportContent, fileName: fileName)
-                
+
                 DispatchQueue.main.async {
                     self.isExporting = false
                     self.exportedFileURL = fileURL
                     self.showingShareSheet = true
                     self.alertMessage = "Export completed successfully!"
                 }
-                
+
             } catch {
                 DispatchQueue.main.async {
                     self.isExporting = false
@@ -235,7 +235,7 @@ struct ExportDataView: View {
             }
         }
     }
-    
+
     private func loadSampleData() -> [ExpenseItem] {
         // Load from sample_import_100.json
         guard let url = Bundle.main.url(forResource: "sample_import_100", withExtension: "json"),
@@ -244,7 +244,7 @@ struct ExportDataView: View {
               let expenses = json["expenses"] as? [[String: Any]] else {
             return []
         }
-        
+
         return expenses.compactMap { expenseDict in
             guard let id = expenseDict["id"] as? String,
                   let name = expenseDict["name"] as? String,
@@ -255,7 +255,7 @@ struct ExportDataView: View {
                   let currency = expenseDict["currency"] as? String else {
                 return nil
             }
-            
+
             return ExpenseItem(
                 id: id,
                 name: name,
@@ -267,7 +267,7 @@ struct ExportDataView: View {
             )
         }
     }
-    
+
     private func createJSONExport(from expenses: [ExpenseItem]) throws -> String {
         let exportData: [String: Any] = [
             "app_name": "HSU Expense",
@@ -286,14 +286,14 @@ struct ExportDataView: View {
             },
             "total_expenses": expenses.count
         ]
-        
+
         let jsonData = try JSONSerialization.data(withJSONObject: exportData, options: .prettyPrinted)
         return String(data: jsonData, encoding: .utf8) ?? ""
     }
-    
+
     private func createCSVExport(from expenses: [ExpenseItem]) -> String {
         var csv = "ID,Name,Price,Description,Date,Time,Currency\n"
-        
+
         for expense in expenses {
             let row = [
                 expense.id,
@@ -308,21 +308,21 @@ struct ExportDataView: View {
                 let escaped = field.replacingOccurrences(of: "\"", with: "\"\"")
                 return field.contains(",") || field.contains("\"") || field.contains("\n") ? "\"\(escaped)\"" : escaped
             }.joined(separator: ",")
-            
+
             csv += row + "\n"
         }
-        
+
         return csv
     }
-    
+
     private func saveToFile(content: String, fileName: String) throws -> URL {
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let fileURL = documentsPath.appendingPathComponent(fileName)
-        
+
         try content.write(to: fileURL, atomically: true, encoding: .utf8)
         return fileURL
     }
-    
+
     private func dateString() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
@@ -330,27 +330,15 @@ struct ExportDataView: View {
     }
 }
 
-// MARK: - Supporting Types
-
-struct ExpenseItem {
-    let id: String
-    let name: String
-    let price: Double
-    let description: String
-    let date: String
-    let time: String
-    let currency: String
-}
-
 // MARK: - ShareSheet for iOS
 
 struct ShareSheet: UIViewControllerRepresentable {
     let activityItems: [Any]
-    
+
     func makeUIViewController(context: Context) -> UIActivityViewController {
         UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
     }
-    
+
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
         // No updates needed
     }
