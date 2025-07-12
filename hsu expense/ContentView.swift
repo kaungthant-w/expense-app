@@ -2843,124 +2843,7 @@ struct InlineGlassmorphismCard<Content: View>: View {
     }
 }
 
-struct InlineSettingsCardView: View {
-    let title: String
-    let description: String
-    let icon: String
-    let iconColor: Color
-    let action: () -> Void
 
-    @State private var isPressed = false
-
-    var body: some View {
-        NavigationView {
-            ZStack {
-                // Background matching Android
-                Color(.systemBackground)
-                    .ignoresSafeArea()
-
-                ScrollView {
-                    VStack(spacing: 16) {
-                        // Header with Back Button (matching Android LinearLayout header)
-                        headerSection
-
-                        // Settings Cards (matching Android CardViews)
-                        settingsCardsSection
-
-                        Spacer(minLength: 20)
-                    }
-                    .padding(16) // matching Android padding="16dp"
-                }
-            }
-            .navigationBarHidden(true)
-        }
-        // Navigation sheets
-        .sheet(isPresented: $showLanguageSettings) {
-            LanguageSettingsView()
-        }
-        .sheet(isPresented: $showThemeSettings) {
-            ThemeSettingsView()
-        }
-        .sheet(isPresented: $showExportData) {
-            ExportDataView()
-        }
-        .sheet(isPresented: $showImportData) {
-            ImportDataView()
-        }
-    }
-
-    // MARK: - Header Section (matching Android LinearLayout header)
-    private var headerSection: some View {
-        HStack(spacing: 16) {
-            // Back Button (matching Android ImageButton)
-            Button(action: {
-                dismiss()
-            }) {
-                Image(systemName: "arrow.left")
-                    .font(.title2)
-                    .foregroundColor(.primary)
-                    .frame(width: 48, height: 48) // matching Android 48dp
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color(.systemGray6))
-                    )
-            }
-
-            // Title (matching Android TextView)
-            Text("Settings")
-                .font(.title) // matching Android textSize="24sp"
-                .fontWeight(.bold) // matching Android textStyle="bold"
-                .foregroundColor(.primary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .padding(.bottom, 14) // matching Android layout_marginBottom="30dp"
-    }
-
-    // MARK: - Settings Cards Section
-    private var settingsCardsSection: some View {
-        VStack(spacing: 16) { // matching Android layout_marginBottom="16dp"
-            // Language Settings Card
-            SettingsCardView(
-                title: "Language Settings",
-                description: "Change app language and region",
-                icon: "globe",
-                iconColor: Color(red: 0.298, green: 0.686, blue: 0.314) // #4CAF50
-            ) {
-                showLanguageSettings = true
-            }
-
-            // Theme Settings Card
-            SettingsCardView(
-                title: "Theme Settings",
-                description: "Switch between light and dark themes",
-                icon: "paintbrush.fill",
-                iconColor: Color(red: 0.612, green: 0.153, blue: 0.690) // #9C27B0
-            ) {
-                showThemeSettings = true
-            }
-
-            // Export Data Card
-            SettingsCardView(
-                title: "Export Data",
-                description: "Save your expense data to external file",
-                icon: "square.and.arrow.up.fill",
-                iconColor: Color(red: 1.0, green: 0.596, blue: 0.0) // #FF9800
-            ) {
-                showExportData = true
-            }
-
-            // Import Data Card
-            SettingsCardView(
-                title: "Import Data",
-                description: "Load expense data from external file",
-                icon: "square.and.arrow.down.fill",
-                iconColor: Color(red: 0.129, green: 0.588, blue: 0.953) // #2196F3
-            ) {
-                showImportData = true
-            }
-        }
-    }
-}
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
@@ -2993,16 +2876,16 @@ struct SettingsView: View {
         }
         // Navigation sheets
         .sheet(isPresented: $showLanguageSettings) {
-            LanguageSettingsView()
+            EnhancedLanguageSettingsView()
         }
         .sheet(isPresented: $showThemeSettings) {
-            ThemeSettingsView()
+            EnhancedThemeSettingsView()
         }
         .sheet(isPresented: $showExportData) {
-            ExportDataView()
+            EnhancedExportDataView()
         }
         .sheet(isPresented: $showImportData) {
-            ImportDataView()
+            EnhancedImportDataView()
         }
     }
 
@@ -3037,41 +2920,41 @@ struct SettingsView: View {
     private var settingsCardsSection: some View {
         VStack(spacing: 16) { // matching Android layout_marginBottom="16dp"
             // Language Settings Card
-            SettingsCardView(
-                title: "Language Settings",
-                description: "Change app language and region",
+            EnhancedSettingsCardView(
                 icon: "globe",
-                iconColor: Color(red: 0.298, green: 0.686, blue: 0.314) // #4CAF50
+                title: "Language Settings",
+                subtitle: "Change app language and region",
+                accentColor: Color(red: 0.298, green: 0.686, blue: 0.314) // #4CAF50
             ) {
                 showLanguageSettings = true
             }
 
             // Theme Settings Card
-            SettingsCardView(
-                title: "Theme Settings",
-                description: "Switch between light and dark themes",
+            EnhancedSettingsCardView(
                 icon: "paintbrush.fill",
-                iconColor: Color(red: 0.612, green: 0.153, blue: 0.690) // #9C27B0
+                title: "Theme Settings",
+                subtitle: "Switch between light and dark themes",
+                accentColor: Color(red: 0.612, green: 0.153, blue: 0.690) // #9C27B0
             ) {
                 showThemeSettings = true
             }
 
             // Export Data Card
-            SettingsCardView(
-                title: "Export Data",
-                description: "Save your expense data to external file",
+            EnhancedSettingsCardView(
                 icon: "square.and.arrow.up.fill",
-                iconColor: Color(red: 1.0, green: 0.596, blue: 0.0) // #FF9800
+                title: "Export Data",
+                subtitle: "Save your expense data to external file",
+                accentColor: Color(red: 1.0, green: 0.596, blue: 0.0) // #FF9800
             ) {
                 showExportData = true
             }
 
             // Import Data Card
-            SettingsCardView(
-                title: "Import Data",
-                description: "Load expense data from external file",
+            EnhancedSettingsCardView(
                 icon: "square.and.arrow.down.fill",
-                iconColor: Color(red: 0.129, green: 0.588, blue: 0.953) // #2196F3
+                title: "Import Data",
+                subtitle: "Load expense data from external file",
+                accentColor: Color(red: 0.129, green: 0.588, blue: 0.953) // #2196F3
             ) {
                 showImportData = true
             }
