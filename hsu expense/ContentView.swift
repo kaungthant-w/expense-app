@@ -1411,6 +1411,7 @@ struct CurrencyPickerView: View {
 
 struct NavigationDrawerView: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var showingAboutUs = false
     
     var body: some View {
         NavigationView {
@@ -1490,7 +1491,7 @@ struct NavigationDrawerView: View {
                             }
                             NavigationMenuItem(icon: "", title: "About Us", emoji: "ℹ️") {
                                 dismiss()
-                                // Handle about action
+                                showingAboutUs = true
                             }
                         }
                     }
@@ -1501,6 +1502,9 @@ struct NavigationDrawerView: View {
             }
             .background(Color.expenseCardBackground)
             .navigationBarHidden(true)
+        }
+        .sheet(isPresented: $showingAboutUs) {
+            AboutUsView()
         }
     }
 }
