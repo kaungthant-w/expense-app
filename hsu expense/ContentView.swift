@@ -2860,7 +2860,7 @@ struct SettingsView: View {
                 
                 ScrollView {
                     VStack(spacing: 16) {
-                        // Header with Back Button (matching Android layout)
+                        // Header with Back Button (matching Android LinearLayout header)
                         headerSection
                         
                         // Settings Cards (matching Android CardViews)
@@ -2881,7 +2881,7 @@ struct SettingsView: View {
             InlineThemeSettingsView()
         }
         .sheet(isPresented: $showExportData) {
-            ExportDataView()
+            InlineExportDataView()
         }
         .sheet(isPresented: $showImportData) {
             InlineImportDataView()
@@ -3179,7 +3179,11 @@ struct InlineThemeSettingsView: View {
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(.systemGray6))
+                    .fill(selectedTheme == theme ? Color.green.opacity(0.1) : Color(.systemGray6))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(selectedTheme == theme ? Color.green : Color.clear, lineWidth: 2)
+                    )
             )
         }
         .buttonStyle(PlainButtonStyle())
@@ -3204,11 +3208,17 @@ struct InlineThemeSettingsView: View {
     }
 }
 
-// MARK: - Inline Import Data View
-struct InlineImportDataView: View {
+// MARK: - Inline Export Data View
+struct InlineExportDataView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var showFilePicker = false
-    @State private var showImportAlert = false
+    @State private var selectedFormat = "JSON"
+    @State private var showingShareSheet = false
+    @State private var exportedFileURL: URL?
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
+    @State private var isExporting = false
+    
+    let exportFormats = ["JSON", "CSV"]
     
     var body: some View {
         NavigationView {
@@ -3216,23 +3226,31 @@ struct InlineImportDataView: View {
                 // Header
                 headerSection
                 
-                // Import instructions
-                importInstructionsSection
+                // Export options
+                exportOptionsSection
                 
-                // Import button
-                importButtonSection
+                // Format selection
+                formatSelectionSection
+                
+                // Export button
+                exportButtonSection
                 
                 Spacer()
             }
             .padding(16)
             .navigationBarHidden(true)
         }
-        .alert(isPresented: $showImportAlert) {
+        .alert(isPresented: $showingAlert) {
             Alert(
-                title: Text("Import Successful"),
-                message: Text("Your data has been imported successfully!"),
+                title: Text("Export Status"),
+                message: Text(alertMessage),
                 dismissButton: .default(Text("OK"))
             )
+        }
+        .sheet(isPresented: $showingShareSheet) {
+            if let url = exportedFileURL {
+                InlineShareSheet(activityItems: [url])
+            }
         }
     }
     
@@ -3251,23 +3269,27 @@ struct InlineImportDataView: View {
                     )
             }
             
-            Text("Import Data")
+            Text("Export Data")
                 .font(.title)
                 .fontWeight(.bold)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
     
-    private var importInstructionsSection: some View {
+    private var exportOptionsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Import Instructions")
+            Text("Export Instructions")
                 .font(.headline)
                 .fontWeight(.bold)
             
-            Text("• Select a JSON, CSV, or Excel file")
-            Text("• Make sure the file follows the correct format")
-            Text("• Existing data will be merged with imported data")
-            Text("• Duplicate entries will be automatically handled")
+            VStack(alignment: .leading, spacing: 8) {
+                Text("• Select your preferred export format")
+                Text("• JSON format preserves all data structure")
+                Text("• CSV format is compatible with Excel")
+                Text("• Your exported file will be saved and shared")
+            }
+            .font(.subheadline)
+            .foregroundColor(.secondary)
         }
         .padding()
         .background(
@@ -3276,30 +3298,238 @@ struct InlineImportDataView: View {
         )
     }
     
-    private var importButtonSection: some View {
-        Button(action: {
-            showFilePicker = true
-        }) {
-            VStack(spacing: 8) {
-                Image(systemName: "square.and.arrow.down.fill")
-                    .font(.largeTitle)
-                    .foregroundColor(.blue)
-                
-                Text("Select File to Import")
-                    .font(.headline)
-                    .foregroundColor(.blue)
+    private var formatSelectionSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Export Format")
+                .font(.headline)
+                .fontWeight(.bold)
+            
+            ForEach(exportFormats, id: \.self) { format in
+                formatRow(format: format)
             }
-            .frame(maxWidth: .infinity)
-            .padding(24)
+        }
+    }
+    
+    private func formatRow(format: String) -> some View {
+        Button(action: {
+            selectedFormat = format
+        }) {
+            HStack(spacing: 16) {
+                Image(systemName: formatIcon(for: format))
+                    .font(.title2)
+                    .foregroundColor(formatColor(for: format))
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(format)
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                    
+                    Text(formatDescription(for: format))
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+                
+                if selectedFormat == format {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.green)
+                }
+            }
+            .padding()
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.blue, lineWidth: 2)
-                    .background(
+                    .fill(selectedFormat == format ? Color.green.opacity(0.1) : Color(.systemGray6))
+                    .overlay(
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.blue.opacity(0.1))
+                            .stroke(selectedFormat == format ? Color.green : Color.clear, lineWidth: 2)
                     )
             )
         }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    private var exportButtonSection: some View {
+        Button(action: {
+            exportData()
+        }) {
+            HStack {
+                if isExporting {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .scaleEffect(0.8)
+                } else {
+                    Image(systemName: "square.and.arrow.up.fill")
+                        .font(.headline)
+                }
+                
+                Text(isExporting ? "Exporting..." : "Export Data")
+                    .font(.headline)
+            }
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isExporting ? Color.gray : Color.green)
+            )
+        }
+        .disabled(isExporting)
+    }
+    
+    // MARK: - Helper Functions
+    private func formatIcon(for format: String) -> String {
+        switch format {
+        case "JSON": return "doc.text.fill"
+        case "CSV": return "tablecells.fill"
+        default: return "doc.fill"
+        }
+    }
+    
+    private func formatColor(for format: String) -> Color {
+        switch format {
+        case "JSON": return .blue
+        case "CSV": return .green
+        default: return .gray
+        }
+    }
+    
+    private func formatDescription(for format: String) -> String {
+        switch format {
+        case "JSON": return "Structured data format with full details"
+        case "CSV": return "Spreadsheet-compatible format"
+        default: return "Standard document format"
+        }
+    }
+    
+    private func exportData() {
+        isExporting = true
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                let sampleData = loadSampleData()
+                let exportContent: String
+                let fileName: String
+                
+                switch selectedFormat {
+                case "JSON":
+                    exportContent = try createJSONExport(from: sampleData)
+                    fileName = "expense_export_\(dateString()).json"
+                case "CSV":
+                    exportContent = createCSVExport(from: sampleData)
+                    fileName = "expense_export_\(dateString()).csv"
+                default:
+                    exportContent = try createJSONExport(from: sampleData)
+                    fileName = "expense_export_\(dateString()).json"
+                }
+                
+                let fileURL = try saveToFile(content: exportContent, fileName: fileName)
+                
+                DispatchQueue.main.async {
+                    self.isExporting = false
+                    self.exportedFileURL = fileURL
+                    self.showingShareSheet = true
+                    self.alertMessage = "Export completed successfully!"
+                }
+                
+            } catch {
+                DispatchQueue.main.async {
+                    self.isExporting = false
+                    self.alertMessage = "Export failed: \(error.localizedDescription)"
+                    self.showingAlert = true
+                }
+            }
+        }
+    }
+    
+    private func loadSampleData() -> [ExpenseItem] {
+        let dictArray = UserDefaults.standard.array(forKey: ExpenseUserDefaultsKeys.expenses) as? [[String: Any]] ?? []
+        return dictArray.compactMap { ExpenseItem.fromDictionary($0) }
+    }
+    
+    private func createJSONExport(from expenses: [ExpenseItem]) throws -> String {
+        let exportData: [String: Any] = [
+            "app_name": "HSU Expense",
+            "export_version": "1.0",
+            "export_date": ISO8601DateFormatter().string(from: Date()),
+            "expenses": expenses.map { expense in
+                [
+                    "id": expense.id.uuidString,
+                    "name": expense.name,
+                    "price": NSDecimalNumber(decimal: expense.price).doubleValue,
+                    "description": expense.description,
+                    "date": dateString(expense.date),
+                    "time": timeString(expense.time),
+                    "currency": expense.currency
+                ]
+            },
+            "total_expenses": expenses.count
+        ]
+        
+        let jsonData = try JSONSerialization.data(withJSONObject: exportData, options: .prettyPrinted)
+        return String(data: jsonData, encoding: .utf8) ?? ""
+    }
+    
+    private func createCSVExport(from expenses: [ExpenseItem]) -> String {
+        var csv = "ID,Name,Price,Description,Date,Time,Currency\n"
+        
+        for expense in expenses {
+            let row = [
+                expense.id.uuidString,
+                expense.name,
+                String(NSDecimalNumber(decimal: expense.price).doubleValue),
+                expense.description,
+                dateString(expense.date),
+                timeString(expense.time),
+                expense.currency
+            ].map { field in
+                let escaped = field.replacingOccurrences(of: "\"", with: "\"\"")
+                return field.contains(",") || field.contains("\"") || field.contains("\n") ? "\"\(escaped)\"" : escaped
+            }.joined(separator: ",")
+            
+            csv += row + "\n"
+        }
+        
+        return csv
+    }
+    
+    private func saveToFile(content: String, fileName: String) throws -> URL {
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let fileURL = documentsPath.appendingPathComponent(fileName)
+        
+        try content.write(to: fileURL, atomically: true, encoding: .utf8)
+        return fileURL
+    }
+    
+    private func dateString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+        return formatter.string(from: Date())
+    }
+    
+    private func dateString(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        return formatter.string(from: date)
+    }
+    
+    private func timeString(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: date)
+    }
+}
+
+// MARK: - Inline ShareSheet
+struct InlineShareSheet: UIViewControllerRepresentable {
+    let activityItems: [Any]
+    
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+    }
+    
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+        // No updates needed
     }
 }
 
