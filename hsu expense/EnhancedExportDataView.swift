@@ -416,21 +416,31 @@ struct EnhancedExportDataView: View {
         case .all:
             return expenses
         case .today:
-            let today = Calendar.current.startOfDay(for: Date())
-            let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
-            return expenses.filter { $0.date >= today && $0.date < tomorrow }
+            let today = DateFormatter.displayDate.string(from: Date())
+            return expenses.filter { $0.date == today }
         case .thisWeek:
             let calendar = Calendar.current
             guard let weekInterval = calendar.dateInterval(of: .weekOfYear, for: Date()) else { return [] }
-            return expenses.filter { $0.date >= weekInterval.start && $0.date < weekInterval.end }
+            return expenses.filter { expense in
+                guard let expenseDate = DateFormatter.displayDate.date(from: expense.date) else { return false }
+                return expenseDate >= weekInterval.start && expenseDate < weekInterval.end
+            }
         case .thisMonth:
             let calendar = Calendar.current
             guard let monthInterval = calendar.dateInterval(of: .month, for: Date()) else { return [] }
-            return expenses.filter { $0.date >= monthInterval.start && $0.date < monthInterval.end }
+            return expenses.filter { expense in
+                guard let expenseDate = DateFormatter.displayDate.date(from: expense.date) else { return false }
+                return expenseDate >= monthInterval.start && expenseDate < monthInterval.end
+            }
         case .custom:
-            let startOfDay = Calendar.current.startOfDay(for: customStartDate)
-            let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: customEndDate))!
-            return expenses.filter { $0.date >= startOfDay && $0.date < endOfDay }
+            let startDateString = DateFormatter.displayDate.string(from: customStartDate)
+            let endDateString = DateFormatter.displayDate.string(from: customEndDate)
+            return expenses.filter { expense in
+                guard let expenseDate = DateFormatter.displayDate.date(from: expense.date) else { return false }
+                let startOfDay = Calendar.current.startOfDay(for: customStartDate)
+                let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: Calendar.current.startOfDay(for: customEndDate))!
+                return expenseDate >= startOfDay && expenseDate < endOfDay
+            }
         }
     }
 
@@ -525,10 +535,10 @@ struct EnhancedExportDataView: View {
                 [
                     "id": expense.id.uuidString,
                     "name": expense.name,
-                    "price": NSDecimalNumber(decimal: expense.price).doubleValue,
+                    "price": String(NSDecimalNumber(decimal: expense.price).doubleValue),
                     "description": expense.description,
-                    "date": dateString(expense.date),
-                    "time": timeString(expense.time),
+                    "date": expense.date,
+                    "time": expense.time,
                     "currency": expense.currency
                 ]
             }
@@ -546,8 +556,8 @@ struct EnhancedExportDataView: View {
                 "\"" + expense.name.replacingOccurrences(of: "\"", with: "\"\"") + "\"",
                 String(NSDecimalNumber(decimal: expense.price).doubleValue),
                 "\"" + expense.description.replacingOccurrences(of: "\"", with: "\"\"") + "\"",
-                dateString(expense.date),
-                timeString(expense.time),
+                expense.date,
+                expense.time,
                 expense.currency
             ].joined(separator: ",")
 
@@ -565,8 +575,8 @@ struct EnhancedExportDataView: View {
 
         for (index, expense) in filteredExpenses.enumerated() {
             textString += "\(index + 1). \(expense.name)\n"
-            textString += "   Price: \(expense.formattedPrice)\n"
-            textString += "   Date: \(expense.formattedDate) at \(expense.formattedTime)\n"
+            textString += "   Price: \(expense.formattedPriceInCurrentCurrency())\n"
+            textString += "   Date: \(expense.date) at \(expense.time)\n"
             if !expense.description.isEmpty {
                 textString += "   Description: \(expense.description)\n"
             }
@@ -574,18 +584,6 @@ struct EnhancedExportDataView: View {
         }
 
         return textString.data(using: .utf8) ?? Data()
-    }
-
-    private func dateString(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: date)
-    }
-
-    private func timeString(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss"
-        return formatter.string(from: date)
     }
 }
 

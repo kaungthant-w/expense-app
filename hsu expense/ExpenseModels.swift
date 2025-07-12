@@ -10,7 +10,7 @@ struct ExpenseItem: Identifiable, Hashable {
     var date: String
     var time: String
     var currency: String
-    
+
     init(id: UUID = UUID(), name: String, price: Decimal, description: String, date: String, time: String, currency: String = "MMK") {
         self.id = id
         self.name = name
@@ -35,7 +35,24 @@ extension ExpenseItem {
             "currency": currency
         ]
     }
-    
+
+    // MARK: - Formatted Properties
+    var formattedPrice: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = currency
+        formatter.maximumFractionDigits = 2
+        return formatter.string(from: NSDecimalNumber(decimal: price)) ?? "\(price)"
+    }
+
+    var formattedDate: String {
+        return date // Already formatted as string
+    }
+
+    var formattedTime: String {
+        return time // Already formatted as string
+    }
+
     static func fromDictionary(_ dict: [String: Any]) -> ExpenseItem? {
         guard let name = dict["name"] as? String,
               let description = dict["description"] as? String,
@@ -44,14 +61,14 @@ extension ExpenseItem {
               let currency = dict["currency"] as? String else {
             return nil
         }
-        
+
         let id: UUID
         if let idString = dict["id"] as? String, let uuid = UUID(uuidString: idString) {
             id = uuid
         } else {
             id = UUID()
         }
-        
+
         let price: Decimal
         if let priceDouble = dict["price"] as? Double {
             price = Decimal(priceDouble)
@@ -60,7 +77,7 @@ extension ExpenseItem {
         } else {
             price = 0
         }
-        
+
         return ExpenseItem(
             id: id,
             name: name,
@@ -90,13 +107,13 @@ extension DateFormatter {
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
         return formatter
     }()
-    
+
     static let displayDate: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
     }()
-    
+
     static let displayTime: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
@@ -128,7 +145,7 @@ extension ExpenseItem {
             "အမဲသား", "ငါး", "ပန်းကန်", "ဒရမ်မာ",
             "ဖြတ်တောင်း", "လှေကား", "အိမ်ခြံ", "ပရိဘောဂ"
         ]
-        
+
         let descriptions = [
             "နေ့စဉ် အသုံးအဆောင်",
             "အစားအသောက်",
@@ -139,15 +156,15 @@ extension ExpenseItem {
             "အပတ်စဉ် စျေးဝယ်",
             "အရေးပေါ် ကုန်ကျမှု"
         ]
-        
+
         var expenses: [ExpenseItem] = []
         let calendar = Calendar.current
         let now = Date()
-        
+
         for i in 0..<count {
             let randomDaysAgo = Int.random(in: 0...30)
             let expenseDate = calendar.date(byAdding: .day, value: -randomDaysAgo, to: now) ?? now
-            
+
             let expense = ExpenseItem(
                 name: myanmarExpenses.randomElement() ?? "အခြား",
                 price: Decimal(Double.random(in: 500...50000)),
@@ -158,7 +175,7 @@ extension ExpenseItem {
             )
             expenses.append(expense)
         }
-        
+
         return expenses
     }
 }
