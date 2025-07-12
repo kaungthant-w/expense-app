@@ -1186,7 +1186,9 @@ struct ExpenseDetailView: View {
 
                 // Convert price if editing existing expense and currency is different
                 if !isNewExpense && originalCurrency != currencyManager.currentCurrency.code {
-                    expense.price = currencyManager.convertAmount(originalPrice, from: originalCurrency, to: currencyManager.currentCurrency.code)
+                    let originalPriceDouble = NSDecimalNumber(decimal: originalPrice).doubleValue
+                    let convertedPrice = currencyManager.convertAmount(originalPriceDouble, from: originalCurrency, to: currencyManager.currentCurrency.code)
+                    expense.price = Decimal(convertedPrice)
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: .currencyChanged)) { _ in
@@ -1197,7 +1199,9 @@ struct ExpenseDetailView: View {
 
                 // Convert price when currency changes
                 if oldCurrency != currencyManager.currentCurrency.code {
-                    expense.price = currencyManager.convertAmount(expense.price, from: oldCurrency, to: currencyManager.currentCurrency.code)
+                    let currentPriceDouble = NSDecimalNumber(decimal: expense.price).doubleValue
+                    let convertedPrice = currencyManager.convertAmount(currentPriceDouble, from: oldCurrency, to: currencyManager.currentCurrency.code)
+                    expense.price = Decimal(convertedPrice)
                 }
             }
         }
