@@ -1,6 +1,154 @@
 import SwiftUI
 import Foundation
 
+// MARK: - Essential Models (inline definitions until separate files are added to Xcode project)
+
+// MARK: - ExpenseItem Model
+struct ExpenseItem: Identifiable, Hashable {
+    let id: UUID
+    var name: String
+    var price: Decimal
+    var description: String
+    var date: Date
+    var time: Date
+    var currency: String
+
+    init(id: UUID = UUID(), name: String, price: Decimal, description: String, date: Date = Date(), time: Date = Date(), currency: String = "USD") {
+        self.id = id
+        self.name = name
+        self.price = price
+        self.description = description
+        self.date = date
+        self.time = time
+        self.currency = currency
+    }
+
+    // Dictionary conversion for UserDefaults
+    var asDictionary: [String: Any] {
+        return [
+            "id": id.uuidString,
+            "name": name,
+            "price": NSDecimalNumber(decimal: price).doubleValue,
+            "description": description,
+            "date": date,
+            "time": time,
+            "currency": currency
+        ]
+    }
+
+    static func fromDictionary(_ dict: [String: Any]) -> ExpenseItem? {
+        guard let idString = dict["id"] as? String,
+              let id = UUID(uuidString: idString),
+              let name = dict["name"] as? String,
+              let description = dict["description"] as? String else {
+            return nil
+        }
+
+        let price: Decimal
+        if let priceDouble = dict["price"] as? Double {
+            price = Decimal(priceDouble)
+        } else if let priceString = dict["price"] as? String, let priceDouble = Double(priceString) {
+            price = Decimal(priceDouble)
+        } else {
+            price = 0
+        }
+
+        let date = dict["date"] as? Date ?? Date()
+        let time = dict["time"] as? Date ?? Date()
+        let currency = dict["currency"] as? String ?? "USD"
+
+        return ExpenseItem(id: id, name: name, price: price, description: description, date: date, time: time, currency: currency)
+    }
+}
+
+// MARK: - CurrencyManager Model
+class CurrencyManager: ObservableObject {
+    static let shared = CurrencyManager()
+
+    @Published var currentCurrency: Currency = .USD
+    @Published var exchangeRates: [String: Double] = [:]
+    @Published var isLoadingRates: Bool = false
+    @Published var lastUpdateTime: Date?
+    @Published var apiError: String?
+
+    private init() {
+        loadSavedCurrency()
+        loadSavedRates()
+    }
+
+    struct Currency: Identifiable, Equatable {
+        let id = UUID()
+        let code: String
+        let name: String
+        let symbol: String
+        let flag: String
+
+        static let USD = Currency(code: "USD", name: "US Dollar", symbol: "$", flag: "🇺🇸")
+        static let MMK = Currency(code: "MMK", name: "Myanmar Kyat", symbol: "MMK", flag: "🇲🇲")
+        static let EUR = Currency(code: "EUR", name: "Euro", symbol: "€", flag: "🇪🇺")
+        static let JPY = Currency(code: "JPY", name: "Japanese Yen", symbol: "¥", flag: "🇯🇵")
+        static let GBP = Currency(code: "GBP", name: "British Pound", symbol: "£", flag: "🇬🇧")
+
+        static let allCurrencies: [Currency] = [.USD, .MMK, .EUR, .JPY, .GBP]
+
+        func format(_ amount: Decimal) -> String {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .currency
+            formatter.currencyCode = self.code
+            formatter.currencySymbol = self.symbol
+            formatter.maximumFractionDigits = 2
+            formatter.minimumFractionDigits = 2
+            return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "\(symbol)0.00"
+        }
+    }
+
+    func setCurrency(_ currency: Currency) {
+        currentCurrency = currency
+        saveCurrency()
+    }
+
+    func fetchExchangeRates() {
+        // Simplified implementation for now
+        isLoadingRates = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.exchangeRates = [
+                "MMK": 2100.0,
+                "EUR": 0.85,
+                "JPY": 110.0,
+                "GBP": 0.72
+            ]
+            self.isLoadingRates = false
+            self.lastUpdateTime = Date()
+        }
+    }
+
+    private func saveCurrency() {
+        UserDefaults.standard.set(currentCurrency.code, forKey: "SelectedCurrency")
+    }
+
+    private func loadSavedCurrency() {
+        if let savedCode = UserDefaults.standard.string(forKey: "SelectedCurrency"),
+           let currency = Currency.allCurrencies.first(where: { $0.code == savedCode }) {
+            currentCurrency = currency
+        }
+    }
+
+    private func saveRates() {
+        if let data = try? JSONSerialization.data(withJSONObject: exchangeRates) {
+            UserDefaults.standard.set(data, forKey: "ExchangeRates")
+            UserDefaults.standard.set(Date(), forKey: "RatesUpdateTime")
+        }
+    }
+
+    private func loadSavedRates() {
+        if let data = UserDefaults.standard.data(forKey: "ExchangeRates"),
+           let rates = try? JSONSerialization.jsonObject(with: data) as? [String: Double] {
+            exchangeRates = rates
+            lastUpdateTime = UserDefaults.standard.object(forKey: "RatesUpdateTime") as? Date
+        }
+    }
+}
+
 // MARK: - UserDefaults Keys
 private enum ExpenseUserDefaultsKeys {
     static let expenses = "hsu_expense_items"
