@@ -570,7 +570,7 @@ struct EnhancedSettingsPage: View {
     private var quickStatsView: some View {
         HStack(spacing: 16) {
             quickStatCard(title: "Total Expenses", value: "\(totalExpenseCount)", icon: "number", color: .expenseAccent)
-            quickStatCard(title: "This Month", value: currencyManager.currentCurrency.format(monthlyTotal), icon: "calendar", color: .expenseGreen)
+            quickStatCard(title: "This Month", value: currencyManager.formatDecimalAmount(monthlyTotal), icon: "calendar", color: .expenseGreen)
             quickStatCard(title: "Categories", value: "5", icon: "tag.fill", color: .expenseEdit)
         }
     }
@@ -639,7 +639,8 @@ struct EnhancedSettingsPage: View {
         }
 
         return expenses.filter { expense in
-            expense.date >= monthInterval.start && expense.date < monthInterval.end
+            guard let expenseDate = DateFormatter.displayDate.date(from: expense.date) else { return false }
+            return expenseDate >= monthInterval.start && expenseDate < monthInterval.end
         }.reduce(0) { total, expense in
             total + expense.convertedPrice(to: currencyManager.currentCurrency.code)
         }
@@ -660,13 +661,15 @@ extension ExpenseItem {
         }
 
         // Use CurrencyManager for conversion
-        return CurrencyManager.shared.convertAmount(self.price, from: self.currency, to: currencyCode)
+        let doubleAmount = NSDecimalNumber(decimal: self.price).doubleValue
+        let convertedDouble = CurrencyManager.shared.convertAmount(doubleAmount, from: self.currency, to: currencyCode)
+        return Decimal(convertedDouble)
     }
 
     func formattedPriceInCurrentCurrency() -> String {
         let currencyManager = CurrencyManager.shared
         let convertedPrice = convertedPrice(to: currencyManager.currentCurrency.code)
-        return currencyManager.currentCurrency.format(convertedPrice)
+        return currencyManager.formatDecimalAmount(convertedPrice)
     }
 }
 

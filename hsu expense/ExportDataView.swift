@@ -246,7 +246,8 @@ struct ExportDataView: View {
         }
 
         return expenses.compactMap { expenseDict in
-            guard let id = expenseDict["id"] as? String,
+            guard let idString = expenseDict["id"] as? String,
+                  let id = UUID(uuidString: idString),
                   let name = expenseDict["name"] as? String,
                   let price = expenseDict["price"] as? Double,
                   let description = expenseDict["description"] as? String,
@@ -259,7 +260,7 @@ struct ExportDataView: View {
             return ExpenseItem(
                 id: id,
                 name: name,
-                price: price,
+                price: Decimal(price),
                 description: description,
                 date: date,
                 time: time,
@@ -296,9 +297,9 @@ struct ExportDataView: View {
 
         for expense in expenses {
             let row = [
-                expense.id,
+                expense.id.uuidString,
                 expense.name,
-                String(expense.price),
+                String(NSDecimalNumber(decimal: expense.price).doubleValue),
                 expense.description,
                 expense.date,
                 expense.time,
