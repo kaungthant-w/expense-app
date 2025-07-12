@@ -695,3 +695,82 @@ Your app should now build successfully with:
 ```
 
 Or using VS Code task: `Cmd+Shift+P` → "Tasks: Run Task" → "Build iOS Expense App"
+
+### 21. iTunes Artwork Integration (IMPLEMENTED)
+
+**✅ Using ItunesArtwork@2x.png as App Logo**
+
+The app now uses the iTunes artwork (ItunesArtwork@2x.png) as the primary logo in both the navigation header and About Us page.
+
+**Updated SafeImage Component:**
+```swift
+struct SafeImage: View {
+    let imageName: String
+    let systemFallback: String
+    let width: CGFloat
+    let height: CGFloat
+    
+    var body: some View {
+        Group {
+            // Try to load ItunesArtwork@2x.png first, then imageName, then system fallback
+            if let uiImage = UIImage(named: "ItunesArtwork@2x") {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            } else if let uiImage = UIImage(named: imageName) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            } else {
+                Image(systemName: systemFallback)
+                    .font(.system(size: min(width, height) * 0.6))
+            }
+        }
+        .frame(width: width, height: height)
+    }
+}
+```
+
+**Navigation Header Implementation:**
+```swift
+SafeImage(
+    imageName: "ItunesArtwork@2x",
+    systemFallback: "chart.bar.doc.horizontal.fill",
+    width: 45,
+    height: 45
+)
+.foregroundColor(.white)
+```
+
+**About Us Page Implementation:**
+```swift
+SafeImage(
+    imageName: "ItunesArtwork@2x",
+    systemFallback: "dollarsign.circle.fill",
+    width: 80,
+    height: 80
+)
+.foregroundColor(.expenseAccent)
+```
+
+**Key Features:**
+- ✅ **Priority Loading**: ItunesArtwork@2x.png loads first
+- ✅ **Fallback Support**: Falls back to imageName parameter if iTunes artwork not found
+- ✅ **System Icon Fallback**: Uses SF Symbols as final fallback
+- ✅ **Consistent Branding**: Same logo used across navigation and About Us page
+- ✅ **High Quality**: Uses 2x resolution artwork for crisp display
+
+**Benefits:**
+1. **Consistent Branding**: Same logo throughout the app
+2. **High Quality**: Uses the high-resolution iTunes artwork
+3. **Automatic Loading**: No need to manually add logo to Assets.xcassets
+4. **Fallback Safety**: Multiple fallback options ensure logo always displays
+5. **Professional Appearance**: Uses the official app store artwork
+
+**File Locations:**
+- **Source**: `hsu expense/Assets.xcassets/AppIcon.appiconset/ItunesArtwork@2x.png`
+- **Navigation Header**: NavigationDrawerView in ContentView.swift
+- **About Us Page**: appInfoSection in AboutUsView.swift
+
+**No Additional Setup Required:**
+Since ItunesArtwork@2x.png is already part of the AppIcon.appiconset, it's automatically available to the app without any additional configuration.

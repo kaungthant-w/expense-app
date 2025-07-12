@@ -206,7 +206,12 @@ struct SafeImage: View {
     
     var body: some View {
         Group {
-            if let uiImage = UIImage(named: imageName) {
+            // Try to load ItunesArtwork@2x.png first, then imageName, then system fallback
+            if let uiImage = UIImage(named: "ItunesArtwork@2x") {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            } else if let uiImage = UIImage(named: imageName) {
                 Image(uiImage: uiImage)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -1463,7 +1468,7 @@ struct NavigationDrawerView: View {
                                 .frame(width: 70, height: 70)
                             
                             SafeImage(
-                                imageName: "app_logo",
+                                imageName: "ItunesArtwork@2x",
                                 systemFallback: "chart.bar.doc.horizontal.fill",
                                 width: 45,
                                 height: 45

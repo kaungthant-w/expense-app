@@ -88,7 +88,7 @@ struct AboutUsView: View {
         VStack(spacing: 16) {
             // App Icon
             SafeImage(
-                imageName: "app_logo",
+                imageName: "ItunesArtwork@2x",
                 systemFallback: "dollarsign.circle.fill",
                 width: 80,
                 height: 80
