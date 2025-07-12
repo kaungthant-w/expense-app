@@ -86,13 +86,19 @@ struct AboutUsView: View {
     // MARK: - App Info Section
     private var appInfoSection: some View {
         VStack(spacing: 16) {
-            // App Icon using iTunes Artwork
+            // App Icon using iTunes Artwork - made circular
             SafeImage(
                 imageName: "ItunesArtwork@2x",
                 systemFallback: "app.badge",
                 width: 80,
                 height: 80
             )
+            .clipShape(Circle())
+            .overlay(
+                Circle()
+                    .stroke(Color.expenseAccent.opacity(0.2), lineWidth: 2)
+            )
+            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
             
             // App Tagline
             Text("📊 Track your expenses efficiently")
@@ -154,9 +160,27 @@ struct AboutUsView: View {
                 
                 VStack(alignment: .leading, spacing: 12) {
                     developerRow(label: "Developer", value: "Kyaw Myo Thant")
-                    developerRow(label: "Company", value: "HSU Development")
                     developerRow(label: "Location", value: "Yangon, Myanmar")
-                    developerRow(label: "Experience", value: "iOS & Flutter Developer")
+                    developerRow(label: "Experience", value: "iOS & Android Developer")
+                    Button(action: {
+                        if let url = URL(string: "https://t.me/hsuexpense") {
+                            UIApplication.shared.open(url)
+                        }
+                    }) {
+                        HStack {
+                            Text("Telegram")
+                                .font(.subheadline)
+                                .foregroundColor(.expenseSecondaryText)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Text("t.me/hsuexpense")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.expenseAccent)
+                                .multilineTextAlignment(.trailing)
+                        }
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
         }
@@ -195,7 +219,7 @@ struct AboutUsView: View {
                         selectedContactType = "Phone"
                         showContactAlert = true
                         // Open phone dialer
-                        if let url = URL(string: "tel:+959123456789") {
+                        if let url = URL(string: "tel:+959977246328") {
                             UIApplication.shared.open(url)
                         }
                     }
