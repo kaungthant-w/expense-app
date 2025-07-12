@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AboutUsView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @State private var showContactAlert = false
     @State private var selectedContactType = ""
     
@@ -61,7 +61,7 @@ struct AboutUsView: View {
         HStack(spacing: 16) {
             // Back Button
             Button(action: {
-                presentationMode.wrappedValue.dismiss()
+                dismiss()
             }) {
                 Image(systemName: "arrow.left")
                     .font(.title2)

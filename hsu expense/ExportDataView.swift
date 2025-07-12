@@ -3,7 +3,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ExportDataView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @State private var selectedFormat = "JSON"
     @State private var showingShareSheet = false
     @State private var exportedFileURL: URL?
@@ -50,7 +50,7 @@ struct ExportDataView: View {
     private var headerSection: some View {
         HStack(spacing: 16) {
             Button(action: {
-                presentationMode.wrappedValue.dismiss()
+                dismiss()
             }) {
                 Image(systemName: "arrow.left")
                     .font(.title2)

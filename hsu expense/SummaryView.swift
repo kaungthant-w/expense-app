@@ -10,7 +10,7 @@ import SwiftUI
 struct SummaryView: View {
     @StateObject private var currencyManager = CurrencyManager.shared
     @State private var summaryData = SummaryData()
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationView {
@@ -51,7 +51,7 @@ struct SummaryView: View {
         HStack(spacing: 16) {
             // Back Button
             Button(action: {
-                presentationMode.wrappedValue.dismiss()
+                dismiss()
             }) {
                 Image(systemName: "arrow.left")
                     .font(.title2)

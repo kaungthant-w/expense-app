@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct ImportDataView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @State private var showFilePicker = false
     @State private var showImportAlert = false
     
@@ -35,7 +35,7 @@ struct ImportDataView: View {
     private var headerSection: some View {
         HStack(spacing: 16) {
             Button(action: {
-                presentationMode.wrappedValue.dismiss()
+                dismiss()
             }) {
                 Image(systemName: "arrow.left")
                     .font(.title2)

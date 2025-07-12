@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct ThemeSettingsView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @State private var selectedTheme = "System"
     
     let themes = ["Light", "Dark", "System"]
@@ -28,7 +28,7 @@ struct ThemeSettingsView: View {
     private var headerSection: some View {
         HStack(spacing: 16) {
             Button(action: {
-                presentationMode.wrappedValue.dismiss()
+                dismiss()
             }) {
                 Image(systemName: "arrow.left")
                     .font(.title2)

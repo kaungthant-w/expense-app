@@ -2151,7 +2151,7 @@ struct InlineSummaryView: View {
     @StateObject private var currencyManager = CurrencyManager.shared
     @State private var summaryData = InlineSummaryData()
     @State private var showingRateDetails = false
-    @Environment(\.resentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationView {
@@ -2192,7 +2192,7 @@ struct InlineSummaryView: View {
         HStack(spacing: 16) {
             // Back Button
             Button(action: {
-                presentationMode.wrappedValue.dismiss()
+                dismiss()
             }) {
                 Image(systemName: "arrow.left")
                     .font(.title2)

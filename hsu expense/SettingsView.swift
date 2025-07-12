@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @State private var showLanguageSettings = false
     @State private var showThemeSettings = false
     @State private var showExportData = false
@@ -50,7 +50,7 @@ struct SettingsView: View {
         HStack(spacing: 16) {
             // Back Button (matching Android ImageButton)
             Button(action: {
-                presentationMode.wrappedValue.dismiss()
+                dismiss()
             }) {
                 Image(systemName: "arrow.left")
                     .font(.title2)

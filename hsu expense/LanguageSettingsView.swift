@@ -2,7 +2,7 @@
 import SwiftUI
 
 struct LanguageSettingsView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @State private var selectedLanguage = "English"
     
     let languages = [
@@ -37,7 +37,7 @@ struct LanguageSettingsView: View {
     private var headerSection: some View {
         HStack(spacing: 16) {
             Button(action: {
-                presentationMode.wrappedValue.dismiss()
+                dismiss()
             }) {
                 Image(systemName: "arrow.left")
                     .font(.title2)
