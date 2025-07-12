@@ -7,16 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE7BB3952E21F9AF004E2851 /* ItunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE7BB3942E21F9AF004E2851 /* ItunesArtwork@2x.png */; };
+		CE7BB3962E21FA69004E2851 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA942312E1E53AA00D6683E /* Assets.xcassets */; };
+		CE7BB3972E21FA6D004E2851 /* ItunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE7BB3942E21F9AF004E2851 /* ItunesArtwork@2x.png */; };
 		CEA9422E2E1E53A800D6683E /* hsu_expenseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9422D2E1E53A800D6683E /* hsu_expenseApp.swift */; };
 		CEA942302E1E53A800D6683E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9422F2E1E53A800D6683E /* ContentView.swift */; };
-		CEA9425C2E1E53AB00D6683E /* AboutUsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9425B2E1E53AB00D6683E /* AboutUsView.swift */; };
 		CEA942322E1E53AA00D6683E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA942312E1E53AA00D6683E /* Assets.xcassets */; };
-		CEA942352E1E53AA00D6683E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA942342E1E53AA00D6683E /* Preview Assets.xcassets */; };
 		CEA942372E1E53AA00D6683E /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA942362E1E53AA00D6683E /* Persistence.swift */; };
 		CEA9423A2E1E53AA00D6683E /* hsu_expense.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CEA942382E1E53AA00D6683E /* hsu_expense.xcdatamodeld */; };
 		CEA942442E1E53AA00D6683E /* hsu_expenseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA942432E1E53AA00D6683E /* hsu_expenseTests.swift */; };
 		CEA9424E2E1E53AA00D6683E /* hsu_expenseUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9424D2E1E53AA00D6683E /* hsu_expenseUITests.swift */; };
 		CEA942502E1E53AA00D6683E /* hsu_expenseUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9424F2E1E53AA00D6683E /* hsu_expenseUITestsLaunchTests.swift */; };
+		CEA9425C2E1E53AB00D6683E /* AboutUsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA9425B2E1E53AB00D6683E /* AboutUsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,10 +39,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		CEA9422A2E1E53A800D6683E /* hsu expense.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "hsu expense.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE7BB3942E21F9AF004E2851 /* ItunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ItunesArtwork@2x.png"; path = "hsu expense/Assets.xcassets/AppIcon.appiconset/ItunesArtwork@2x.png"; sourceTree = "<group>"; };
+		CEA9422A2E1E53A800D6683E /* hsu expense.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "hsu expense.app"; path = "HSU expense.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA9422D2E1E53A800D6683E /* hsu_expenseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hsu_expenseApp.swift; sourceTree = "<group>"; };
 		CEA9422F2E1E53A800D6683E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		CEA9425B2E1E53AB00D6683E /* AboutUsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutUsView.swift; sourceTree = "<group>"; };
 		CEA942312E1E53AA00D6683E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEA942342E1E53AA00D6683E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CEA942362E1E53AA00D6683E /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -50,6 +52,7 @@
 		CEA942492E1E53AA00D6683E /* hsu expenseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "hsu expenseUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA9424D2E1E53AA00D6683E /* hsu_expenseUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hsu_expenseUITests.swift; sourceTree = "<group>"; };
 		CEA9424F2E1E53AA00D6683E /* hsu_expenseUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hsu_expenseUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		CEA9425B2E1E53AB00D6683E /* AboutUsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutUsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +83,7 @@
 		CEA942212E1E53A800D6683E = {
 			isa = PBXGroup;
 			children = (
+				CE7BB3942E21F9AF004E2851 /* ItunesArtwork@2x.png */,
 				CEA9422C2E1E53A800D6683E /* hsu expense */,
 				CEA942422E1E53AA00D6683E /* hsu expenseTests */,
 				CEA9424C2E1E53AA00D6683E /* hsu expenseUITests */,
@@ -139,9 +143,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CEA942292E1E53A800D6683E /* hsu expense */ = {
+		CEA942292E1E53A800D6683E /* HSU expense */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CEA942532E1E53AA00D6683E /* Build configuration list for PBXNativeTarget "hsu expense" */;
+			buildConfigurationList = CEA942532E1E53AA00D6683E /* Build configuration list for PBXNativeTarget "HSU expense" */;
 			buildPhases = (
 				CEA942262E1E53A800D6683E /* Sources */,
 				CEA942272E1E53A800D6683E /* Frameworks */,
@@ -228,7 +232,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CEA942292E1E53A800D6683E /* hsu expense */,
+				CEA942292E1E53A800D6683E /* HSU expense */,
 				CEA9423E2E1E53AA00D6683E /* hsu expenseTests */,
 				CEA942482E1E53AA00D6683E /* hsu expenseUITests */,
 			);
@@ -240,7 +244,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEA942352E1E53AA00D6683E /* Preview Assets.xcassets in Resources */,
+				CE7BB3952E21F9AF004E2851 /* ItunesArtwork@2x.png in Resources */,
 				CEA942322E1E53AA00D6683E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -249,6 +253,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE7BB3972E21FA6D004E2851 /* ItunesArtwork@2x.png in Resources */,
+				CE7BB3962E21FA69004E2851 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,12 +302,12 @@
 /* Begin PBXTargetDependency section */
 		CEA942412E1E53AA00D6683E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CEA942292E1E53A800D6683E /* hsu expense */;
+			target = CEA942292E1E53A800D6683E /* HSU expense */;
 			targetProxy = CEA942402E1E53AA00D6683E /* PBXContainerItemProxy */;
 		};
 		CEA9424B2E1E53AA00D6683E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CEA942292E1E53A800D6683E /* hsu expense */;
+			target = CEA942292E1E53A800D6683E /* HSU expense */;
 			targetProxy = CEA9424A2E1E53AA00D6683E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -571,7 +577,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CEA942532E1E53AA00D6683E /* Build configuration list for PBXNativeTarget "hsu expense" */ = {
+		CEA942532E1E53AA00D6683E /* Build configuration list for PBXNativeTarget "HSU expense" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CEA942542E1E53AA00D6683E /* Debug */,
