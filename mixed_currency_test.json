@@ -1,0 +1,62 @@
+{
+  "app_name": "HSU Expense",
+  "export_version": "1.0",
+  "export_date": "2025-07-13T10:30:00.000Z",
+  "total_expenses": 6,
+  "expenses": [
+    {
+      "id": "test-usd-1",
+      "name": "Coffee Shop",
+      "price": 50.0,
+      "description": "Morning coffee and pastry",
+      "date": "2025-07-13",
+      "time": "08:30 AM",
+      "currency": "USD"
+    },
+    {
+      "id": "test-mmk-1",
+      "name": "Local Food",
+      "price": 2000.0,
+      "description": "Myanmar local restaurant",
+      "date": "2025-07-13",
+      "time": "12:30 PM",
+      "currency": "MMK"
+    },
+    {
+      "id": "test-eur-1",
+      "name": "Museum Ticket",
+      "price": 30.0,
+      "description": "Art museum entrance fee",
+      "date": "2025-07-13",
+      "time": "02:15 PM",
+      "currency": "EUR"
+    },
+    {
+      "id": "test-usd-2",
+      "name": "Taxi Ride",
+      "price": 25.0,
+      "description": "Airport to hotel",
+      "date": "2025-07-12",
+      "time": "06:45 PM",
+      "currency": "USD"
+    },
+    {
+      "id": "test-mmk-2",
+      "name": "Street Food",
+      "price": 1500.0,
+      "description": "Traditional Myanmar snack",
+      "date": "2025-07-12",
+      "time": "07:30 PM",
+      "currency": "MMK"
+    },
+    {
+      "id": "test-eur-2",
+      "name": "Book Store",
+      "price": 45.0,
+      "description": "Travel guidebook",
+      "date": "2025-07-11",
+      "time": "10:20 AM",
+      "currency": "EUR"
+    }
+  ]
+}

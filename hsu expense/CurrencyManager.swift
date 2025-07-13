@@ -366,6 +366,7 @@ class CurrencyManager: ObservableObject {
 
     func formatAmount(_ amount: Double, currency: Currency? = nil) -> String {
         let selectedCurrency = currency ?? currentCurrency
+        print("🎨 Formatting \(amount) for currency: \(selectedCurrency.code)")
 
         // Handle specific currency formatting
         switch selectedCurrency.code {
@@ -377,7 +378,9 @@ class CurrencyManager: ObservableObject {
             formatter.groupingSeparator = ","
             formatter.usesGroupingSeparator = true
             let formattedNumber = formatter.string(from: NSNumber(value: amount)) ?? String(format: "%.0f", amount)
-            return "\(formattedNumber) MMK"
+            let result = "\(formattedNumber) MMK"
+            print("🎨 MMK Format result: \(result)")
+            return result
 
         case "USD":
             // Format USD with $ prefix
@@ -387,7 +390,9 @@ class CurrencyManager: ObservableObject {
             formatter.groupingSeparator = ","
             formatter.usesGroupingSeparator = true
             let formattedNumber = formatter.string(from: NSNumber(value: amount)) ?? String(format: "%.2f", amount)
-            return "$\(formattedNumber)"
+            let result = "$\(formattedNumber)"
+            print("🎨 USD Format result: \(result)")
+            return result
 
         default:
             // Use standard currency formatting for other currencies
@@ -396,7 +401,9 @@ class CurrencyManager: ObservableObject {
             formatter.currencyCode = selectedCurrency.code
             formatter.currencySymbol = selectedCurrency.symbol
             formatter.maximumFractionDigits = 2
-            return formatter.string(from: NSNumber(value: amount)) ?? "\(selectedCurrency.symbol)\(String(format: "%.2f", amount))"
+            let result = formatter.string(from: NSNumber(value: amount)) ?? "\(selectedCurrency.symbol)\(String(format: "%.2f", amount))"
+            print("🎨 \(selectedCurrency.code) Format result: \(result)")
+            return result
         }
     }
 

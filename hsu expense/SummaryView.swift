@@ -34,6 +34,9 @@ struct SummaryView: View {
                     // Extremes Card
                     extremesCard
 
+                    // Debug Section - Remove this in production
+                    debugSection
+
                     Spacer(minLength: 20)
                 }
                 .padding(16)
@@ -250,6 +253,51 @@ struct SummaryView: View {
         }
     }
 
+    // MARK: - Debug Section (Remove in production)
+    private var debugSection: some View {
+        GlassmorphismCard {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("🧪 Debug & Testing")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.expensePrimaryText)
+
+                VStack(spacing: 8) {
+                    Button(action: {
+                        loadMixedCurrencyTestData()
+                    }) {
+                        Text("Load Mixed Currency Test Data")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color.blue)
+                            .cornerRadius(8)
+                    }
+
+                    Button(action: {
+                        currencyManager.updateExchangeRates()
+                    }) {
+                        Text("Update Exchange Rates")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color.green)
+                            .cornerRadius(8)
+                    }
+
+                    Text("Current Rates: \(currencyManager.exchangeRates.description)")
+                        .font(.caption)
+                        .foregroundColor(.expenseSecondaryText)
+                        .multilineTextAlignment(.leading)
+                }
+            }
+        }
+    }
+
     // MARK: - Helper Views
     private func summaryRow(label: String, value: String, valueColor: Color) -> some View {
         HStack {
@@ -271,11 +319,17 @@ struct SummaryView: View {
         let dictArray = UserDefaults.standard.array(forKey: ExpenseUserDefaultsKeys.expenses) as? [[String: Any]] ?? []
         let expenses = dictArray.compactMap { ExpenseItem.fromDictionary($0) }
 
+        print("📊 SummaryView: Loading \(expenses.count) expenses")
+        print("📊 Current currency: \(currencyManager.currentCurrency.code)")
+        print("📊 Exchange rates: \(currencyManager.exchangeRates)")
+
         // Calculate overall statistics (convert to current currency)
         let totalCount = expenses.count
         let totalAmount = expenses.reduce(0) { total, expense in
             let convertedAmount = currencyManager.convertDecimalAmount(expense.price, from: expense.currency, to: currencyManager.currentCurrency.code)
-            return total + NSDecimalNumber(decimal: convertedAmount).doubleValue
+            let convertedDouble = NSDecimalNumber(decimal: convertedAmount).doubleValue
+            print("📊 Converting: \(expense.price) \(expense.currency) → \(convertedDouble) \(currencyManager.currentCurrency.code)")
+            return total + convertedDouble
         }
         let averageAmount = totalCount > 0 ? totalAmount / Double(totalCount) : 0
 
@@ -346,6 +400,48 @@ struct SummaryView: View {
             highestExpense: highestText,
             lowestExpense: lowestText
         )
+    }
+
+    // MARK: - Debug Functions
+    private func loadMixedCurrencyTestData() {
+        print("🧪 Loading mixed currency test data...")
+
+        let testExpenses = [
+            [
+                "id": "test-usd-1",
+                "name": "Coffee Shop",
+                "price": 50.0,
+                "description": "Morning coffee and pastry",
+                "date": "2025-07-13",
+                "time": "08:30 AM",
+                "currency": "USD"
+            ],
+            [
+                "id": "test-mmk-1",
+                "name": "Local Food",
+                "price": 2000.0,
+                "description": "Myanmar local restaurant",
+                "date": "2025-07-13",
+                "time": "12:30 PM",
+                "currency": "MMK"
+            ],
+            [
+                "id": "test-eur-1",
+                "name": "Museum Ticket",
+                "price": 30.0,
+                "description": "Art museum entrance fee",
+                "date": "2025-07-13",
+                "time": "02:15 PM",
+                "currency": "EUR"
+            ]
+        ]
+
+        // Save test data
+        UserDefaults.standard.set(testExpenses, forKey: ExpenseUserDefaultsKeys.expenses)
+        print("✅ Mixed currency test data loaded!")
+
+        // Reload summary data
+        loadSummaryData()
     }
 }
 
