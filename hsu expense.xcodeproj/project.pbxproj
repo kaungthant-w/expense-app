@@ -7,6 +7,43 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE441CB32E232CC500D50D56 /* ExportDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441C992E232CC400D50D56 /* ExportDataView.swift */; };
+		CE441CB42E232CC500D50D56 /* EnhancedThemeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441C9A2E232CC400D50D56 /* EnhancedThemeSettingsView.swift */; };
+		CE441CB52E232CC500D50D56 /* ThemeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441C9B2E232CC400D50D56 /* ThemeSettingsView.swift */; };
+		CE441CB62E232CC500D50D56 /* GlassmorphismCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441C9C2E232CC400D50D56 /* GlassmorphismCard.swift */; };
+		CE441CB72E232CC500D50D56 /* EnhancedSettingsCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441C9D2E232CC400D50D56 /* EnhancedSettingsCardView.swift */; };
+		CE441CB82E232CC500D50D56 /* ExpenseDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441C9E2E232CC400D50D56 /* ExpenseDataManager.swift */; };
+		CE441CB92E232CC500D50D56 /* hsu_expense_export_2025-07-10_11-31-58 PM.json in Resources */ = {isa = PBXBuildFile; fileRef = CE441C9F2E232CC500D50D56 /* hsu_expense_export_2025-07-10_11-31-58 PM.json */; };
+		CE441CBA2E232CC500D50D56 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CA02E232CC500D50D56 /* ThemeManager.swift */; };
+		CE441CBB2E232CC500D50D56 /* ExpenseModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CA12E232CC500D50D56 /* ExpenseModels.swift */; };
+		CE441CBC2E232CC500D50D56 /* sample_import_100.json in Resources */ = {isa = PBXBuildFile; fileRef = CE441CA22E232CC500D50D56 /* sample_import_100.json */; };
+		CE441CBD2E232CC500D50D56 /* CurrencyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CA32E232CC500D50D56 /* CurrencyManager.swift */; };
+		CE441CBE2E232CC500D50D56 /* EnhancedImportDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CA42E232CC500D50D56 /* EnhancedImportDataView.swift */; };
+		CE441CBF2E232CC500D50D56 /* sample_today_import_30.json in Resources */ = {isa = PBXBuildFile; fileRef = CE441CA52E232CC500D50D56 /* sample_today_import_30.json */; };
+		CE441CC02E232CC500D50D56 /* hsu_expense.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE441CA62E232CC500D50D56 /* hsu_expense.xcdatamodeld */; };
+		CE441CC12E232CC500D50D56 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CA82E232CC500D50D56 /* SettingsView.swift */; };
+		CE441CC22E232CC500D50D56 /* EnhancedLanguageSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CA92E232CC500D50D56 /* EnhancedLanguageSettingsView.swift */; };
+		CE441CC32E232CC500D50D56 /* ImportDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CAA2E232CC500D50D56 /* ImportDataView.swift */; };
+		CE441CC42E232CC500D50D56 /* sample_import_stringified.json in Resources */ = {isa = PBXBuildFile; fileRef = CE441CAB2E232CC500D50D56 /* sample_import_stringified.json */; };
+		CE441CC52E232CC500D50D56 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CAC2E232CC500D50D56 /* Extensions.swift */; };
+		CE441CC62E232CC500D50D56 /* SettingsCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CAD2E232CC500D50D56 /* SettingsCardView.swift */; };
+		CE441CC72E232CC500D50D56 /* EnhancedExportDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CAE2E232CC500D50D56 /* EnhancedExportDataView.swift */; };
+		CE441CC82E232CC500D50D56 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CAF2E232CC500D50D56 /* ColorExtension.swift */; };
+		CE441CC92E232CC500D50D56 /* CurrencySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CB02E232CC500D50D56 /* CurrencySettingsView.swift */; };
+		CE441CCA2E232CC500D50D56 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CB12E232CC500D50D56 /* SummaryView.swift */; };
+		CE441CCB2E232CC500D50D56 /* LanguageSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CB22E232CC500D50D56 /* LanguageSettingsView.swift */; };
+		CE441CD32E23301800D50D56 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE441CD22E23301800D50D56 /* AuthenticationServices.framework */; };
+		CE441CD62E23301800D50D56 /* AccountAuthenticationModificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CD52E23301800D50D56 /* AccountAuthenticationModificationViewController.swift */; };
+		CE441CD92E23301800D50D56 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE441CD72E23301800D50D56 /* MainInterface.storyboard */; };
+		CE441CDD2E23301800D50D56 /* hsu expense.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CE441CD02E23301800D50D56 /* hsu expense.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CE441CE72E23303800D50D56 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE441CD22E23301800D50D56 /* AuthenticationServices.framework */; };
+		CE441CEA2E23303800D50D56 /* AccountAuthenticationModificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CE92E23303800D50D56 /* AccountAuthenticationModificationViewController.swift */; };
+		CE441CED2E23303800D50D56 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE441CEB2E23303800D50D56 /* MainInterface.storyboard */; };
+		CE441CF12E23303800D50D56 /* HSU Expense.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CE441CE62E23303800D50D56 /* HSU Expense.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CE441CFA2E23307000D50D56 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE441CD22E23301800D50D56 /* AuthenticationServices.framework */; };
+		CE441CFD2E23307000D50D56 /* AccountAuthenticationModificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CFC2E23307000D50D56 /* AccountAuthenticationModificationViewController.swift */; };
+		CE441D002E23307000D50D56 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE441CFE2E23307000D50D56 /* MainInterface.storyboard */; };
+		CE441D042E23307000D50D56 /* hsu.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CE441CF92E23307000D50D56 /* hsu.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CE7BB3952E21F9AF004E2851 /* ItunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE7BB3942E21F9AF004E2851 /* ItunesArtwork@2x.png */; };
 		CE7BB3962E21FA69004E2851 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA942312E1E53AA00D6683E /* Assets.xcassets */; };
 		CE7BB3972E21FA6D004E2851 /* ItunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE7BB3942E21F9AF004E2851 /* ItunesArtwork@2x.png */; };
@@ -22,6 +59,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		CE441CDB2E23301800D50D56 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEA942222E1E53A800D6683E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE441CCF2E23301800D50D56;
+			remoteInfo = "hsu expense";
+		};
+		CE441CEF2E23303800D50D56 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEA942222E1E53A800D6683E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE441CE52E23303800D50D56;
+			remoteInfo = "HSU Expense";
+		};
+		CE441D022E23307000D50D56 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEA942222E1E53A800D6683E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE441CF82E23307000D50D56;
+			remoteInfo = hsu;
+		};
 		CEA942402E1E53AA00D6683E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CEA942222E1E53A800D6683E /* Project object */;
@@ -38,9 +96,63 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		CE441CE12E23301800D50D56 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				CE441CDD2E23301800D50D56 /* hsu expense.appex in Embed Foundation Extensions */,
+				CE441D042E23307000D50D56 /* hsu.appex in Embed Foundation Extensions */,
+				CE441CF12E23303800D50D56 /* HSU Expense.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		CE441C992E232CC400D50D56 /* ExportDataView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExportDataView.swift; sourceTree = "<group>"; };
+		CE441C9A2E232CC400D50D56 /* EnhancedThemeSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnhancedThemeSettingsView.swift; sourceTree = "<group>"; };
+		CE441C9B2E232CC400D50D56 /* ThemeSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeSettingsView.swift; sourceTree = "<group>"; };
+		CE441C9C2E232CC400D50D56 /* GlassmorphismCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlassmorphismCard.swift; sourceTree = "<group>"; };
+		CE441C9D2E232CC400D50D56 /* EnhancedSettingsCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnhancedSettingsCardView.swift; sourceTree = "<group>"; };
+		CE441C9E2E232CC400D50D56 /* ExpenseDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpenseDataManager.swift; sourceTree = "<group>"; };
+		CE441C9F2E232CC500D50D56 /* hsu_expense_export_2025-07-10_11-31-58 PM.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "hsu_expense_export_2025-07-10_11-31-58 PM.json"; sourceTree = "<group>"; };
+		CE441CA02E232CC500D50D56 /* ThemeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		CE441CA12E232CC500D50D56 /* ExpenseModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpenseModels.swift; sourceTree = "<group>"; };
+		CE441CA22E232CC500D50D56 /* sample_import_100.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample_import_100.json; sourceTree = "<group>"; };
+		CE441CA32E232CC500D50D56 /* CurrencyManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyManager.swift; sourceTree = "<group>"; };
+		CE441CA42E232CC500D50D56 /* EnhancedImportDataView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnhancedImportDataView.swift; sourceTree = "<group>"; };
+		CE441CA52E232CC500D50D56 /* sample_today_import_30.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample_today_import_30.json; sourceTree = "<group>"; };
+		CE441CA72E232CC500D50D56 /* hsu_expense.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = hsu_expense.xcdatamodel; sourceTree = "<group>"; };
+		CE441CA82E232CC500D50D56 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		CE441CA92E232CC500D50D56 /* EnhancedLanguageSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnhancedLanguageSettingsView.swift; sourceTree = "<group>"; };
+		CE441CAA2E232CC500D50D56 /* ImportDataView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportDataView.swift; sourceTree = "<group>"; };
+		CE441CAB2E232CC500D50D56 /* sample_import_stringified.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample_import_stringified.json; sourceTree = "<group>"; };
+		CE441CAC2E232CC500D50D56 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		CE441CAD2E232CC500D50D56 /* SettingsCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsCardView.swift; sourceTree = "<group>"; };
+		CE441CAE2E232CC500D50D56 /* EnhancedExportDataView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnhancedExportDataView.swift; sourceTree = "<group>"; };
+		CE441CAF2E232CC500D50D56 /* ColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		CE441CB02E232CC500D50D56 /* CurrencySettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySettingsView.swift; sourceTree = "<group>"; };
+		CE441CB12E232CC500D50D56 /* SummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
+		CE441CB22E232CC500D50D56 /* LanguageSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageSettingsView.swift; sourceTree = "<group>"; };
+		CE441CD02E23301800D50D56 /* hsu expense.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "hsu expense.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE441CD22E23301800D50D56 /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
+		CE441CD52E23301800D50D56 /* AccountAuthenticationModificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationModificationViewController.swift; sourceTree = "<group>"; };
+		CE441CD82E23301800D50D56 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		CE441CDA2E23301800D50D56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE441CE62E23303800D50D56 /* HSU Expense.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "HSU Expense.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE441CE92E23303800D50D56 /* AccountAuthenticationModificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationModificationViewController.swift; sourceTree = "<group>"; };
+		CE441CEC2E23303800D50D56 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		CE441CEE2E23303800D50D56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CE441CF92E23307000D50D56 /* hsu.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = hsu.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE441CFC2E23307000D50D56 /* AccountAuthenticationModificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationModificationViewController.swift; sourceTree = "<group>"; };
+		CE441CFF2E23307000D50D56 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		CE441D012E23307000D50D56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE7BB3942E21F9AF004E2851 /* ItunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ItunesArtwork@2x.png"; path = "hsu expense/Assets.xcassets/AppIcon.appiconset/ItunesArtwork@2x.png"; sourceTree = "<group>"; };
-		CEA9422A2E1E53A800D6683E /* hsu expense.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "hsu expense.app"; path = "HSU expense.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEA9422A2E1E53A800D6683E /* HSU expense.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HSU expense.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA9422D2E1E53A800D6683E /* hsu_expenseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hsu_expenseApp.swift; sourceTree = "<group>"; };
 		CEA9422F2E1E53A800D6683E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		CEA942312E1E53AA00D6683E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -56,6 +168,30 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		CE441CCD2E23301800D50D56 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE441CD32E23301800D50D56 /* AuthenticationServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE441CE32E23303800D50D56 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE441CE72E23303800D50D56 /* AuthenticationServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE441CF62E23307000D50D56 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE441CFA2E23307000D50D56 /* AuthenticationServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CEA942272E1E53A800D6683E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -80,6 +216,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CE441CD12E23301800D50D56 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CE441CD22E23301800D50D56 /* AuthenticationServices.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CE441CD42E23301800D50D56 /* hsu expense */ = {
+			isa = PBXGroup;
+			children = (
+				CE441CD52E23301800D50D56 /* AccountAuthenticationModificationViewController.swift */,
+				CE441CD72E23301800D50D56 /* MainInterface.storyboard */,
+				CE441CDA2E23301800D50D56 /* Info.plist */,
+			);
+			path = "hsu expense";
+			sourceTree = "<group>";
+		};
+		CE441CE82E23303800D50D56 /* HSU Expense */ = {
+			isa = PBXGroup;
+			children = (
+				CE441CE92E23303800D50D56 /* AccountAuthenticationModificationViewController.swift */,
+				CE441CEB2E23303800D50D56 /* MainInterface.storyboard */,
+				CE441CEE2E23303800D50D56 /* Info.plist */,
+			);
+			path = "HSU Expense";
+			sourceTree = "<group>";
+		};
+		CE441CFB2E23307000D50D56 /* hsu */ = {
+			isa = PBXGroup;
+			children = (
+				CE441CFC2E23307000D50D56 /* AccountAuthenticationModificationViewController.swift */,
+				CE441CFE2E23307000D50D56 /* MainInterface.storyboard */,
+				CE441D012E23307000D50D56 /* Info.plist */,
+			);
+			path = hsu;
+			sourceTree = "<group>";
+		};
 		CEA942212E1E53A800D6683E = {
 			isa = PBXGroup;
 			children = (
@@ -87,6 +261,10 @@
 				CEA9422C2E1E53A800D6683E /* hsu expense */,
 				CEA942422E1E53AA00D6683E /* hsu expenseTests */,
 				CEA9424C2E1E53AA00D6683E /* hsu expenseUITests */,
+				CE441CD42E23301800D50D56 /* hsu expense */,
+				CE441CE82E23303800D50D56 /* HSU Expense */,
+				CE441CFB2E23307000D50D56 /* hsu */,
+				CE441CD12E23301800D50D56 /* Frameworks */,
 				CEA9422B2E1E53A800D6683E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -94,9 +272,12 @@
 		CEA9422B2E1E53A800D6683E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CEA9422A2E1E53A800D6683E /* hsu expense.app */,
+				CEA9422A2E1E53A800D6683E /* HSU expense.app */,
 				CEA9423F2E1E53AA00D6683E /* hsu expenseTests.xctest */,
 				CEA942492E1E53AA00D6683E /* hsu expenseUITests.xctest */,
+				CE441CD02E23301800D50D56 /* hsu expense.appex */,
+				CE441CE62E23303800D50D56 /* HSU Expense.appex */,
+				CE441CF92E23307000D50D56 /* hsu.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -104,6 +285,31 @@
 		CEA9422C2E1E53A800D6683E /* hsu expense */ = {
 			isa = PBXGroup;
 			children = (
+				CE441CAF2E232CC500D50D56 /* ColorExtension.swift */,
+				CE441CA32E232CC500D50D56 /* CurrencyManager.swift */,
+				CE441CB02E232CC500D50D56 /* CurrencySettingsView.swift */,
+				CE441CAE2E232CC500D50D56 /* EnhancedExportDataView.swift */,
+				CE441CA42E232CC500D50D56 /* EnhancedImportDataView.swift */,
+				CE441CA92E232CC500D50D56 /* EnhancedLanguageSettingsView.swift */,
+				CE441C9D2E232CC400D50D56 /* EnhancedSettingsCardView.swift */,
+				CE441C9A2E232CC400D50D56 /* EnhancedThemeSettingsView.swift */,
+				CE441C9E2E232CC400D50D56 /* ExpenseDataManager.swift */,
+				CE441CA12E232CC500D50D56 /* ExpenseModels.swift */,
+				CE441C992E232CC400D50D56 /* ExportDataView.swift */,
+				CE441CAC2E232CC500D50D56 /* Extensions.swift */,
+				CE441C9C2E232CC400D50D56 /* GlassmorphismCard.swift */,
+				CE441C9F2E232CC500D50D56 /* hsu_expense_export_2025-07-10_11-31-58 PM.json */,
+				CE441CA62E232CC500D50D56 /* hsu_expense.xcdatamodeld */,
+				CE441CAA2E232CC500D50D56 /* ImportDataView.swift */,
+				CE441CB22E232CC500D50D56 /* LanguageSettingsView.swift */,
+				CE441CA22E232CC500D50D56 /* sample_import_100.json */,
+				CE441CAB2E232CC500D50D56 /* sample_import_stringified.json */,
+				CE441CA52E232CC500D50D56 /* sample_today_import_30.json */,
+				CE441CAD2E232CC500D50D56 /* SettingsCardView.swift */,
+				CE441CA82E232CC500D50D56 /* SettingsView.swift */,
+				CE441CB12E232CC500D50D56 /* SummaryView.swift */,
+				CE441CA02E232CC500D50D56 /* ThemeManager.swift */,
+				CE441C9B2E232CC400D50D56 /* ThemeSettingsView.swift */,
 				CEA9422D2E1E53A800D6683E /* hsu_expenseApp.swift */,
 				CEA9422F2E1E53A800D6683E /* ContentView.swift */,
 				CEA9425B2E1E53AB00D6683E /* AboutUsView.swift */,
@@ -143,6 +349,57 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		CE441CCF2E23301800D50D56 /* hsu expense */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE441CDE2E23301800D50D56 /* Build configuration list for PBXNativeTarget "hsu expense" */;
+			buildPhases = (
+				CE441CCC2E23301800D50D56 /* Sources */,
+				CE441CCD2E23301800D50D56 /* Frameworks */,
+				CE441CCE2E23301800D50D56 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "hsu expense";
+			productName = "hsu expense";
+			productReference = CE441CD02E23301800D50D56 /* hsu expense.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		CE441CE52E23303800D50D56 /* HSU Expense */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE441CF22E23303800D50D56 /* Build configuration list for PBXNativeTarget "HSU Expense" */;
+			buildPhases = (
+				CE441CE22E23303800D50D56 /* Sources */,
+				CE441CE32E23303800D50D56 /* Frameworks */,
+				CE441CE42E23303800D50D56 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "HSU Expense";
+			productName = "HSU Expense";
+			productReference = CE441CE62E23303800D50D56 /* HSU Expense.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		CE441CF82E23307000D50D56 /* hsu */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE441D052E23307000D50D56 /* Build configuration list for PBXNativeTarget "hsu" */;
+			buildPhases = (
+				CE441CF52E23307000D50D56 /* Sources */,
+				CE441CF62E23307000D50D56 /* Frameworks */,
+				CE441CF72E23307000D50D56 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = hsu;
+			productName = hsu;
+			productReference = CE441CF92E23307000D50D56 /* hsu.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		CEA942292E1E53A800D6683E /* HSU expense */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CEA942532E1E53AA00D6683E /* Build configuration list for PBXNativeTarget "HSU expense" */;
@@ -150,14 +407,18 @@
 				CEA942262E1E53A800D6683E /* Sources */,
 				CEA942272E1E53A800D6683E /* Frameworks */,
 				CEA942282E1E53A800D6683E /* Resources */,
+				CE441CE12E23301800D50D56 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CE441CDC2E23301800D50D56 /* PBXTargetDependency */,
+				CE441CF02E23303800D50D56 /* PBXTargetDependency */,
+				CE441D032E23307000D50D56 /* PBXTargetDependency */,
 			);
 			name = "HSU expense";
 			productName = "HSU expense";
-			productReference = CEA9422A2E1E53A800D6683E /* hsu expense.app */;
+			productReference = CEA9422A2E1E53A800D6683E /* HSU expense.app */;
 			productType = "com.apple.product-type.application";
 		};
 		CEA9423E2E1E53AA00D6683E /* hsu expenseTests */ = {
@@ -206,6 +467,15 @@
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
+					CE441CCF2E23301800D50D56 = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					CE441CE52E23303800D50D56 = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					CE441CF82E23307000D50D56 = {
+						CreatedOnToolsVersion = 14.2;
+					};
 					CEA942292E1E53A800D6683E = {
 						CreatedOnToolsVersion = 14.2;
 					};
@@ -235,17 +505,48 @@
 				CEA942292E1E53A800D6683E /* HSU expense */,
 				CEA9423E2E1E53AA00D6683E /* hsu expenseTests */,
 				CEA942482E1E53AA00D6683E /* hsu expenseUITests */,
+				CE441CCF2E23301800D50D56 /* hsu expense */,
+				CE441CE52E23303800D50D56 /* HSU Expense */,
+				CE441CF82E23307000D50D56 /* hsu */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		CE441CCE2E23301800D50D56 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE441CD92E23301800D50D56 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE441CE42E23303800D50D56 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE441CED2E23303800D50D56 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE441CF72E23307000D50D56 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE441D002E23307000D50D56 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CEA942282E1E53A800D6683E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				CE7BB3952E21F9AF004E2851 /* ItunesArtwork@2x.png in Resources */,
 				CEA942322E1E53AA00D6683E /* Assets.xcassets in Resources */,
+				CE441CBF2E232CC500D50D56 /* sample_today_import_30.json in Resources */,
+				CE441CBC2E232CC500D50D56 /* sample_import_100.json in Resources */,
+				CE441CB92E232CC500D50D56 /* hsu_expense_export_2025-07-10_11-31-58 PM.json in Resources */,
+				CE441CC42E232CC500D50D56 /* sample_import_stringified.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,15 +569,60 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		CE441CCC2E23301800D50D56 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE441CD62E23301800D50D56 /* AccountAuthenticationModificationViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE441CE22E23303800D50D56 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE441CEA2E23303800D50D56 /* AccountAuthenticationModificationViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE441CF52E23307000D50D56 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE441CFD2E23307000D50D56 /* AccountAuthenticationModificationViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CEA942262E1E53A800D6683E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE441CB62E232CC500D50D56 /* GlassmorphismCard.swift in Sources */,
+				CE441CB82E232CC500D50D56 /* ExpenseDataManager.swift in Sources */,
+				CE441CC82E232CC500D50D56 /* ColorExtension.swift in Sources */,
+				CE441CC62E232CC500D50D56 /* SettingsCardView.swift in Sources */,
+				CE441CC92E232CC500D50D56 /* CurrencySettingsView.swift in Sources */,
+				CE441CBD2E232CC500D50D56 /* CurrencyManager.swift in Sources */,
 				CEA942372E1E53AA00D6683E /* Persistence.swift in Sources */,
+				CE441CC32E232CC500D50D56 /* ImportDataView.swift in Sources */,
+				CE441CB52E232CC500D50D56 /* ThemeSettingsView.swift in Sources */,
+				CE441CC12E232CC500D50D56 /* SettingsView.swift in Sources */,
+				CE441CB72E232CC500D50D56 /* EnhancedSettingsCardView.swift in Sources */,
+				CE441CCB2E232CC500D50D56 /* LanguageSettingsView.swift in Sources */,
 				CEA942302E1E53A800D6683E /* ContentView.swift in Sources */,
+				CE441CC02E232CC500D50D56 /* hsu_expense.xcdatamodeld in Sources */,
 				CEA9425C2E1E53AB00D6683E /* AboutUsView.swift in Sources */,
+				CE441CBE2E232CC500D50D56 /* EnhancedImportDataView.swift in Sources */,
+				CE441CBB2E232CC500D50D56 /* ExpenseModels.swift in Sources */,
 				CEA9422E2E1E53A800D6683E /* hsu_expenseApp.swift in Sources */,
+				CE441CB32E232CC500D50D56 /* ExportDataView.swift in Sources */,
+				CE441CC52E232CC500D50D56 /* Extensions.swift in Sources */,
+				CE441CB42E232CC500D50D56 /* EnhancedThemeSettingsView.swift in Sources */,
+				CE441CC72E232CC500D50D56 /* EnhancedExportDataView.swift in Sources */,
+				CE441CC22E232CC500D50D56 /* EnhancedLanguageSettingsView.swift in Sources */,
+				CE441CCA2E232CC500D50D56 /* SummaryView.swift in Sources */,
 				CEA9423A2E1E53AA00D6683E /* hsu_expense.xcdatamodeld in Sources */,
+				CE441CBA2E232CC500D50D56 /* ThemeManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +646,21 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CE441CDC2E23301800D50D56 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE441CCF2E23301800D50D56 /* hsu expense */;
+			targetProxy = CE441CDB2E23301800D50D56 /* PBXContainerItemProxy */;
+		};
+		CE441CF02E23303800D50D56 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE441CE52E23303800D50D56 /* HSU Expense */;
+			targetProxy = CE441CEF2E23303800D50D56 /* PBXContainerItemProxy */;
+		};
+		CE441D032E23307000D50D56 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE441CF82E23307000D50D56 /* hsu */;
+			targetProxy = CE441D022E23307000D50D56 /* PBXContainerItemProxy */;
+		};
 		CEA942412E1E53AA00D6683E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CEA942292E1E53A800D6683E /* HSU expense */;
@@ -312,7 +673,182 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		CE441CD72E23301800D50D56 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CE441CD82E23301800D50D56 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+		CE441CEB2E23303800D50D56 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CE441CEC2E23303800D50D56 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+		CE441CFE2E23307000D50D56 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CE441CFF2E23307000D50D56 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		CE441CDF2E23301800D50D56 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WY3GFL6Y63;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "hsu expense/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "hsu expense";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "expense.hsu-expense.hsu-expense";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CE441CE02E23301800D50D56 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WY3GFL6Y63;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "hsu expense/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "hsu expense";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "expense.hsu-expense.hsu-expense";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CE441CF32E23303800D50D56 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WY3GFL6Y63;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "HSU Expense/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "HSU Expense";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "expense.hsu-expense.HSU-Expense";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CE441CF42E23303800D50D56 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WY3GFL6Y63;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "HSU Expense/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "HSU Expense";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "expense.hsu-expense.HSU-Expense";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CE441D062E23307000D50D56 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WY3GFL6Y63;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = hsu/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "expense.hsu-expense";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CE441D072E23307000D50D56 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WY3GFL6Y63;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = hsu/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "expense.hsu-expense";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		CEA942512E1E53AA00D6683E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -430,6 +966,7 @@
 		CEA942542E1E53AA00D6683E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -461,6 +998,7 @@
 		CEA942552E1E53AA00D6683E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -568,6 +1106,33 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		CE441CDE2E23301800D50D56 /* Build configuration list for PBXNativeTarget "hsu expense" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE441CDF2E23301800D50D56 /* Debug */,
+				CE441CE02E23301800D50D56 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE441CF22E23303800D50D56 /* Build configuration list for PBXNativeTarget "HSU Expense" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE441CF32E23303800D50D56 /* Debug */,
+				CE441CF42E23303800D50D56 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE441D052E23307000D50D56 /* Build configuration list for PBXNativeTarget "hsu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE441D062E23307000D50D56 /* Debug */,
+				CE441D072E23307000D50D56 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CEA942252E1E53A800D6683E /* Build configuration list for PBXProject "hsu expense" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -607,6 +1172,16 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
+		CE441CA62E232CC500D50D56 /* hsu_expense.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				CE441CA72E232CC500D50D56 /* hsu_expense.xcdatamodel */,
+			);
+			currentVersion = CE441CA72E232CC500D50D56 /* hsu_expense.xcdatamodel */;
+			path = hsu_expense.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		CEA942382E1E53AA00D6683E /* hsu_expense.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
