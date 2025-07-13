@@ -173,28 +173,24 @@ struct ContentView: View {
                 .toolbarBackground(.visible, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar) // Ensures white title text
 
-                // Floating Action Button
+                // Floating Action Button (equivalent to DraggableFloatingActionButton)
                 VStack {
                     Spacer()
                     HStack {
                         Spacer()
-                        Button(action: {
-                            showingAddExpense = true
-                        }) {
+                        Button(action: { showingAddExpense = true }) {
                             Image(systemName: "plus")
                                 .font(.title2)
                                 .fontWeight(.semibold)
-                                .foregroundColor(.white)
+                                .foregroundColor(Color(red: 0.4, green: 0.4, blue: 0.4)) // Dark gray icon
                                 .frame(width: 56, height: 56)
-                                .background(
-                                    Circle()
-                                        .fill(Color.expenseAccent)
-                                        .shadow(color: .black.opacity(0.3), radius: 8, x: 0, y: 4)
-                                )
+                                .background(Color(red: 0.933, green: 0.933, blue: 0.933)) // Light gray background #EEEEEE
+                                .clipShape(Circle())
+                                .shadow(color: .black.opacity(0.15), radius: 4, x: 0, y: 2)
                         }
-                        .buttonStyle(PlainButtonStyle())
-                        .padding(.trailing, 20)
-                        .padding(.bottom, 20)
+                        .accessibilityLabel("Add expense")
+                        .padding(.trailing, 24)
+                        .padding(.bottom, 24)
                     }
                 }
             }

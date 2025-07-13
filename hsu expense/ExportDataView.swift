@@ -201,19 +201,19 @@ struct ExportDataView: View {
 
         DispatchQueue.global(qos: .userInitiated).async {
             do {
-                let sampleData = loadSampleData()
+                let expenses = loadExpensesFromUserDefaults()
                 let exportContent: String
                 let fileName: String
 
                 switch selectedFormat {
                 case "JSON":
-                    exportContent = try createJSONExport(from: sampleData)
+                    exportContent = try createJSONExport(from: expenses)
                     fileName = "expense_export_\(dateString()).json"
                 case "CSV":
-                    exportContent = createCSVExport(from: sampleData)
+                    exportContent = createCSVExport(from: expenses)
                     fileName = "expense_export_\(dateString()).csv"
                 default:
-                    exportContent = try createJSONExport(from: sampleData)
+                    exportContent = try createJSONExport(from: expenses)
                     fileName = "expense_export_\(dateString()).json"
                 }
 
@@ -236,37 +236,11 @@ struct ExportDataView: View {
         }
     }
 
-    private func loadSampleData() -> [ExpenseItem] {
-        // Load from sample_import_100.json
-        guard let url = Bundle.main.url(forResource: "sample_import_100", withExtension: "json"),
-              let data = try? Data(contentsOf: url),
-              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let expenses = json["expenses"] as? [[String: Any]] else {
+    private func loadExpensesFromUserDefaults() -> [ExpenseItem] {
+        guard let dictArray = UserDefaults.standard.array(forKey: ExpenseUserDefaultsKeys.expenses) as? [[String: Any]] else {
             return []
         }
-
-        return expenses.compactMap { expenseDict in
-            guard let idString = expenseDict["id"] as? String,
-                  let id = UUID(uuidString: idString),
-                  let name = expenseDict["name"] as? String,
-                  let price = expenseDict["price"] as? Double,
-                  let description = expenseDict["description"] as? String,
-                  let date = expenseDict["date"] as? String,
-                  let time = expenseDict["time"] as? String,
-                  let currency = expenseDict["currency"] as? String else {
-                return nil
-            }
-
-            return ExpenseItem(
-                id: id,
-                name: name,
-                price: Decimal(price),
-                description: description,
-                date: date,
-                time: time,
-                currency: currency
-            )
-        }
+        return dictArray.compactMap { ExpenseItem.fromDictionary($0) }
     }
 
     private func createJSONExport(from expenses: [ExpenseItem]) throws -> String {

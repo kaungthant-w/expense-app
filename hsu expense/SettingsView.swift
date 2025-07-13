@@ -7,22 +7,22 @@ struct SettingsView: View {
     @State private var showThemeSettings = false
     @State private var showExportData = false
     @State private var showImportData = false
-    
+
     var body: some View {
         NavigationView {
             ZStack {
                 // Background matching Android
                 Color(.systemBackground)
                     .ignoresSafeArea()
-                
+
                 ScrollView {
                     VStack(spacing: 16) {
                         // Header with Back Button (matching Android layout)
                         headerSection
-                        
+
                         // Settings Cards (matching Android CardViews)
                         settingsCardsSection
-                        
+
                         Spacer(minLength: 20)
                     }
                     .padding(16) // matching Android padding="16dp"
@@ -38,13 +38,13 @@ struct SettingsView: View {
             ThemeSettingsView()
         }
         .sheet(isPresented: $showExportData) {
-            ExportDataView()
+            EnhancedExportDataView()
         }
         .sheet(isPresented: $showImportData) {
             ImportDataView()
         }
     }
-    
+
     // MARK: - Header Section (matching Android LinearLayout header)
     private var headerSection: some View {
         HStack(spacing: 16) {
@@ -61,7 +61,7 @@ struct SettingsView: View {
                             .fill(Color(.systemGray6))
                     )
             }
-            
+
             // Title (matching Android TextView)
             Text("Settings")
                 .font(.title) // matching Android textSize="24sp"
@@ -71,7 +71,7 @@ struct SettingsView: View {
         }
         .padding(.bottom, 14) // matching Android layout_marginBottom="30dp"
     }
-    
+
     // MARK: - Settings Cards Section
     private var settingsCardsSection: some View {
         VStack(spacing: 16) { // matching Android layout_marginBottom="16dp"
@@ -84,7 +84,7 @@ struct SettingsView: View {
             ) {
                 showLanguageSettings = true
             }
-            
+
             // Theme Settings Card
             SettingsCardView(
                 title: "Theme Settings",
@@ -94,7 +94,7 @@ struct SettingsView: View {
             ) {
                 showThemeSettings = true
             }
-            
+
             // Export Data Card
             SettingsCardView(
                 title: "Export Data",
@@ -104,7 +104,7 @@ struct SettingsView: View {
             ) {
                 showExportData = true
             }
-            
+
             // Import Data Card
             SettingsCardView(
                 title: "Import Data",
