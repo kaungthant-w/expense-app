@@ -204,9 +204,9 @@ struct CurrencySettingsView: View {
             forName: .exchangeRatesUpdated,
             object: nil,
             queue: .main
-        ) { [weak self] _ in
-            self?.updateMessage = "Exchange rates updated successfully from Myanmar Currency API! 🇲🇲💱"
-            self?.showingUpdateSuccess = true
+        ) { _ in
+            updateMessage = "Exchange rates updated successfully from Myanmar Currency API! 🇲🇲💱"
+            showingUpdateSuccess = true
         }
 
         // Listen for API errors
@@ -214,14 +214,14 @@ struct CurrencySettingsView: View {
             forName: .exchangeRatesFailed,
             object: nil,
             queue: .main
-        ) { [weak self] notification in
+        ) { notification in
             if let userInfo = notification.userInfo,
                let error = userInfo["error"] as? String {
-                self?.errorMessage = "Failed to update exchange rates: \(error)\n\nUsing fallback rates instead."
+                errorMessage = "Failed to update exchange rates: \(error)\n\nUsing fallback rates instead."
             } else {
-                self?.errorMessage = "Failed to update exchange rates. Using fallback rates instead."
+                errorMessage = "Failed to update exchange rates. Using fallback rates instead."
             }
-            self?.showingUpdateError = true
+            showingUpdateError = true
         }
     }
 }
