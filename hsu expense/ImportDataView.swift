@@ -99,8 +99,9 @@ struct ImportDataView: View {
                 .font(.headline)
                 .fontWeight(.bold)
 
-            Text("• Select a JSON, CSV, or Excel file")
-            Text("• Make sure the file follows the correct format")
+            Text("• Select a JSON, CSV, or TXT file")
+            Text("• CSV format: Name, Price, Description, Date [, Time]")
+            Text("• JSON format: HSU Expense export or array format")
             Text("• Existing data will be merged with imported data")
             Text("• Duplicate entries will be automatically handled")
         }
@@ -225,18 +226,24 @@ struct ImportDataView: View {
             let components = parseCSVRow(line)
             guard components.count >= 4 else { continue }
 
-            let title = components[0].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+            let name = components[0].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
             let priceString = components[1].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
-            let category = components[2].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+            let description = components[2].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
             let dateString = components[3].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+
+            // Check if time is included in CSV (5th column)
+            let timeString = components.count > 4 ?
+                components[4].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\"")) :
+                "12:00 PM"
 
             guard let price = Decimal(string: priceString) else { continue }
 
             let expense = ExpenseItem(
-                title: title,
+                name: name,
                 price: price,
-                category: category,
-                date: dateString
+                description: description,
+                date: dateString,
+                time: timeString
             )
             expenses.append(expense)
         }
