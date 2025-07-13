@@ -1,5 +1,8 @@
 import SwiftUI
 import Foundation
+import CoreData
+import Combine
+import UniformTypeIdentifiers
 
 //
 //  ContentView.swift
@@ -7,10 +10,6 @@ import Foundation
 //
 //  Created by kmt on 7/9/25.
 //
-
-import SwiftUI
-import CoreData
-import Combine
 
 // MARK: - ExpenseItem struct is now defined in ExpenseModels.swift
 
@@ -1639,15 +1638,42 @@ struct SettingsPage: View {
                 Button(action: { showImporter = true }) {
                     HStack {
                         Image(systemName: "square.and.arrow.down")
-                        Text("Import Expenses")
+                        VStack(spacing: 2) {
+                            Text("Import Expenses")
+                                .font(.title3)
+                            Text("JSON, CSV, TXT")
+                                .font(.caption)
+                                .opacity(0.8)
+                        }
                     }
-                    .font(.title3)
                     .foregroundColor(.white)
                     .padding(.horizontal, 32)
                     .padding(.vertical, 16)
                     .background(Color.expenseEdit)
                     .cornerRadius(12)
                 }
+
+                // Format information
+                VStack(spacing: 8) {
+                    Text("Supported Import Formats:")
+                        .font(.headline)
+                        .foregroundColor(.expensePrimaryText)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("• JSON: HSU Expense export format")
+                        Text("• CSV: name,price,description,date,time,currency")
+                        Text("• TXT: Simple list of expense names")
+                    }
+                    .font(.caption)
+                    .foregroundColor(.expenseSecondaryText)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.expenseInputBackground)
+                )
+
                 if let error = importError {
                     Text(error)
                         .foregroundColor(.expenseError)
@@ -1673,7 +1699,17 @@ struct SettingsPage: View {
                     importError = "Export failed: \(error.localizedDescription)"
                 }
             }
-            .fileImporter(isPresented: $showImporter, allowedContentTypes: [.json], allowsMultipleSelection: false) { result in
+            .fileImporter(
+                isPresented: $showImporter,
+                allowedContentTypes: [
+                    .json,                                    // JSON files
+                    .commaSeparatedText,                      // CSV files
+                    .plainText,                               // TXT files
+                    UTType(filenameExtension: "xlsx") ?? .data, // Excel files
+                    UTType(filenameExtension: "xls") ?? .data   // Legacy Excel files
+                ],
+                allowsMultipleSelection: false
+            ) { result in
                 switch result {
                 case .success(let urls):
                     if let url = urls.first {
@@ -1705,42 +1741,157 @@ struct SettingsPage: View {
                 url.stopAccessingSecurityScopedResource()
             }
         }
+
         do {
             let data = try Data(contentsOf: url)
-            guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                importError = "Invalid file format."
+            let fileExtension = url.pathExtension.lowercased()
+
+            var importedExpenses: [ExpenseItem] = []
+
+            switch fileExtension {
+            case "json":
+                importedExpenses = try parseJSONFile(data: data)
+            case "csv":
+                importedExpenses = try parseCSVFile(data: data)
+            case "txt":
+                importedExpenses = try parseTextFile(data: data)
+            case "xlsx", "xls":
+                importError = "Excel file import is not yet supported. Please export as CSV or JSON."
+                return
+            default:
+                importError = "Unsupported file format: .\(fileExtension)"
                 return
             }
-            // Support both stringified and array for "expenses" field
-            var importedExpensesArray: [[String: Any]] = []
-            if let expensesString = json["expenses"] as? String {
-                if let expensesData = expensesString.data(using: .utf8),
-                   let arr = try? JSONSerialization.jsonObject(with: expensesData) as? [[String: Any]] {
-                    importedExpensesArray = arr
-                }
-            } else if let arr = json["expenses"] as? [[String: Any]] {
-                importedExpensesArray = arr
-            }
-            if importedExpensesArray.isEmpty {
-                importError = "No expenses found in import file."
-                return
-            }
-            // Overwrite: Only use imported expenses
-            let importedExpenses = importedExpensesArray.compactMap { ExpenseItem.fromDictionary($0) }
+
             if importedExpenses.isEmpty {
-                importError = "No valid expenses to import."
-                importSuccess = false
+                importError = "No valid expenses found in the file."
                 return
             }
+
+            // Save imported expenses (overwrite existing)
             let importedArray = importedExpenses.map { $0.asDictionary }
             UserDefaults.standard.set(importedArray, forKey: ExpenseUserDefaultsKeys.expenses)
+
             // Notify ContentView to reload data
             NotificationCenter.default.post(name: NSNotification.Name("ReloadExpensesFromUserDefaults"), object: nil)
+
             importSuccess = true
             importError = nil
+
         } catch {
             importError = "Import failed: \(error.localizedDescription)"
         }
+    }
+
+    private func parseJSONFile(data: Data) throws -> [ExpenseItem] {
+        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            throw NSError(domain: "ImportError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid JSON format"])
+        }
+
+        // Support both stringified and array for "expenses" field
+        var importedExpensesArray: [[String: Any]] = []
+        if let expensesString = json["expenses"] as? String {
+            if let expensesData = expensesString.data(using: .utf8),
+               let arr = try? JSONSerialization.jsonObject(with: expensesData) as? [[String: Any]] {
+                importedExpensesArray = arr
+            }
+        } else if let arr = json["expenses"] as? [[String: Any]] {
+            importedExpensesArray = arr
+        }
+
+        return importedExpensesArray.compactMap { ExpenseItem.fromDictionary($0) }
+    }
+
+    private func parseCSVFile(data: Data) throws -> [ExpenseItem] {
+        guard let csvString = String(data: data, encoding: .utf8) else {
+            throw NSError(domain: "ImportError", code: 2, userInfo: [NSLocalizedDescriptionKey: "Unable to read CSV file"])
+        }
+
+        let lines = csvString.components(separatedBy: .newlines).filter { !$0.isEmpty }
+        guard lines.count > 1 else {
+            throw NSError(domain: "ImportError", code: 3, userInfo: [NSLocalizedDescriptionKey: "CSV file must have at least a header and one data row"])
+        }
+
+        var expenses: [ExpenseItem] = []
+
+        // Skip header row, process data rows
+        for line in lines.dropFirst() {
+            let components = parseCSVRow(line)
+
+            // Expected CSV format: name, price, description, date, time, currency
+            guard components.count >= 6 else { continue }
+
+            let name = components[0].trimmingCharacters(in: CharacterSet(charactersIn: "\"")).trimmingCharacters(in: .whitespaces)
+            guard !name.isEmpty else { continue }
+
+            guard let price = Double(components[1].trimmingCharacters(in: .whitespaces)) else { continue }
+
+            let description = components[2].trimmingCharacters(in: CharacterSet(charactersIn: "\"")).trimmingCharacters(in: .whitespaces)
+            let dateString = components[3].trimmingCharacters(in: CharacterSet(charactersIn: "\"")).trimmingCharacters(in: .whitespaces)
+            let timeString = components[4].trimmingCharacters(in: CharacterSet(charactersIn: "\"")).trimmingCharacters(in: .whitespaces)
+            let currency = components[5].trimmingCharacters(in: CharacterSet(charactersIn: "\"")).trimmingCharacters(in: .whitespaces)
+
+            let expense = ExpenseItem(
+                name: name,
+                price: Decimal(price),
+                description: description,
+                date: dateString,
+                time: timeString,
+                currency: currency.isEmpty ? "USD" : currency
+            )
+
+            expenses.append(expense)
+        }
+
+        return expenses
+    }
+
+    private func parseTextFile(data: Data) throws -> [ExpenseItem] {
+        guard let textString = String(data: data, encoding: .utf8) else {
+            throw NSError(domain: "ImportError", code: 4, userInfo: [NSLocalizedDescriptionKey: "Unable to read text file"])
+        }
+
+        // Try to parse as CSV first
+        if textString.contains(",") {
+            return try parseCSVFile(data: data)
+        } else {
+            // Simple text format: each line is an expense name with a default price
+            let lines = textString.components(separatedBy: .newlines).filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+
+            return lines.map { line in
+                ExpenseItem(
+                    name: line.trimmingCharacters(in: .whitespaces),
+                    price: 0,
+                    description: "",
+                    date: DateFormatter.displayDate.string(from: Date()),
+                    time: DateFormatter.displayTime.string(from: Date()),
+                    currency: "USD"
+                )
+            }
+        }
+    }
+
+    private func parseCSVRow(_ row: String) -> [String] {
+        var components: [String] = []
+        var currentComponent = ""
+        var insideQuotes = false
+
+        for char in row {
+            if char == "\"" {
+                insideQuotes.toggle()
+            } else if char == "," && !insideQuotes {
+                components.append(currentComponent)
+                currentComponent = ""
+            } else {
+                currentComponent.append(char)
+            }
+        }
+
+        // Add the last component
+        components.append(currentComponent)
+
+        return components
+    }
     }
 
     private func createExportDocument() -> ExportDocument {
