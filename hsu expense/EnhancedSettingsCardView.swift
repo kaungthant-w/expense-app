@@ -501,7 +501,7 @@ struct EnhancedSettingsPage: View {
             }
         }
         .sheet(isPresented: $showingExportView) {
-            EnhancedExportDataView()
+            ExportDataView()
         }
         .sheet(isPresented: $showingImportView) {
             EnhancedImportDataView()

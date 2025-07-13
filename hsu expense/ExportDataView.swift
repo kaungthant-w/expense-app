@@ -29,6 +29,9 @@ struct ExportDataView: View {
                 // Export button
                 exportButtonSection
 
+                // Test data button (for debugging)
+                testDataButtonSection
+
                 Spacer()
             }
             .padding(16)
@@ -182,6 +185,26 @@ struct ExportDataView: View {
         .disabled(isExporting)
     }
 
+    private var testDataButtonSection: some View {
+        Button(action: {
+            addTestData()
+        }) {
+            HStack {
+                Image(systemName: "plus.circle.fill")
+                    .font(.headline)
+                Text("Add Test Data")
+                    .font(.headline)
+            }
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.blue)
+            )
+        }
+    }
+
     // MARK: - Helper Functions
 
     private func formatIcon(for format: String) -> String {
@@ -209,35 +232,46 @@ struct ExportDataView: View {
     }
 
     private func exportData() {
+        print("🚀 Export Data button clicked")
         isExporting = true
 
         DispatchQueue.global(qos: .userInitiated).async {
             do {
+                print("📊 Loading expenses from UserDefaults...")
                 let expenses = loadExpensesFromUserDefaults()
+                print("📊 Found \(expenses.count) expenses")
+
                 let exportContent: String
                 let fileName: String
 
                 switch selectedFormat {
                 case "JSON":
+                    print("📄 Creating JSON export...")
                     exportContent = try createJSONExport(from: expenses)
                     fileName = "expense_export_\(dateString()).json"
                 case "CSV":
+                    print("📊 Creating CSV export...")
                     exportContent = createCSVExport(from: expenses)
                     fileName = "expense_export_\(dateString()).csv"
                 default:
+                    print("📄 Creating default JSON export...")
                     exportContent = try createJSONExport(from: expenses)
                     fileName = "expense_export_\(dateString()).json"
                 }
 
+                print("💾 Saving file: \(fileName)")
                 let fileURL = try saveToFile(content: exportContent, fileName: fileName)
+                print("✅ File saved successfully at: \(fileURL.path)")
 
                 DispatchQueue.main.async {
+                    print("📱 Showing share sheet...")
                     self.isExporting = false
                     self.exportedFileURL = fileURL
                     self.showingShareSheet = true
                 }
 
             } catch {
+                print("❌ Export failed: \(error)")
                 DispatchQueue.main.async {
                     self.isExporting = false
                     self.alertMessage = "Export failed: \(error.localizedDescription)"
@@ -248,10 +282,56 @@ struct ExportDataView: View {
     }
 
     private func loadExpensesFromUserDefaults() -> [ExpenseItem] {
+        print("🔍 Checking UserDefaults for expenses...")
         guard let dictArray = UserDefaults.standard.array(forKey: ExpenseUserDefaultsKeys.expenses) as? [[String: Any]] else {
+            print("⚠️ No expenses found in UserDefaults")
             return []
         }
-        return dictArray.compactMap { ExpenseItem.fromDictionary($0) }
+        print("📋 Found \(dictArray.count) expense dictionaries in UserDefaults")
+        let expenses = dictArray.compactMap { ExpenseItem.fromDictionary($0) }
+        print("✅ Successfully converted \(expenses.count) expenses")
+        return expenses
+    }
+
+    private func addTestData() {
+        let testExpenses = [
+            ExpenseItem(
+                name: "Coffee Shop",
+                price: Decimal(3.50),
+                description: "Morning coffee",
+                date: "2025-07-13",
+                time: "08:30 AM",
+                currency: "USD"
+            ),
+            ExpenseItem(
+                name: "Lunch",
+                price: Decimal(12.00),
+                description: "Chicken sandwich and drink",
+                date: "2025-07-13",
+                time: "12:15 PM",
+                currency: "USD"
+            ),
+            ExpenseItem(
+                name: "Gas Station",
+                price: Decimal(45.00),
+                description: "Fill up car tank",
+                date: "2025-07-13",
+                time: "05:45 PM",
+                currency: "USD"
+            )
+        ]
+
+        // Load existing expenses
+        var existingExpenses = loadExpensesFromUserDefaults()
+
+        // Add test expenses
+        existingExpenses.append(contentsOf: testExpenses)
+
+        // Save back to UserDefaults
+        let dictArray = existingExpenses.map { $0.asDictionary }
+        UserDefaults.standard.set(dictArray, forKey: ExpenseUserDefaultsKeys.expenses)
+
+        print("✅ Added \(testExpenses.count) test expenses. Total: \(existingExpenses.count)")
     }
 
     private func createJSONExport(from expenses: [ExpenseItem]) throws -> String {
@@ -328,10 +408,15 @@ struct ShareSheet: UIViewControllerRepresentable {
     }
 
     func makeUIViewController(context: Context) -> UIActivityViewController {
+        print("📤 Creating UIActivityViewController with \(activityItems.count) items")
         let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
 
         // Set completion handler
         controller.completionWithItemsHandler = { (activityType, completed, returnedItems, error) in
+            print("📤 Share sheet completed - Activity: \(activityType?.rawValue ?? "none"), Completed: \(completed)")
+            if let error = error {
+                print("❌ Share sheet error: \(error)")
+            }
             completion?()
         }
 

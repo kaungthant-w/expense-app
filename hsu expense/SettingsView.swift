@@ -38,7 +38,7 @@ struct SettingsView: View {
             ThemeSettingsView()
         }
         .sheet(isPresented: $showExportData) {
-            EnhancedExportDataView()
+            ExportDataView()
         }
         .sheet(isPresented: $showImportData) {
             ImportDataView()
