@@ -324,6 +324,13 @@ struct ImportDataView: View {
 
         return components
     }
+
+    private func loadExpensesFromUserDefaults() -> [ExpenseItem] {
+        guard let dictArray = UserDefaults.standard.array(forKey: ExpenseUserDefaultsKeys.expenses) as? [[String: Any]] else {
+            return []
+        }
+        return dictArray.compactMap { ExpenseItem.fromDictionary($0) }
+    }
 }
 
 enum ImportError: Error {
