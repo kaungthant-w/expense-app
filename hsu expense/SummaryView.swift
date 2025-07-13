@@ -44,6 +44,14 @@ struct SummaryView: View {
         .onAppear {
             loadSummaryData()
         }
+        .onReceive(NotificationCenter.default.publisher(for: .currencyChanged)) { _ in
+            // Reload summary data when currency changes
+            loadSummaryData()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .exchangeRatesUpdated)) { _ in
+            // Reload summary data when exchange rates are updated
+            loadSummaryData()
+        }
     }
 
     // MARK: - Header Section
@@ -63,12 +71,29 @@ struct SummaryView: View {
                     )
             }
 
-            // Title
-            Text("Summary")
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundColor(.expensePrimaryText)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            // Title and Currency Info
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Summary")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.expensePrimaryText)
+
+                HStack(spacing: 4) {
+                    Text(currencyManager.currentCurrency.flag)
+                        .font(.caption)
+                    Text("Amounts in \(currencyManager.currentCurrency.code)")
+                        .font(.caption)
+                        .foregroundColor(.expenseSecondaryText)
+
+                    // Show loading indicator when updating rates
+                    if currencyManager.isUpdatingRates {
+                        ProgressView()
+                            .scaleEffect(0.6)
+                            .frame(width: 12, height: 12)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.bottom, 14)
     }
@@ -246,20 +271,26 @@ struct SummaryView: View {
         let dictArray = UserDefaults.standard.array(forKey: ExpenseUserDefaultsKeys.expenses) as? [[String: Any]] ?? []
         let expenses = dictArray.compactMap { ExpenseItem.fromDictionary($0) }
 
-        // Calculate overall statistics
+        // Calculate overall statistics (convert to current currency)
         let totalCount = expenses.count
-        let totalAmount = expenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
+        let totalAmount = expenses.reduce(0) { total, expense in
+            let convertedAmount = currencyManager.convertDecimalAmount(expense.price, from: expense.currency, to: currencyManager.currentCurrency.code)
+            return total + NSDecimalNumber(decimal: convertedAmount).doubleValue
+        }
         let averageAmount = totalCount > 0 ? totalAmount / Double(totalCount) : 0
 
-        // Calculate today's statistics
+        // Calculate today's statistics (convert to current currency)
         let today = DateFormatter.displayDate.string(from: Date())
         let todayExpenses = expenses.filter { expense in
             expense.date == today
         }
         let todayCount = todayExpenses.count
-        let todayTotal = todayExpenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
+        let todayTotal = todayExpenses.reduce(0) { total, expense in
+            let convertedAmount = currencyManager.convertDecimalAmount(expense.price, from: expense.currency, to: currencyManager.currentCurrency.code)
+            return total + NSDecimalNumber(decimal: convertedAmount).doubleValue
+        }
 
-        // Calculate this week's statistics
+        // Calculate this week's statistics (convert to current currency)
         let calendar = Calendar.current
         guard let weekInterval = calendar.dateInterval(of: .weekOfYear, for: Date()) else { return }
         let weekExpenses = expenses.filter { expense in
@@ -267,25 +298,39 @@ struct SummaryView: View {
             return expenseDate >= weekInterval.start && expenseDate < weekInterval.end
         }
         let weekCount = weekExpenses.count
-        let weekTotal = weekExpenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
+        let weekTotal = weekExpenses.reduce(0) { total, expense in
+            let convertedAmount = currencyManager.convertDecimalAmount(expense.price, from: expense.currency, to: currencyManager.currentCurrency.code)
+            return total + NSDecimalNumber(decimal: convertedAmount).doubleValue
+        }
         let weekAveragePerDay = weekTotal / 7.0
 
-        // Calculate this month's statistics
+        // Calculate this month's statistics (convert to current currency)
         guard let monthInterval = calendar.dateInterval(of: .month, for: Date()) else { return }
         let monthExpenses = expenses.filter { expense in
             guard let expenseDate = DateFormatter.displayDate.date(from: expense.date) else { return false }
             return expenseDate >= monthInterval.start && expenseDate < monthInterval.end
         }
         let monthCount = monthExpenses.count
-        let monthTotal = monthExpenses.reduce(0) { $0 + NSDecimalNumber(decimal: $1.price).doubleValue }
+        let monthTotal = monthExpenses.reduce(0) { total, expense in
+            let convertedAmount = currencyManager.convertDecimalAmount(expense.price, from: expense.currency, to: currencyManager.currentCurrency.code)
+            return total + NSDecimalNumber(decimal: convertedAmount).doubleValue
+        }
 
-        // Find extremes
-        let sortedExpenses = expenses.sorted { NSDecimalNumber(decimal: $0.price).doubleValue > NSDecimalNumber(decimal: $1.price).doubleValue }
+        // Find extremes (convert to current currency for comparison)
+        let expensesWithConvertedAmounts = expenses.map { expense in
+            let convertedAmount = currencyManager.convertDecimalAmount(expense.price, from: expense.currency, to: currencyManager.currentCurrency.code)
+            return (expense: expense, convertedAmount: convertedAmount)
+        }
+
+        let sortedExpenses = expensesWithConvertedAmounts.sorted {
+            NSDecimalNumber(decimal: $0.convertedAmount).doubleValue > NSDecimalNumber(decimal: $1.convertedAmount).doubleValue
+        }
+
         let highest = sortedExpenses.first
         let lowest = sortedExpenses.last
 
-        let highestText = highest != nil ? "\(highest!.name) - \(currencyManager.formatDecimalAmount(highest!.price))" : ""
-        let lowestText = lowest != nil ? "\(lowest!.name) - \(currencyManager.formatDecimalAmount(lowest!.price))" : ""
+        let highestText = highest != nil ? "\(highest!.expense.name) - \(currencyManager.formatDecimalAmount(highest!.convertedAmount))" : ""
+        let lowestText = lowest != nil ? "\(lowest!.expense.name) - \(currencyManager.formatDecimalAmount(lowest!.convertedAmount))" : ""
 
         summaryData = SummaryData(
             totalExpenseCount: totalCount,
