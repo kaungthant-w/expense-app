@@ -32,18 +32,6 @@
 		CE441CC92E232CC500D50D56 /* CurrencySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CB02E232CC500D50D56 /* CurrencySettingsView.swift */; };
 		CE441CCA2E232CC500D50D56 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CB12E232CC500D50D56 /* SummaryView.swift */; };
 		CE441CCB2E232CC500D50D56 /* LanguageSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CB22E232CC500D50D56 /* LanguageSettingsView.swift */; };
-		CE441CD32E23301800D50D56 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE441CD22E23301800D50D56 /* AuthenticationServices.framework */; };
-		CE441CD62E23301800D50D56 /* AccountAuthenticationModificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CD52E23301800D50D56 /* AccountAuthenticationModificationViewController.swift */; };
-		CE441CD92E23301800D50D56 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE441CD72E23301800D50D56 /* MainInterface.storyboard */; };
-		CE441CDD2E23301800D50D56 /* hsu expense.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CE441CD02E23301800D50D56 /* hsu expense.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		CE441CE72E23303800D50D56 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE441CD22E23301800D50D56 /* AuthenticationServices.framework */; };
-		CE441CEA2E23303800D50D56 /* AccountAuthenticationModificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CE92E23303800D50D56 /* AccountAuthenticationModificationViewController.swift */; };
-		CE441CED2E23303800D50D56 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE441CEB2E23303800D50D56 /* MainInterface.storyboard */; };
-		CE441CF12E23303800D50D56 /* HSU Expense.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CE441CE62E23303800D50D56 /* HSU Expense.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		CE441CFA2E23307000D50D56 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE441CD22E23301800D50D56 /* AuthenticationServices.framework */; };
-		CE441CFD2E23307000D50D56 /* AccountAuthenticationModificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE441CFC2E23307000D50D56 /* AccountAuthenticationModificationViewController.swift */; };
-		CE441D002E23307000D50D56 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE441CFE2E23307000D50D56 /* MainInterface.storyboard */; };
-		CE441D042E23307000D50D56 /* hsu.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = CE441CF92E23307000D50D56 /* hsu.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CE7BB3952E21F9AF004E2851 /* ItunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE7BB3942E21F9AF004E2851 /* ItunesArtwork@2x.png */; };
 		CE7BB3962E21FA69004E2851 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA942312E1E53AA00D6683E /* Assets.xcassets */; };
 		CE7BB3972E21FA6D004E2851 /* ItunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE7BB3942E21F9AF004E2851 /* ItunesArtwork@2x.png */; };
@@ -59,27 +47,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		CE441CDB2E23301800D50D56 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA942222E1E53A800D6683E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CE441CCF2E23301800D50D56;
-			remoteInfo = "hsu expense";
-		};
-		CE441CEF2E23303800D50D56 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA942222E1E53A800D6683E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CE441CE52E23303800D50D56;
-			remoteInfo = "HSU Expense";
-		};
-		CE441D022E23307000D50D56 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA942222E1E53A800D6683E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CE441CF82E23307000D50D56;
-			remoteInfo = hsu;
-		};
 		CEA942402E1E53AA00D6683E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CEA942222E1E53A800D6683E /* Project object */;
@@ -103,9 +70,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				CE441CDD2E23301800D50D56 /* hsu expense.appex in Embed Foundation Extensions */,
-				CE441D042E23307000D50D56 /* hsu.appex in Embed Foundation Extensions */,
-				CE441CF12E23303800D50D56 /* HSU Expense.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -138,16 +102,13 @@
 		CE441CB02E232CC500D50D56 /* CurrencySettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySettingsView.swift; sourceTree = "<group>"; };
 		CE441CB12E232CC500D50D56 /* SummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
 		CE441CB22E232CC500D50D56 /* LanguageSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageSettingsView.swift; sourceTree = "<group>"; };
-		CE441CD02E23301800D50D56 /* hsu expense.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "hsu expense.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE441CD22E23301800D50D56 /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = System/Library/Frameworks/AuthenticationServices.framework; sourceTree = SDKROOT; };
 		CE441CD52E23301800D50D56 /* AccountAuthenticationModificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationModificationViewController.swift; sourceTree = "<group>"; };
 		CE441CD82E23301800D50D56 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		CE441CDA2E23301800D50D56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CE441CE62E23303800D50D56 /* HSU Expense.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "HSU Expense.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE441CE92E23303800D50D56 /* AccountAuthenticationModificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationModificationViewController.swift; sourceTree = "<group>"; };
 		CE441CEC2E23303800D50D56 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		CE441CEE2E23303800D50D56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CE441CF92E23307000D50D56 /* hsu.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = hsu.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE441CFC2E23307000D50D56 /* AccountAuthenticationModificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationModificationViewController.swift; sourceTree = "<group>"; };
 		CE441CFF2E23307000D50D56 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		CE441D012E23307000D50D56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -168,30 +129,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		CE441CCD2E23301800D50D56 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CE441CD32E23301800D50D56 /* AuthenticationServices.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CE441CE32E23303800D50D56 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CE441CE72E23303800D50D56 /* AuthenticationServices.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CE441CF62E23307000D50D56 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CE441CFA2E23307000D50D56 /* AuthenticationServices.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		CEA942272E1E53A800D6683E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -275,9 +212,6 @@
 				CEA9422A2E1E53A800D6683E /* HSU expense.app */,
 				CEA9423F2E1E53AA00D6683E /* hsu expenseTests.xctest */,
 				CEA942492E1E53AA00D6683E /* hsu expenseUITests.xctest */,
-				CE441CD02E23301800D50D56 /* hsu expense.appex */,
-				CE441CE62E23303800D50D56 /* HSU Expense.appex */,
-				CE441CF92E23307000D50D56 /* hsu.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -349,57 +283,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CE441CCF2E23301800D50D56 /* hsu expense */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CE441CDE2E23301800D50D56 /* Build configuration list for PBXNativeTarget "hsu expense" */;
-			buildPhases = (
-				CE441CCC2E23301800D50D56 /* Sources */,
-				CE441CCD2E23301800D50D56 /* Frameworks */,
-				CE441CCE2E23301800D50D56 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "hsu expense";
-			productName = "hsu expense";
-			productReference = CE441CD02E23301800D50D56 /* hsu expense.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
-		CE441CE52E23303800D50D56 /* HSU Expense */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CE441CF22E23303800D50D56 /* Build configuration list for PBXNativeTarget "HSU Expense" */;
-			buildPhases = (
-				CE441CE22E23303800D50D56 /* Sources */,
-				CE441CE32E23303800D50D56 /* Frameworks */,
-				CE441CE42E23303800D50D56 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "HSU Expense";
-			productName = "HSU Expense";
-			productReference = CE441CE62E23303800D50D56 /* HSU Expense.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
-		CE441CF82E23307000D50D56 /* hsu */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CE441D052E23307000D50D56 /* Build configuration list for PBXNativeTarget "hsu" */;
-			buildPhases = (
-				CE441CF52E23307000D50D56 /* Sources */,
-				CE441CF62E23307000D50D56 /* Frameworks */,
-				CE441CF72E23307000D50D56 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = hsu;
-			productName = hsu;
-			productReference = CE441CF92E23307000D50D56 /* hsu.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		CEA942292E1E53A800D6683E /* HSU expense */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CEA942532E1E53AA00D6683E /* Build configuration list for PBXNativeTarget "HSU expense" */;
@@ -412,9 +295,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				CE441CDC2E23301800D50D56 /* PBXTargetDependency */,
-				CE441CF02E23303800D50D56 /* PBXTargetDependency */,
-				CE441D032E23307000D50D56 /* PBXTargetDependency */,
 			);
 			name = "HSU expense";
 			productName = "HSU expense";
@@ -467,15 +347,6 @@
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
-					CE441CCF2E23301800D50D56 = {
-						CreatedOnToolsVersion = 14.2;
-					};
-					CE441CE52E23303800D50D56 = {
-						CreatedOnToolsVersion = 14.2;
-					};
-					CE441CF82E23307000D50D56 = {
-						CreatedOnToolsVersion = 14.2;
-					};
 					CEA942292E1E53A800D6683E = {
 						CreatedOnToolsVersion = 14.2;
 					};
@@ -505,38 +376,11 @@
 				CEA942292E1E53A800D6683E /* HSU expense */,
 				CEA9423E2E1E53AA00D6683E /* hsu expenseTests */,
 				CEA942482E1E53AA00D6683E /* hsu expenseUITests */,
-				CE441CCF2E23301800D50D56 /* hsu expense */,
-				CE441CE52E23303800D50D56 /* HSU Expense */,
-				CE441CF82E23307000D50D56 /* hsu */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		CE441CCE2E23301800D50D56 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CE441CD92E23301800D50D56 /* MainInterface.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CE441CE42E23303800D50D56 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CE441CED2E23303800D50D56 /* MainInterface.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CE441CF72E23307000D50D56 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CE441D002E23307000D50D56 /* MainInterface.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		CEA942282E1E53A800D6683E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -569,30 +413,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		CE441CCC2E23301800D50D56 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CE441CD62E23301800D50D56 /* AccountAuthenticationModificationViewController.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CE441CE22E23303800D50D56 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CE441CEA2E23303800D50D56 /* AccountAuthenticationModificationViewController.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CE441CF52E23307000D50D56 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CE441CFD2E23307000D50D56 /* AccountAuthenticationModificationViewController.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		CEA942262E1E53A800D6683E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -646,21 +466,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CE441CDC2E23301800D50D56 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CE441CCF2E23301800D50D56 /* hsu expense */;
-			targetProxy = CE441CDB2E23301800D50D56 /* PBXContainerItemProxy */;
-		};
-		CE441CF02E23303800D50D56 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CE441CE52E23303800D50D56 /* HSU Expense */;
-			targetProxy = CE441CEF2E23303800D50D56 /* PBXContainerItemProxy */;
-		};
-		CE441D032E23307000D50D56 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CE441CF82E23307000D50D56 /* hsu */;
-			targetProxy = CE441D022E23307000D50D56 /* PBXContainerItemProxy */;
-		};
 		CEA942412E1E53AA00D6683E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CEA942292E1E53A800D6683E /* HSU expense */;
@@ -701,154 +506,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		CE441CDF2E23301800D50D56 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = WY3GFL6Y63;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "hsu expense/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "hsu expense";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "expense.hsu-expense.hsu-expense";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		CE441CE02E23301800D50D56 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = WY3GFL6Y63;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "hsu expense/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "hsu expense";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "expense.hsu-expense.hsu-expense";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		CE441CF32E23303800D50D56 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = WY3GFL6Y63;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "HSU Expense/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "HSU Expense";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "expense.hsu-expense.HSU-Expense";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		CE441CF42E23303800D50D56 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = WY3GFL6Y63;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "HSU Expense/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "HSU Expense";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "expense.hsu-expense.HSU-Expense";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		CE441D062E23307000D50D56 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = WY3GFL6Y63;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = hsu/Info.plist;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "expense.hsu-expense";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		CE441D072E23307000D50D56 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = WY3GFL6Y63;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = hsu/Info.plist;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "expense.hsu-expense";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		CEA942512E1E53AA00D6683E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1106,33 +763,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CE441CDE2E23301800D50D56 /* Build configuration list for PBXNativeTarget "hsu expense" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CE441CDF2E23301800D50D56 /* Debug */,
-				CE441CE02E23301800D50D56 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		CE441CF22E23303800D50D56 /* Build configuration list for PBXNativeTarget "HSU Expense" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CE441CF32E23303800D50D56 /* Debug */,
-				CE441CF42E23303800D50D56 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		CE441D052E23307000D50D56 /* Build configuration list for PBXNativeTarget "hsu" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CE441D062E23307000D50D56 /* Debug */,
-				CE441D072E23307000D50D56 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		CEA942252E1E53A800D6683E /* Build configuration list for PBXProject "hsu expense" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

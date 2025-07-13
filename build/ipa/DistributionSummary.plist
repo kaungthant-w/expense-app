@@ -14,9 +14,9 @@
 			<key>certificate</key>
 			<dict>
 				<key>SHA1</key>
-				<string>1549F5B13D2BFA3587503AED94D0BAA58594E6C2</string>
+				<string>1825E4B0E4C4EFE82FF696AB188EA0D3655E5E93</string>
 				<key>dateExpires</key>
-				<string>7/9/26</string>
+				<string>7/13/26</string>
 				<key>type</key>
 				<string>Apple Development</string>
 			</dict>
@@ -34,9 +34,9 @@
 			<key>profile</key>
 			<dict>
 				<key>UUID</key>
-				<string>54eca1f9-6c0a-4e57-9290-0a9dccdd75a3</string>
+				<string>42d40c2b-9ae7-44cb-847b-db7facf46c18</string>
 				<key>dateExpires</key>
-				<string>7/16/25</string>
+				<string>7/20/25</string>
 				<key>name</key>
 				<string>iOS Team Provisioning Profile: expense.hsu-expense</string>
 			</dict>
