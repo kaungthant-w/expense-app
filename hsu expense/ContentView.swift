@@ -173,22 +173,29 @@ struct ContentView: View {
                 .toolbarBackground(.visible, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar) // Ensures white title text
 
+                // Floating Action Button
                 VStack {
-                    // Main content area
                     Spacer()
-
-                    // Settings button in navigation or toolbar
                     HStack {
                         Spacer()
                         Button(action: {
-                            showSettings = true
+                            showingAddExpense = true
                         }) {
-                            Image(systemName: "gear")
+                            Image(systemName: "plus")
                                 .font(.title2)
-                                .foregroundColor(.primary)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                                .frame(width: 56, height: 56)
+                                .background(
+                                    Circle()
+                                        .fill(Color.expenseAccent)
+                                        .shadow(color: .black.opacity(0.3), radius: 8, x: 0, y: 4)
+                                )
                         }
+                        .buttonStyle(PlainButtonStyle())
+                        .padding(.trailing, 20)
+                        .padding(.bottom, 20)
                     }
-                    .padding()
                 }
             }
         }
