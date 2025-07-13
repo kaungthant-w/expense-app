@@ -1892,7 +1892,6 @@ struct SettingsPage: View {
 
         return components
     }
-    }
 
     private func createExportDocument() -> ExportDocument {
         let expenses = loadExpensesForExport()
