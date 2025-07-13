@@ -10,6 +10,7 @@ struct ExportDataView: View {
     @State private var showingAlert = false
     @State private var alertMessage = ""
     @State private var isExporting = false
+    @State private var showingSuccessAlert = false
 
     let exportFormats = ["JSON", "CSV"]
 
@@ -40,9 +41,19 @@ struct ExportDataView: View {
                 dismissButton: .default(Text("OK"))
             )
         }
+        .alert("Export Completed", isPresented: $showingSuccessAlert) {
+            Button("OK") { }
+        } message: {
+            Text("Your file has been exported successfully!\n\nTo save it:\n• Tap 'Save to Files' to save in Files app\n• Or choose another app to share\n• Files saved to Downloads or Documents can be accessed later")
+        }
         .sheet(isPresented: $showingShareSheet) {
             if let url = exportedFileURL {
-                ShareSheet(activityItems: [url])
+                ShareSheet(activityItems: [url]) {
+                    // Show success alert when share sheet is dismissed
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showingSuccessAlert = true
+                    }
+                }
             }
         }
     }
@@ -79,7 +90,8 @@ struct ExportDataView: View {
                 Text("• Select your preferred export format")
                 Text("• JSON format preserves all data structure")
                 Text("• CSV format is compatible with Excel")
-                Text("• Your exported file will be saved and shared")
+                Text("• Files will be shared via iOS Share Sheet")
+                Text("• You can save to Files app, email, or other apps")
             }
             .font(.subheadline)
             .foregroundColor(.secondary)
@@ -223,7 +235,6 @@ struct ExportDataView: View {
                     self.isExporting = false
                     self.exportedFileURL = fileURL
                     self.showingShareSheet = true
-                    self.alertMessage = "Export completed successfully!"
                 }
 
             } catch {
@@ -309,9 +320,22 @@ struct ExportDataView: View {
 
 struct ShareSheet: UIViewControllerRepresentable {
     let activityItems: [Any]
+    let completion: (() -> Void)?
+
+    init(activityItems: [Any], completion: (() -> Void)? = nil) {
+        self.activityItems = activityItems
+        self.completion = completion
+    }
 
     func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+
+        // Set completion handler
+        controller.completionWithItemsHandler = { (activityType, completed, returnedItems, error) in
+            completion?()
+        }
+
+        return controller
     }
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
