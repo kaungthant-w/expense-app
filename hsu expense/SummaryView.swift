@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SummaryView: View {
-    @StateObject private var currencyManager = CurrencyManager.shared
+    @ObservedObject private var currencyManager = CurrencyManager.shared
     @State private var summaryData = SummaryData()
     @Environment(\.dismiss) private var dismiss
 

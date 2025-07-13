@@ -366,12 +366,38 @@ class CurrencyManager: ObservableObject {
 
     func formatAmount(_ amount: Double, currency: Currency? = nil) -> String {
         let selectedCurrency = currency ?? currentCurrency
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = selectedCurrency.code
-        formatter.currencySymbol = selectedCurrency.symbol
-        formatter.maximumFractionDigits = 2
-        return formatter.string(from: NSNumber(value: amount)) ?? "\(selectedCurrency.symbol)\(String(format: "%.2f", amount))"
+
+        // Handle specific currency formatting
+        switch selectedCurrency.code {
+        case "MMK":
+            // Format MMK without decimal places and with proper suffix
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.maximumFractionDigits = 0
+            formatter.groupingSeparator = ","
+            formatter.usesGroupingSeparator = true
+            let formattedNumber = formatter.string(from: NSNumber(value: amount)) ?? String(format: "%.0f", amount)
+            return "\(formattedNumber) MMK"
+
+        case "USD":
+            // Format USD with $ prefix
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.maximumFractionDigits = 2
+            formatter.groupingSeparator = ","
+            formatter.usesGroupingSeparator = true
+            let formattedNumber = formatter.string(from: NSNumber(value: amount)) ?? String(format: "%.2f", amount)
+            return "$\(formattedNumber)"
+
+        default:
+            // Use standard currency formatting for other currencies
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .currency
+            formatter.currencyCode = selectedCurrency.code
+            formatter.currencySymbol = selectedCurrency.symbol
+            formatter.maximumFractionDigits = 2
+            return formatter.string(from: NSNumber(value: amount)) ?? "\(selectedCurrency.symbol)\(String(format: "%.2f", amount))"
+        }
     }
 
     func formatDecimalAmount(_ amount: Decimal, currency: Currency? = nil) -> String {
