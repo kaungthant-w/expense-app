@@ -459,8 +459,8 @@ class CurrencyManager: ObservableObject {
     private func loadExchangeRates() {
         guard let data = userDefaults.data(forKey: ratesKey),
               let rates = try? JSONDecoder().decode([String: Double].self, from: data) else {
-            // Default rates
-            exchangeRates = [
+            // Default rates - ensure they are always available
+            let defaultRates: [String: Double] = [
                 "USD": 1.0,
                 "MMK": 2100.0,
                 "EUR": 0.85,
@@ -472,9 +472,12 @@ class CurrencyManager: ObservableObject {
                 "SGD": 1.35,
                 "INR": 83.0
             ]
+            exchangeRates = defaultRates
+            print("📊 Loaded default exchange rates: \(defaultRates)")
             return
         }
         exchangeRates = rates
+        print("📊 Loaded saved exchange rates: \(rates)")
     }
 }
 

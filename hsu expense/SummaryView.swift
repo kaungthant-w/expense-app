@@ -302,10 +302,38 @@ struct SummaryView: View {
                             .cornerRadius(8)
                     }
 
+                    Button(action: {
+                        forceReloadData()
+                    }) {
+                        Text("Force Reload Data")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color.red)
+                            .cornerRadius(8)
+                    }
+
                     Text("Current Rates: \(currencyManager.exchangeRates.description)")
                         .font(.caption)
                         .foregroundColor(.expenseSecondaryText)
                         .multilineTextAlignment(.leading)
+
+                    // Real-time conversion test
+                    let testConversion = currencyManager.convertAmount(22.03, from: "USD", to: currencyManager.currentCurrency.code)
+                    let testFormatted = currencyManager.formatAmount(testConversion)
+
+                    Text("Live Test: $22.03 USD = \(testFormatted)")
+                        .font(.caption)
+                        .foregroundColor(.red)
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.leading)
+
+                    Text("Current Currency: \(currencyManager.currentCurrency.code)")
+                        .font(.caption)
+                        .foregroundColor(.blue)
+                        .fontWeight(.bold)
                 }
             }
         }
@@ -483,6 +511,31 @@ struct SummaryView: View {
         // Save test data
         UserDefaults.standard.set(testExpenses, forKey: ExpenseUserDefaultsKeys.expenses)
         print("✅ $22.03 USD test data loaded!")
+
+        // Reload summary data
+        loadSummaryData()
+    }
+
+    private func forceReloadData() {
+        print("🔄 Force reloading all data...")
+        print("🔄 Current currency: \(currencyManager.currentCurrency.code)")
+        print("🔄 Exchange rates: \(currencyManager.exchangeRates)")
+
+        // Force reload exchange rates
+        currencyManager.exchangeRates = [
+            "USD": 1.0,
+            "MMK": 2100.0,
+            "EUR": 0.85,
+            "JPY": 150.0,
+            "GBP": 0.79,
+            "CNY": 7.25,
+            "KRW": 1340.0,
+            "THB": 36.0,
+            "SGD": 1.35,
+            "INR": 83.0
+        ]
+
+        print("🔄 Forced exchange rates: \(currencyManager.exchangeRates)")
 
         // Reload summary data
         loadSummaryData()
