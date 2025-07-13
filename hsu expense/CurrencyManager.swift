@@ -38,11 +38,18 @@ class CurrencyManager: ObservableObject {
         loadSelectedCurrency()
         loadExchangeRates()
 
+        print("🏁 CurrencyManager initialized")
+        print("🏁 Current currency: \(currentCurrency.code)")
+        print("🏁 Exchange rates: \(exchangeRates)")
+
         // Auto-update rates if they're more than 1 hour old
         if shouldAutoUpdateRates() {
+            print("⏰ Exchange rates are old, updating...")
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 self.updateExchangeRates()
             }
+        } else {
+            print("✅ Exchange rates are up to date")
         }
     }
 
@@ -54,8 +61,10 @@ class CurrencyManager: ObservableObject {
 
     // MARK: - Currency Selection
     func setCurrency(_ currency: Currency) {
+        print("💰 Setting currency to: \(currency.code)")
         currentCurrency = currency
         userDefaults.set(currency.code, forKey: currencyKey)
+        print("💰 Currency changed notification sent")
         NotificationCenter.default.post(name: .currencyChanged, object: currency)
     }
 
@@ -338,23 +347,40 @@ class CurrencyManager: ObservableObject {
 
     // MARK: - Currency Conversion
     func convertAmount(_ amount: Double, from: String, to: String) -> Double {
-        guard from != to else { return amount }
+        print("💱 Converting \(amount) from \(from) to \(to)")
+        print("💱 Available rates: \(exchangeRates)")
+
+        guard from != to else {
+            print("💱 Same currency, returning \(amount)")
+            return amount
+        }
 
         // Convert to USD first (base currency)
         let usdAmount: Double
         if from == "USD" {
             usdAmount = amount
+            print("💱 From USD: \(usdAmount)")
         } else {
-            guard let fromRate = exchangeRates[from] else { return amount }
+            guard let fromRate = exchangeRates[from] else {
+                print("❌ No rate found for \(from), returning original amount")
+                return amount
+            }
             usdAmount = amount / fromRate
+            print("💱 \(amount) \(from) / \(fromRate) = \(usdAmount) USD")
         }
 
         // Convert from USD to target currency
         if to == "USD" {
+            print("💱 Final result: \(usdAmount) USD")
             return usdAmount
         } else {
-            guard let toRate = exchangeRates[to] else { return amount }
-            return usdAmount * toRate
+            guard let toRate = exchangeRates[to] else {
+                print("❌ No rate found for \(to), returning USD amount")
+                return usdAmount
+            }
+            let finalAmount = usdAmount * toRate
+            print("💱 \(usdAmount) USD * \(toRate) = \(finalAmount) \(to)")
+            return finalAmount
         }
     }
 

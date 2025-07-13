@@ -277,6 +277,19 @@ struct SummaryView: View {
                     }
 
                     Button(action: {
+                        load22DollarTest()
+                    }) {
+                        Text("Load $22.03 USD Test")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color.orange)
+                            .cornerRadius(8)
+                    }
+
+                    Button(action: {
                         currencyManager.updateExchangeRates()
                     }) {
                         Text("Update Exchange Rates")
@@ -322,6 +335,14 @@ struct SummaryView: View {
         print("📊 SummaryView: Loading \(expenses.count) expenses")
         print("📊 Current currency: \(currencyManager.currentCurrency.code)")
         print("📊 Exchange rates: \(currencyManager.exchangeRates)")
+
+        // Test the conversion logic with a sample
+        if !expenses.isEmpty {
+            let testAmount = 22.03
+            let convertedTest = currencyManager.convertAmount(testAmount, from: "USD", to: currencyManager.currentCurrency.code)
+            print("🧪 Test conversion: $22.03 USD → \(convertedTest) \(currencyManager.currentCurrency.code)")
+            print("🧪 Formatted result: \(currencyManager.formatAmount(convertedTest))")
+        }
 
         // Calculate overall statistics (convert to current currency)
         let totalCount = expenses.count
@@ -439,6 +460,29 @@ struct SummaryView: View {
         // Save test data
         UserDefaults.standard.set(testExpenses, forKey: ExpenseUserDefaultsKeys.expenses)
         print("✅ Mixed currency test data loaded!")
+
+        // Reload summary data
+        loadSummaryData()
+    }
+
+    private func load22DollarTest() {
+        print("🧪 Loading $22.03 USD test data...")
+
+        let testExpenses = [
+            [
+                "id": "test-22-usd",
+                "name": "Test Expense",
+                "price": 22.03,
+                "description": "Testing $22.03 USD conversion",
+                "date": "2025-07-13",
+                "time": "10:00 AM",
+                "currency": "USD"
+            ]
+        ]
+
+        // Save test data
+        UserDefaults.standard.set(testExpenses, forKey: ExpenseUserDefaultsKeys.expenses)
+        print("✅ $22.03 USD test data loaded!")
 
         // Reload summary data
         loadSummaryData()
