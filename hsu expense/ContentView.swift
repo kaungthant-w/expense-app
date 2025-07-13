@@ -283,7 +283,7 @@ struct ContentView: View {
                         .font(.system(size: 14))
                         .foregroundColor(.expenseSecondaryText)
                     Spacer()
-                    Text(currencyManager.formatDecimalAmount(todayTotalAmountInCurrentCurrency))
+                    Text(formatTodayAmount(todayTotalAmountInCurrentCurrency))
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(.expensePrimaryText)
                 }
@@ -567,6 +567,38 @@ struct ContentView: View {
         formatter.maximumFractionDigits = 2
         formatter.minimumFractionDigits = 2
         return formatter.string(from: NSDecimalNumber(decimal: amount)) ?? "$0.00"
+    }
+
+    // Custom format for Today's Summary: Different formats for different currencies
+    private func formatTodayAmount(_ amount: Decimal) -> String {
+        let doubleAmount = NSDecimalNumber(decimal: amount).doubleValue
+        let currencyCode = currencyManager.currentCurrency.code
+
+        switch currencyCode {
+        case "USD":
+            return String(format: "$ %.2f", doubleAmount)
+        case "MMK":
+            return String(format: "%.2f MMK", doubleAmount)
+        case "SGD":
+            return String(format: "%.2f SGD", doubleAmount)
+        case "THB":
+            return String(format: "%.2f THB", doubleAmount)
+        case "JPY":
+            return String(format: "%.2f JPY", doubleAmount)
+        case "EUR":
+            return String(format: "%.2f EUR", doubleAmount)
+        case "GBP":
+            return String(format: "%.2f GBP", doubleAmount)
+        case "CNY":
+            return String(format: "%.2f CNY", doubleAmount)
+        case "KRW":
+            return String(format: "%.2f KRW", doubleAmount)
+        case "INR":
+            return String(format: "%.2f INR", doubleAmount)
+        default:
+            // Fallback: use currency code after amount
+            return String(format: "%.2f %@", doubleAmount, currencyCode)
+        }
     }
 
     private func calculateTotal() {
