@@ -123,6 +123,29 @@ struct CurrencySettingsView: View {
                         .padding(.horizontal, 16)
                     }
                     .padding(.top, 16)
+
+                    // Exchange Rate Table
+                    VStack(alignment: .leading, spacing: 16) {
+                        // Table Header
+                        HStack {
+                            Text("Live Exchange Rates")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.expenseSecondaryText)
+                                .textCase(.uppercase)
+                            Spacer()
+                            Text("Base: USD")
+                                .font(.caption2)
+                                .foregroundColor(.expenseAccent)
+                                .fontWeight(.medium)
+                        }
+                        .padding(.horizontal, 16)
+
+                        // Exchange Rate Table
+                        ExchangeRateTableView(exchangeRates: currencyManager.exchangeRates)
+                            .padding(.horizontal, 16)
+                    }
+                    .padding(.top, 20)
                 }
             }
             .background(Color.expenseBackground)
@@ -134,6 +157,12 @@ struct CurrencySettingsView: View {
                         dismiss()
                     }
                 }
+            }
+            .onAppear {
+                setupNotificationObservers()
+            }
+            .onDisappear {
+                NotificationCenter.default.removeObserver(self)
             }
             .alert("Success", isPresented: $showingUpdateSuccess) {
                 Button("OK") { }
@@ -164,15 +193,20 @@ struct CurrencySettingsView: View {
 
     private func updateExchangeRates() {
         currencyManager.updateExchangeRates()
+    }
+
+    private func setupNotificationObservers() {
+        // Remove any existing observers first
+        NotificationCenter.default.removeObserver(self)
 
         // Listen for successful completion
         NotificationCenter.default.addObserver(
             forName: .exchangeRatesUpdated,
             object: nil,
             queue: .main
-        ) { _ in
-            updateMessage = "Exchange rates updated successfully from Myanmar Currency API! 🇲🇲"
-            showingUpdateSuccess = true
+        ) { [weak self] _ in
+            self?.updateMessage = "Exchange rates updated successfully from Myanmar Currency API! 🇲🇲💱"
+            self?.showingUpdateSuccess = true
         }
 
         // Listen for API errors
@@ -180,14 +214,14 @@ struct CurrencySettingsView: View {
             forName: .exchangeRatesFailed,
             object: nil,
             queue: .main
-        ) { notification in
+        ) { [weak self] notification in
             if let userInfo = notification.userInfo,
                let error = userInfo["error"] as? String {
-                errorMessage = "Failed to update exchange rates: \(error)\n\nUsing fallback rates instead."
+                self?.errorMessage = "Failed to update exchange rates: \(error)\n\nUsing fallback rates instead."
             } else {
-                errorMessage = "Failed to update exchange rates. Using fallback rates instead."
+                self?.errorMessage = "Failed to update exchange rates. Using fallback rates instead."
             }
-            showingUpdateError = true
+            self?.showingUpdateError = true
         }
     }
 }
@@ -288,6 +322,154 @@ struct CurrencyCardView: View {
             )
         }
         .buttonStyle(PlainButtonStyle())
+    }
+}
+
+// MARK: - Exchange Rate Table View
+struct ExchangeRateTableView: View {
+    let exchangeRates: [String: Double]
+
+    var body: some View {
+        VStack(spacing: 8) {
+            // Table Header
+            HStack {
+                Text("From")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.expenseSecondaryText)
+                    .frame(width: 50, alignment: .leading)
+
+                Text("To")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.expenseSecondaryText)
+                    .frame(width: 50, alignment: .leading)
+
+                Spacer()
+
+                Text("Rate")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.expenseSecondaryText)
+                    .frame(width: 80, alignment: .trailing)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .background(Color.expenseInputBackground)
+            .cornerRadius(8)
+
+            // Table Rows
+            LazyVStack(spacing: 4) {
+                ForEach(sortedExchangeRates, id: \.key) { currencyCode, rate in
+                    ExchangeRateRowView(
+                        fromCurrency: "USD",
+                        toCurrency: currencyCode,
+                        rate: rate,
+                        isHighlighted: currencyCode == "MMK" // Highlight Myanmar Kyat
+                    )
+                }
+            }
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color.expenseCardBackground)
+                .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
+        )
+    }
+
+    private var sortedExchangeRates: [(key: String, value: Double)] {
+        let currencies = ["USD", "MMK", "EUR", "JPY", "GBP", "CNY", "KRW", "THB", "SGD", "INR"]
+
+        return currencies.compactMap { currencyCode in
+            guard let rate = exchangeRates[currencyCode] else { return nil }
+            return (key: currencyCode, value: rate)
+        }
+    }
+}
+
+// MARK: - Exchange Rate Row View
+struct ExchangeRateRowView: View {
+    let fromCurrency: String
+    let toCurrency: String
+    let rate: Double
+    let isHighlighted: Bool
+
+    var body: some View {
+        HStack {
+            // From Currency
+            HStack(spacing: 4) {
+                Text(currencyFlag(for: fromCurrency))
+                    .font(.caption)
+                Text(fromCurrency)
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.expensePrimaryText)
+            }
+            .frame(width: 50, alignment: .leading)
+
+            // Arrow
+            Image(systemName: "arrow.right")
+                .font(.caption2)
+                .foregroundColor(.expenseSecondaryText)
+
+            // To Currency
+            HStack(spacing: 4) {
+                Text(currencyFlag(for: toCurrency))
+                    .font(.caption)
+                Text(toCurrency)
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.expensePrimaryText)
+            }
+            .frame(width: 50, alignment: .leading)
+
+            Spacer()
+
+            // Exchange Rate
+            HStack(spacing: 4) {
+                if toCurrency == "USD" {
+                    Text("1.00")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.expenseAccent)
+                } else {
+                    Text(String(format: "%.2f", rate))
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(isHighlighted ? .expenseGreen : .expensePrimaryText)
+                }
+
+                // Live indicator for highlighted currencies
+                if isHighlighted && toCurrency != "USD" {
+                    Image(systemName: "wifi")
+                        .font(.caption2)
+                        .foregroundColor(.expenseGreen)
+                }
+            }
+            .frame(width: 80, alignment: .trailing)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(
+            RoundedRectangle(cornerRadius: 6)
+                .fill(isHighlighted ? Color.expenseGreen.opacity(0.05) : Color.clear)
+        )
+    }
+
+    private func currencyFlag(for code: String) -> String {
+        switch code {
+        case "USD": return "🇺🇸"
+        case "MMK": return "🇲🇲"
+        case "EUR": return "🇪🇺"
+        case "JPY": return "🇯🇵"
+        case "GBP": return "🇬🇧"
+        case "CNY": return "🇨🇳"
+        case "KRW": return "🇰🇷"
+        case "THB": return "🇹🇭"
+        case "SGD": return "🇸🇬"
+        case "INR": return "🇮🇳"
+        default: return "💱"
+        }
     }
 }
 
@@ -420,6 +602,40 @@ struct CurrencyCardView_Previews: PreviewProvider {
                 exchangeRate: 0.85
             ) { }
         }
+        .padding()
+        .preferredColorScheme(.dark)
+    }
+}
+
+struct ExchangeRateTableView_Previews: PreviewProvider {
+    static var previews: some View {
+        ExchangeRateTableView(exchangeRates: [
+            "USD": 1.0,
+            "MMK": 2100.0,
+            "EUR": 0.85,
+            "JPY": 150.0,
+            "GBP": 0.79,
+            "CNY": 7.25,
+            "KRW": 1340.0,
+            "THB": 36.0,
+            "SGD": 1.35,
+            "INR": 83.0
+        ])
+        .padding()
+        .preferredColorScheme(.light)
+
+        ExchangeRateTableView(exchangeRates: [
+            "USD": 1.0,
+            "MMK": 2100.0,
+            "EUR": 0.85,
+            "JPY": 150.0,
+            "GBP": 0.79,
+            "CNY": 7.25,
+            "KRW": 1340.0,
+            "THB": 36.0,
+            "SGD": 1.35,
+            "INR": 83.0
+        ])
         .padding()
         .preferredColorScheme(.dark)
     }
