@@ -250,9 +250,9 @@ struct ExportDataView: View {
             "export_date": ISO8601DateFormatter().string(from: Date()),
             "expenses": expenses.map { expense in
                 [
-                    "id": expense.id,
+                    "id": expense.id.uuidString,
                     "name": expense.name,
-                    "price": expense.price,
+                    "price": NSDecimalNumber(decimal: expense.price).doubleValue,
                     "description": expense.description,
                     "date": expense.date,
                     "time": expense.time,

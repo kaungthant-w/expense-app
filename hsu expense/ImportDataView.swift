@@ -100,7 +100,8 @@ struct ImportDataView: View {
                 .fontWeight(.bold)
 
             Text("• Select a JSON, CSV, or TXT file")
-            Text("• CSV format: Name, Price, Description, Date [, Time]")
+            Text("• CSV format: Name, Price, Description, Date [, Time] OR")
+            Text("• Exported CSV: ID, Name, Price, Description, Date, Time, Currency")
             Text("• JSON format: HSU Expense export or array format")
             Text("• Existing data will be merged with imported data")
             Text("• Duplicate entries will be automatically handled")
@@ -176,9 +177,19 @@ struct ImportDataView: View {
                 return
             }
 
-            // Save imported expenses (overwrite existing)
-            let importedArray = importedExpenses.map { $0.asDictionary }
-            UserDefaults.standard.set(importedArray, forKey: ExpenseUserDefaultsKeys.expenses)
+            // Merge imported expenses with existing data
+            var existingExpenses = loadExpensesFromUserDefaults()
+
+            // Avoid duplicates by checking IDs
+            let existingIds = Set(existingExpenses.map { $0.id })
+            let newExpenses = importedExpenses.filter { !existingIds.contains($0.id) }
+
+            // Add new expenses to existing ones
+            existingExpenses.append(contentsOf: newExpenses)
+
+            // Save merged expenses
+            let mergedArray = existingExpenses.map { $0.asDictionary }
+            UserDefaults.standard.set(mergedArray, forKey: ExpenseUserDefaultsKeys.expenses)
 
             // Notify ContentView to reload data
             NotificationCenter.default.post(name: NSNotification.Name("ReloadExpensesFromUserDefaults"), object: nil)
@@ -224,28 +235,55 @@ struct ImportDataView: View {
 
         for line in lines.dropFirst() {
             let components = parseCSVRow(line)
-            guard components.count >= 4 else { continue }
 
-            let name = components[0].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
-            let priceString = components[1].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
-            let description = components[2].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
-            let dateString = components[3].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+            // Handle both formats: exported format (7 columns) and simple format (4-5 columns)
+            if components.count >= 7 {
+                // Exported CSV format: ID,Name,Price,Description,Date,Time,Currency
+                let id = components[0].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+                let name = components[1].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+                let priceString = components[2].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+                let description = components[3].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+                let dateString = components[4].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+                let timeString = components[5].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+                let currency = components[6].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
 
-            // Check if time is included in CSV (5th column)
-            let timeString = components.count > 4 ?
-                components[4].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\"")) :
-                "12:00 PM"
+                guard let price = Decimal(string: priceString) else { continue }
 
-            guard let price = Decimal(string: priceString) else { continue }
+                let expenseId = UUID(uuidString: id) ?? UUID()
+                let expense = ExpenseItem(
+                    id: expenseId,
+                    name: name,
+                    price: price,
+                    description: description,
+                    date: dateString,
+                    time: timeString,
+                    currency: currency
+                )
+                expenses.append(expense)
 
-            let expense = ExpenseItem(
-                name: name,
-                price: price,
-                description: description,
-                date: dateString,
-                time: timeString
-            )
-            expenses.append(expense)
+            } else if components.count >= 4 {
+                // Simple CSV format: Name,Price,Description,Date[,Time]
+                let name = components[0].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+                let priceString = components[1].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+                let description = components[2].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+                let dateString = components[3].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+
+                // Check if time is included in CSV (5th column)
+                let timeString = components.count > 4 ?
+                    components[4].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\"")) :
+                    "12:00 PM"
+
+                guard let price = Decimal(string: priceString) else { continue }
+
+                let expense = ExpenseItem(
+                    name: name,
+                    price: price,
+                    description: description,
+                    date: dateString,
+                    time: timeString
+                )
+                expenses.append(expense)
+            }
         }
 
         return expenses
