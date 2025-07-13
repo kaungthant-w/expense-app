@@ -65,7 +65,9 @@ class CurrencyManager: ObservableObject {
 
         // Fetch real exchange rates from Myanmar Currency API
         fetchExchangeRatesFromAPI()
-    }    private func fetchExchangeRatesFromAPI() {
+    }
+
+    private func fetchExchangeRatesFromAPI() {
         // Use Myanmar Currency API as primary source
         let apiUrls = [
             "https://myanmar-currency-api.github.io/api/latest.json",
@@ -123,7 +125,7 @@ class CurrencyManager: ObservableObject {
                         // Format 1: Myanmar Currency API format
                         if currentIndex == 0, let dataArray = json["data"] as? [[String: Any]] {
                             print("🇲🇲 Processing Myanmar Currency API data")
-                            rates = processMyanmarCurrencyAPI(dataArray: dataArray)
+                            rates = self.processMyanmarCurrencyAPI(dataArray: dataArray)
                         }
                         // Format 2: Standard exchange rate APIs
                         else if let directRates = json["rates"] as? [String: Double] {
