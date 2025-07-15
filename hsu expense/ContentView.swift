@@ -881,44 +881,15 @@ struct EmptyStateView: View {
     var body: some View {
         VStack(spacing: 24) {
             VStack(spacing: 16) {
-                // Use a system image as the primary icon for better reliability
-//                Image(systemName: "dollarsign.circle")
-//                    .font(.system(size: 80))
-//                    .foregroundColor(.expenseSecondaryText)
-//                    .opacity(0.6)
-
                 VStack(spacing: 8) {
-                    Text("no record available")
+                    Text("📭 No Record available")
                         .font(.title2)
                         .fontWeight(.semibold)
                         .foregroundColor(.expensePrimaryText)
-
-//                    Text("Start tracking your expenses by adding your first entry")
-//                        .font(.body)
-//                        .foregroundColor(.expenseSecondaryText)
-//                        .multilineTextAlignment(.center)
-//                        .padding(.horizontal, 32)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
-
-//            Button(action: onAddExpense) {
-//                HStack(spacing: 8) {
-//                    Image(systemName: "plus.circle.fill")
-//                        .font(.title3)
-//
-//                    Text("Add Your First Expense")
-//                        .font(.body)
-//                        .fontWeight(.medium)
-//                }
-//                .foregroundColor(.white)
-//                .padding(.horizontal, 24)
-//                .padding(.vertical, 12)
-//                .background(
-//                    RoundedRectangle(cornerRadius: 25)
-//                        .fill(Color.expenseAccent)
-//                )
-//            }
-//            .buttonStyle(PlainButtonStyle())
         }
         .padding(40)
         .frame(maxWidth: .infinity)
